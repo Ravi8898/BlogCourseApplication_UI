@@ -1,0 +1,271 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div class="feature-card mt-2 px-3 text-start">
+    <div class="">
+        <div class="d-flex justify-content-between">
+            <h6 class="my-0" style="font-weight:600">Update GRN</h6>
+            <button type="submit" class="button-submit mx-0" [disabled]="this.apipoResponseJson.length==0" (click)="downloadGRNExcelFile()" style="margin-top: -10px; margin-bottom: -5px;">Download GRN</button>
+        </div>
+        <hr class="my-2">
+
+        <form [formGroup]="conditionalForm">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-xs-4 input-text-group">
+                    <label for="" class="form-label m-0">Vendor Number</label>
+                    <label class="label-mandatory-field">*</label>
+                    <ng-select class="dropdown-list-autocomplete" placeholder="Select Vendor Number" formControlName="vendor_no" name="vendor_no" id="vendor_no" (change)="getPOList($event)">
+                        <ng-option value="">Select</ng-option>
+                        <ng-option *ngFor="let option of this.vendorArray" [value]="option['vendorNumber']">{{option['vendorNumber']}}-{{option['name']}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-4">
+                    <label for="" class="form-label m-0">Plant Code</label>
+                    <span class="asterisk"> *</span>
+                    <ng-select class="dropdown-list-autocomplete" formControlName="plant_code" name="plant_code" id="plant_code" (change)="selectedPlantCode($event)">
+                        <ng-option value="">Select</ng-option>
+                        <ng-option *ngFor="let option of this.plantCodeArray" [value]="option">{{option}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-xs-2">
+                    <label for="" class="form-label m-0">Start Date</label>
+                    <span class="asterisk"> *</span>
+                    <!-- <input type="date" class="form-control" formControlName="start_date" [min]="minDate" [max]="maxDate" (change)="selectedStartDate($event)" onkeydown="return false"> -->
+                    <input type="date" class="form-control" formControlName="start_date"(change)="selectedStartDate($event)" onkeydown="return false">
+                    <!-- <input type="date" class="form-control" formControlName="start_date" (change)="selectedStartDate($event)"> -->
+                </div>
+                <div class="col-lg-2 col-md-2 col-xs-2">
+                    <label for="" class="form-label m-0">End Date</label>
+                    <span class="asterisk"> *</span>
+                    <!-- made change for Direct Transporter testing -->
+                    <!-- <input type="date" class="form-control" formControlName="end_date" [min]="endMinDate" [max]="maxDate" [max]="endMaxDate" (change)="getPOList($event)" onkeydown="return false"> -->
+                    <input type="date" class="form-control" formControlName="end_date" (change)="getPOList($event)" onkeydown="return false">
+                    <!-- <input type="date" class="form-control" formControlName="end_date" (change)="getPOList($event)"> -->
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-4 mt-2">
+                    <label for="" class="form-label m-0">PO Number</label>
+                    <span class="asterisk"> *</span>
+                    <ng-select class="dropdown-list-autocomplete" formControlName="po_number" name="po_number" id="po_number" (change)="getPOItemList($event)">
+                        <ng-option value="">Select</ng-option>
+                        <ng-option *ngFor="let option of this.poArray" [value]="option">{{option}}</ng-option>
+                    </ng-select>
+                    <p class="m-0" *ngIf="actualPOVendor?.name" style="font-size: 12px;">Vendor : <strong>{{actualPOVendor?.name}}, {{actualPOVendor?.city}}</strong></p>
+                    <!-- <p class="m-0" *ngIf="actualPOVendor" style="font-size: 12px;">Vendor : <strong>{{actualPOVendor}}</strong></p> -->
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-4 mt-2">
+                    <label for="" class="form-label m-0">PO Item Number</label>
+                    <span class="asterisk"> *</span>
+                    <ng-select class="dropdown-list-autocomplete" formControlName="po_item_no" name="po_item_no" id="po_item_no" (change)="getConditionType($event)">
+                        <ng-option value="">Select</ng-option>
+                        <ng-option *ngFor="let option of this.poItemArray" [value]="option">{{option}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-4 mt-2">
+                    <label for="" class="form-label m-0">Conditional Type Description</label>
+                    <span class="asterisk"> *</span>
+                    <ng-select class="dropdown-list-autocomplete" formControlName="condition_type" name="condition_type" id="condition_type" (change)="selectCondType($event)">
+                        <ng-option value="">Select</ng-option>
+                        <ng-option *ngFor="let option of this.condDescArray" [value]="option">{{option}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-4 mt-2">
+                    <label for="" class="form-label m-0">Child Vendor</label>
+                    <span class="asterisk"> *</span>
+                    <ng-select class="dropdown-list-autocomplete" formControlName="child_vendor" name="child_vendor" id="child_vendor" (change)="selectChildVendor($event)">
+                        <ng-option value="">Select</ng-option>
+                        <ng-option *ngFor="let option of this.childVendorArray" [value]="option">{{option['vendorNumber']}}-{{option['name']}}</ng-option>
+                        <ng-option value="Not Applicable">Not Applicable</ng-option>
+                    </ng-select>
+                </div>
+
+                <div class="col-lg-4 col-md-4 col-xs-4 mt-2">
+                    <label for="" class="form-label m-0">Quantity Type</label>
+                    <span class="asterisk"> *</span>
+                    <ng-select class="dropdown-list-autocomplete" formControlName="quantity_type" name="quantity_type" id="quantity_type">
+                        <ng-option value="">Select</ng-option>
+                        <ng-option *ngFor="let option of this.quantityArray" [value]="option">{{option}}</ng-option>
+                    </ng-select>
+                </div>
+
+                <!-- <div class="col-lg-12 col-md-12 col-xs-12 mt-2" style="" *ngIf="!viewConditional"> -->
+                <div class="col-lg-12 col-md-12 col-xs-12 mt-2" *ngIf="action!='view'">
+                    <div class="my-1">
+                        <!-- <button type="submit" class="button-submit mx-0" [disabled]="!this.conditionalForm['valid'] || this.poGrnDetails.length==0" (click)="submitConditionalForm($event)">Validate</button> -->
+                        <button type="submit" class="button-submit mx-0" [disabled]="!this.conditionalForm['valid'] ||
+                                               this.selectedGRN.length==0 ||
+                                               !isActualPOVendorValid()" (click)="submitConditionalForm($event)">Validate</button>
+                        <!-- <button type="submit" class="button-submit mx-0" [disabled]="poGrnDetails.length==0" (click)="submitConditionalForm($event)">Submit</button> -->
+                        <button *ngIf="action!='edit'" type="button" class="button-back" (click)="resetconditionalForm()">Reset</button>
+                        </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="feature-card pb-1 mt-2" *ngIf="poGrnDetails.length>0">
+    <div class="w-100">
+        <div class="text-end px-3" title="Filter" (click)="$event.stopPropagation()">
+            <div class="" [ngStyle]="{'visibility': viewConditional?'hidden':''}">
+                <!-- <img src="../../../assets/svg/upload.svg" title="Upload Excel" (click)="uploadExcel.click()" style="height: 32px; width: 32px; padding: 0px 0px;"> -->
+                <!-- <input type="file" id="uploadExcel" #uploadExcel accept=".xlsx" (change)="uploadExcelFile($event)" style="display: none;" > -->
+                <!-- <img src=" ../../../assets/img/icons/excel.png" class="" alt="" title="Download Excel" style="height: 32px; width: 32px; padding:7px" (click)="downloadGRNExcelFile()"> -->
+                <!-- <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal" data-bs-target="#filterModal" style="height: 32px; width: 32px; padding: 7px;"> -->
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead class="data-grid-thead" style="vertical-align: middle;">
+                <tr>
+                    <th *ngIf="action=='create'" scope="col"><input class="" type="checkbox" [checked]=selectedAll [disabled]="viewConditional" value="" id="" (change)="checkAll($event)"></th>
+                    <th scope="col">GRN Posting Date</th>
+                    <!-- <th scope="col">Ref Number</th> -->
+                    <!-- <th scope="col">PO Number</th> -->
+                    <!-- <th scope="col">PO Item No.</th> -->
+                    <th scope="col">Material Desc</th>
+                    <th scope="col">IGP No</th>
+                    <th scope="col">Material Doc</th>
+                    <th scope="col">Gate Out Date</th>
+                    <!-- <th scope="col">Doc Item No.</th> -->
+                    <th scope="col">Vehicle Number</th>
+                    <!-- <th scope="col">Material Desc</th> -->
+                    <!-- <th scope="col">Conditional Type</th> -->
+                    <!-- <th scope="col">Conditional Desc</th> -->
+                    <!-- <th scope="col">Child Vendor</th> -->
+                    <!-- <th scope="col">Child Vendor Name</th> -->
+                    <th scope="col">Challan No.</th>
+                    <th scope="col">Challan Date</th>
+                    <th scope="col">LR No.</th>
+                    <th scope="col">LR Date</th>
+                    <th scope="col">Rate(Rs)</th>
+                    <th scope="col">Challan Qnty(MT)</th>
+                    <th scope="col">Actual(MT)</th>
+                    <th scope="col">GRN(MT)</th>
+                    <th scope="col">Lesser(MT)</th>
+                    <!-- <th scope="col">Amount</th> -->
+                </tr>
+            </thead>
+            <tbody *ngIf="poGrnDetails.length>0">
+                <tr *ngFor="let item of poGrnDetails">
+                    <td *ngIf="action=='create'" scope="row"><input class="form-check-input1" type="checkbox" [disabled]="item['disabled']" [checked]="item['checked']" id="" (change)="grnSelect($event, item)"></td>
+                    <td>{{item['date']}}</td>
+                    <!-- <td>{{item['refrenceDocNo']}}</td> -->
+                    <!-- <td>{{item['poNumber']}}</td> -->
+                    <!-- <td>{{item['purchaseOrderItemNo']}}</td> -->
+                    <td>{{item['materialDes']}}</td>
+                    <td>{{item['igpNo']}}</td>
+                    <td>{{item['materialDocumentNumber']}}</td>
+                    <td>{{item['gateOutDate']}}</td>
+                    <!-- <td>{{item['materialDocumentItemNumber']}}</td> -->
+                    <td>{{item['truckId']?item['truckId']:'-'}}</td>
+                    <!-- <td>{{item['materialDescription']}}</td> -->
+                    <!-- <td>{{item['conditionType']}}</td> -->
+                    <!-- <td>{{item['conditionDescription']}}</td> -->
+                    <!-- <td>{{item['childVendorCode']?item['childVendorCode']:'-'}}</td> -->
+                    <!-- <td>{{item['childVendorName']?item['childVendorName']:'-'}}</td> -->
+                    <td>{{item['challanNo']}}</td>
+                    <td>{{item['challanDate']}}</td>
+                    <td>{{item['lrNo']}}</td>
+                    <td>{{item['lrDate']}}</td>
+                    <td>{{item['rate']}}</td>
+                    <td>{{item['challanQty'] | number}}</td>
+                    <td>{{item['actualQty'] | number}}</td>
+                    <td>{{item['grnQty'] | number}}</td>
+                    <td>{{item['lesserQty'] | number}}</td>
+                    <!-- <td>{{item['amount']}}</td> -->
+                </tr>
+                <tr>
+                    <td *ngIf="action=='create'" colspan="12"></td>
+                    <td *ngIf="action!='create'" colspan="11"></td>
+                    <td>{{totalQnty['challan']}}</td>
+                    <td>{{totalQnty['actual']}}</td>
+                    <td>{{totalQnty['grn']}}</td>
+                    <td>{{totalQnty['lesser']}}</td>
+                </tr>
+                <!-- <tr>
+                    <td colspan="12" style="font-weight: 600; text-align: right;">Total :</td>
+                    <td> {{totalGRNAmount}} </td>
+                    <td> {{totalGRNQuantity | number}} </td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-content mb-4" *ngIf="poGrnDetails && poGrnDetails.length > 0">
+        <div class="pagination">
+            <button class="btn" (click)="prevPage()" [disabled]="currentPage == 1">&lt;</button>
+            <ng-container *ngFor="let page of visiblePages">
+                <button (click)="goToPage(page)" [class.active]="currentPage == page">{{ page }}</button>
+            </ng-container>
+            <button (click)="nextPage()" [disabled]="currentPage == totalPages">&gt;</button>
+            <label for="pageDropdown" class="pg-dp-label">Jump to </label>
+            <select class="form-select" id="pageDropdown" [value]="currentPage" (change)="onPageChange($event)" style="width: 100px;">
+                <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+            </select>
+        </div>
+
+        <div class="total">Total: <span>{{ apipoGrnDetails.length }}</span></div>
+    </div>
+</div>
+
+<!-- <div class="col-lg-12 col-md-12 col-xs-12 mt-2" style="margin-bottom: 25px;" *ngIf="!viewConditional">
+    <div class="my-3">
+        <button type="submit" class="button-submit mx-0" [disabled]="!conditionalForm['valid']"
+            (click)="submitConditionalForm($event)">Submit</button>
+        <button type="button" class="button-back" (click)="resetconditionalForm()">Reset</button>
+    </div>
+</div> -->
+
+<!-- Filter form-->
+<div class="modal right fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">Filter</h4>
+            </div>
+
+            <!-- <div class="modal-body">
+                <form [formGroup]="dynamicFilterForm">
+                    <div class="input-text-group">
+                        <label>Reference Number</label>
+                        <input type="text" placeholder="Enter Reference Number" (paste)="pasteApplyFilter()" formControlName="ref_number" class="input-text"/>
+                    </div>
+
+                    <div class="bt-section mt-5">
+                        <button class="button-back" data-bs-dismiss="modal" (click)="resetFilter()">Reset</button>
+                        <button class="button-submit" data-bs-dismiss="modal" (click)="applyFilter()">Submit</button>
+                    </div>
+                </form>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal for RefNum not found -->
+<button id="refNotFoundModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#refNotFoundModal">Open</button>
+<div class="modal fade" id="refNotFoundModal" data-bs-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-track" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2" style="font-weight: 600;">Alert</h6>
+            </div>
+
+            <div class="modal-body">
+                <div style="max-height: 200px; overflow-x: auto;">
+                    <p>Condition with this scenerio already created, Please check Condition Id {{checkExistCondition?.['conditionId']}}</p>
+                </div>
+                <div class="my-0 text-center">
+                    <button type="submit" class="button-submit" data-bs-toggle="modal" data-bs-target="#refNotFoundModal">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

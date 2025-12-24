@@ -1,0 +1,69 @@
+.submitBtn {
+  position: relative;
+}
+.aligns {
+  position: absolute;
+  top: -11px;
+  width: 60px;
+  height: 60px;
+  left: 133px;
+}
+.button-back {
+  position: relative;
+}
+.resetbtn {
+  position: relative;
+}
+.bill-form {
+  overflow: auto;
+  height: 500px;
+  @media (max-width: 767px) {
+    height: 80vh;
+  }
+}
+.feature-card {
+  background-color: #fff;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px -5px black;
+  text-align: -webkit-center;
+}
+.form-control {
+  height: 40px;
+  width: 100%;
+}
+.back-to-listing span {
+  font-size: large;
+  font-weight: bold;
+}
+.buttons {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.input-text-group {
+  margin-bottom: 1rem;
+}
+@media (max-width: 767px) {
+  .feature-card {
+    padding: 10px;
+    position: relative;
+    height: 93vh;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .input-text-group {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    margin-top: 10px;
+  }
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+    display: flex;
+    align-items: baseline;
+  }
+}

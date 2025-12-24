@@ -1,0 +1,567 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div class="bg-color"><!--  style="height: calc(100% - 60px);" --> <!-- style="height: 1000vh;" -->
+
+    <div class="">
+        <h5 class="">PO Invoice Action</h5>
+        <div class="">
+            <form [formGroup]="purchaseForm">
+
+                <div class="row">
+                    <mat-accordion>
+                        <mat-expansion-panel class="mt-2" [expanded]="true">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    PO Invoice
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0">Invoice Type</label>
+                                    <span class="asterisk"> *</span>
+                                    <select class="form-select" formControlName="invoice_type"
+                                        aria-label="Default select example">
+                                        <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                        <option value="Freight">Freight</option>
+                                        <option value="Non-PO">Non-PO</option>
+                                        <option value="Material">Material</option>
+                                        <option value="Service">Service</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0">PO Number</label>
+                                    <span class="asterisk"> *</span>
+                                    <div class="input-group mb-13">
+                                        <input type="text" class="form-control" formControlName="po_number"
+                                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                            placeholder="Enter PO Number" aria-label="po numner"
+                                            aria-describedby="basic-addon1">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0">Invoice Number</label>
+                                    <span class="asterisk"> *</span>
+                                    <input type="text" placeholder="Enter Invoice Number"
+                                        (keypress)="allowInvoiceChars($event)" formControlName="invoice_number"
+                                        onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                        class="form-control">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0">Invoice Date</label>
+                                    <span class="asterisk"> *</span>
+                                    <input type="date" formControlName="invoice_date" class="form-control"
+                                        [max]="currentDate" [value]="currentDate">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Amount As Per Invoice</label>
+                                    <span class="asterisk"> *</span>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon3"
+                                                style="font-size: 12px;">₹.</span>
+                                        </div>
+                                        <input type="text" placeholder="Enter Amount" formControlName="invoice_amount"
+                                            class="form-control" id="invoice_amount" aria-describedby="basic-addon3"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Total Amount As Per Line Items</label>
+                                    <span class="asterisk"> *</span>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon3"
+                                                style="font-size: 12px;">₹.</span>
+                                        </div>
+                                        <input type="text" placeholder="Enter Amount"
+                                            formControlName="invoice_amount_line" class="form-control"
+                                            id="invoice_amount" aria-describedby="basic-addon3"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3 d-flex justify-content-between">
+                                    <div class="">
+                                        <label for="" class="form-label m-0 mt-3">Company</label>
+                                        <span class="asterisk"> *</span>
+                                        <select class="form-select" value="" formControlName="company"
+                                            aria-label="Default select example">
+                                            <option value="choose" [selected]="true" disabled="true">Company</option>
+                                            <option value="IN10">ACC</option>
+                                            <option value="IN20">Ambuja</option>
+                                        </select>
+                                    </div>
+                                    <div class="">
+                                        <label for="" class="form-label m-0 mt-3">Currency</label>
+                                        <input type="text" placeholder="Currency" formControlName="currency"
+                                            class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Plant Code</label>
+                                    <input type="text" placeholder="Enter Plant Code" formControlName="plant_code"
+                                        class="form-control">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Department</label>
+                                    <select class="form-select" value="" formControlName="department"
+                                        aria-label="Default select example">
+                                        <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                        <option value="logistics">Logistics</option>
+                                        <option value="manufacturing">Manufacturing</option>
+                                        <option value="hr">HR</option>
+                                        <option value="it">IT</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Receiver GST Number</label>
+                                    <input type="text" placeholder="Enter Receiver GST Number"
+                                        onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                        formControlName="rece_gst_no" class="form-control">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Supplier GST Number</label>
+                                    <span class="asterisk"> *</span>
+                                    <input type="text" placeholder="Enter Supplier GST Number"
+                                        onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                        formControlName="supp_gst_no" class="form-control">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Child GST</label>
+                                    <span class="asterisk"> *</span>
+                                    <input type="text" placeholder="Child GST" formControlName="child_gst"
+                                        class="form-control" [readonly]="true">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Payment Mode</label>
+                                    <span class="asterisk"> *</span>
+                                    <select class="form-select" value="" formControlName="payment_mode"
+                                        aria-label="Default select example">
+                                        <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                        <option value="rtgs">RTGS</option>
+                                        <option value="neft">NEFT</option>
+                                        <option value="dd">DD</option>
+                                        <option value="cheque">Cheque</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Adani Contact Details</label>
+                                    <input type="text" placeholder="Enter Adani Contact Details"
+                                        formControlName="adani_contact" class="form-control"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Submission To</label>
+                                    <span class="asterisk"> *</span>
+                                    <select class="form-select" aria-label="Default select example" [value]=""
+                                        formControlName="submission_to">
+                                        <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                        <option *ngFor="let item of submissionArr" [value]=item.loginId>
+                                            {{item['employeeName']}}</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Payment Term To</label>
+                                    <input type="text" placeholder="Payment Term To" formControlName="payment_term"
+                                        class="form-control" [readonly]="true">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Uploaded Invoice PDF</label>
+                                    <span class="asterisk"> *</span>
+                                    <div class="input-group mb-0">
+                                        <p class="hint mt-1 d-inline float-end pointer"
+                                            *ngIf="this.editPurchaseData['invoiceAttachment']" data-toggle="tooltip"
+                                            title="View Attachement" (click)="viewAttachment()">View Uploaded Invoice
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label mt-3">Invoice Series Type</label>
+                                    <span class="asterisk"> *</span>
+                                    <select class="form-select" formControlName="series_type"
+                                        aria-label="Default select example">
+                                        <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                        <option value='labour'>Labour</option>
+                                        <option value='normal'>Normal</option>
+                                        <option value='urgent'>Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div
+                                    class="col-offset-lg-6 col-offset-md-6 col-offset-xs-6  col-lg-6 col-md-6 col-xs-6">
+                                    <label for="" class="form-label m-0 mt-3">Remarks</label>
+                                    <span class="asterisk"> *</span>
+                                    <textarea type="text" formControlName="remarks" placeholder="Enter Remarks"
+                                        class="form-control" rows="3"></textarea>
+                                    <span *ngIf="purchaseForm.get('remarks').hasError('maxlength')">Remarks exceeds max
+                                        256
+                                        character</span>
+                                </div>
+
+                                <div
+                                    class="col-offset-lg-6 col-offset-md-6 col-offset-xs-6  col-lg-6 col-md-6 col-xs-6">
+                                    <label for="" class="form-label m-0 mt-3">Reviewer Remarks</label>
+                                    <span class="asterisk"> *</span>
+                                    <textarea type="text" formControlName="reviewer_remarks"
+                                        placeholder="Enter Reviewer Remarks" class="form-control" rows="3"></textarea>
+                                    <span *ngIf="purchaseForm.get('remarks').hasError('maxlength')">Remarks exceeds max
+                                        256
+                                        character</span>
+                                </div>
+                            </div>
+
+                            <div class="row" style="display: none;">
+                                <div class="col-lg-2 col-md-2 col-xs-2">
+                                    <label for="" class="form-label mb-1 mt-3 d-block">Late Delivery Applicable</label>
+                                    <input type="radio" formControlName=""
+                                        class="form-check-input me-1"><span>Yes</span>
+                                    <input type="radio" formControlName=""
+                                        class="form-check-input ms-4 me-1"><span>NO</span>
+                                </div>
+
+                                <div class="col-lg-4 col-md-4 col-xs-4">
+                                    <label for="" class="form-label m-0 mt-3">Amount</label>
+                                    <input type="text" placeholder="Enter Amount" formControlName=""
+                                        class="form-control"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </div>
+
+                                <div class="col-lg-2 col-md-2 col-xs-2">
+                                    <label for="" class="form-label mb-1 mt-3 d-block">Retention Applicable</label>
+                                    <input type="radio" formControlName=""
+                                        class="form-check-input me-1"><span>Yes</span>
+                                    <input type="radio" formControlName=""
+                                        class="form-check-input ms-4 me-1"><span>NO</span>
+                                </div>
+
+                                <div class="col-lg-4 col-md-4 col-xs-4">
+                                    <label for="" class="form-label m-0 mt-3">Amount</label>
+                                    <input type="text" placeholder="Enter Amount" formControlName=""
+                                        class="form-control"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel class="mt-2">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title> PO Items </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <table class="table table-striped" *ngIf="items.length>0"><!--  -->
+                                <thead class="data-grid-thead">
+                                    <tr>
+                                        <th scope="col">
+                                            <!-- <input class="" type="checkbox" [checked]=selectedAll value="" id="" (change)="checkAll($event)"> -->
+                                        </th>
+                                        <!-- <th scope="col">Purchase Order Item No.</th> -->
+                                        <!-- <th scope="col">Item Description</th> -->
+                                        <th scope="col">Item No.</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Material Number</th>
+                                        <th scope="col">PLant Code</th>
+                                        <!-- <th scope="col">Unit Of Measurement</th> -->
+                                        <th scope="col">UoM</th>
+                                        <th scope="col">Net Price</th>
+                                        <th scope="col">Price Per Unit</th>
+                                        <th scope="col">Quantity</th>
+                                        <!-- <th scope="col">Quantity</th> -->
+                                        <th scope="col" *ngIf="contractNoExist">Contract Number</th>
+                                        <th scope="col" *ngIf="contractNoExist">Contract item Number</th>
+                                        <!-- <th scope="col">Package Number</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of items">
+                                        <td scope="row"><input class="form-check-input" type="checkbox" disabled
+                                                [checked]="item['checked']" id="" (change)="poSelect($event, item)">
+                                        </td>
+                                        <td>{{item['purchaseOrderItemNo']}}</td>
+                                        <td>{{item['itemDescription']}}</td>
+                                        <td>{{item['materialNumber']}}</td>
+                                        <td>{{item['plantCode']}}</td>
+                                        <td>{{item['unitOfMeasure']}}</td>
+                                        <td>{{item['netPrice']}}</td>
+                                        <!-- <td>{{item['netPrice'] | number:'0.2'}}</td> -->
+                                        <td>{{item['pricePerUnit']}}</td>
+                                        <td>{{item['quantity']}}</td>
+                                        <!-- <td>{{item['quantity']}}</td> -->
+                                        <td *ngIf="contractNoExist">{{item['contractNo']}}</td>
+                                        <td *ngIf="contractNoExist">{{item['contractItemNo']}}</td>
+                                        <!-- <td>{{item['packageNo']}}</td> -->
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-xs-12 mt-3">
+                                    <table class="table table-striped1 data-grid po-items"
+                                        *ngIf="items.length>0 && selectedItemsArr.length>0">
+                                        <thead class="data-grid-thead">
+                                            <tr>
+                                                <th scope="col">Purchase Order Item No.</th>
+                                                <th scope="col">Description</th>
+                                                <!-- <th scope="col">HSN / SAC Code</th> -->
+                                                <th scope="col">Quantity</th>
+                                                <th scope="col">Rate</th>
+                                                <th scope="col">Net Amount</th>
+                                                <!-- <th scope="col">Tax</th> -->
+                                                <th scope="col">Gross Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let item of selectedItemsDataArr">
+                                                <!-- <td scope="row"><input class="form-check-input" type="checkbox" [checked]="item['checked']" id="" (change)="poSelect($event, item)"></td> -->
+                                                <td><input type="text" [value]="item['purchaseOrderItemNo']" readonly
+                                                        disabled></td>
+                                                <td>{{item['itemDescription']}}</td>
+                                                <!-- <td><input type="text" [value]="item['hsnCode']" readonly disabled onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"></td> -->
+                                                <td><input type="text" [value]="item['quantity']" readonly disabled
+                                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                                </td>
+                                                <td><input type="text" [value]="item['netPrice']" readonly disabled
+                                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                                </td>
+                                                <td><input type="text" [value]="item['netAmount']" readonly disabled>
+                                                </td>
+                                                <!-- <td><input type="text" [value]="item['tax']" readonly disabled></td> -->
+                                                <td><input type="text" [value]="item['grossAmount']" readonly disabled>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+
+                        <mat-expansion-panel class="mt-2">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <!-- GRN -->
+                                    <div class="w-100">
+                                        <label for="" class="form-label m-0 mt-1" style="font-weight: 100;">GRN</label>
+                                        <div class="fliter icon-border" style="display: inline; float: right;"
+                                            title="Filter" (click)="$event.stopPropagation()">
+                                            <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal"
+                                                style="height: 29px; width: 29px; padding: 7px;">
+                                        </div>
+                                    </div>
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="table-responsive" id="htmlData">
+                                <table class="table table-striped">
+                                    <thead class="data-grid-thead" style="vertical-align: middle;">
+                                        <tr>
+                                            <th scope="col"><input class="" type="checkbox" [checked]=selectedAll
+                                                    value="" id="" (change)="checkAll($event)"></th>
+                                            <!-- <th scope="col">Document Date</th>
+                                        <th scope="col">Purchase Order Item Number</th>
+                                        <th scope="col">Material Document Fiscal Year</th>
+                                        <th scope="col">Material Document Number</th>
+                                        <th scope="col">Material Document Item Number</th>
+                                        <th scope="col">Vehicle Number</th>
+                                        <th scope="col">Material Number</th>
+                                        <th scope="col">Material Description</th>
+                                        <th scope="col">Plant Code</th> -->
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Ref Number</th> <!-- <img src="../../../assets/img/vendor-filter.png" class="filter-icon" data-bs-toggle="modal"
+                                            data-bs-target="#filterModal"> -->
+                                            <th scope="col">PO Item Number</th>
+                                            <th scope="col">Fiscal Year</th>
+                                            <th scope="col">Doc Number</th>
+                                            <th scope="col">Doc Item Number</th>
+                                            <!-- <th scope="col">Vehicle Number</th> -->
+                                            <th scope="col">Material Number</th>
+                                            <th scope="col">Material Desc</th>
+                                            <th scope="col">Plant Code</th>
+                                            <th scope="col">Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- <tr *ngFor="let item of siteTable">
+                                        <td scope="row"><input class="form-check-input" type="checkbox" [checked]="item['checked']" id="" (change)="siteselect($event, item)"></td>
+                                        <td>{{item['item_no']}}</td>
+                                        <td>{{item['vehicle_no']}}</td>
+                                        <td>{{item['material_desc']}}</td>
+                                        <td>{{item['weight']}}</td>
+                                        <td>{{item['document_date']}}</td>
+                                    </tr> -->
+                                        <tr *ngFor="let item of poGrnDetails">
+                                            <td scope="row"><input class="form-check-input1" type="checkbox"
+                                                    [disabled]="item['disabled']" [checked]="item['checked']" id=""
+                                                    (change)="grnSelect($event, item)"></td>
+                                            <td>{{item['documentDate']}}</td>
+                                            <td>{{item['refInvoiceNumber']}}</td>
+                                            <!-- <td>{{item['materialDocumentItemNumber']}}</td> -->
+                                            <td>{{item['purchaseOrderItemNo']}}</td>
+                                            <td>{{item['materialDocumentFiscalYear']}}</td>
+                                            <td>{{item['materialDocumentNumber']}}</td>
+                                            <td>{{item['materialDocumentItemNumber']}}</td>
+                                            <!-- <td>{{item['vehicleNumber']}}</td> -->
+                                            <td>{{item['materialNumber']}}</td>
+                                            <td>{{item['materialDescription']}}</td>
+                                            <td>{{item['plantCode']}}</td>
+                                            <td>{{item['quantity'] | number}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="10" style="font-weight: 600; text-align: right;">Total Quantity
+                                                :</td>
+                                            <!-- <td> {{totalGRNQuantity | number: '1.0'}} </td> -->
+                                            <td> {{totalGRNQuantity | number}} </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="pagination-content mb-4" *ngIf="poGrnDetails && poGrnDetails.length > 0">
+                                <div class="pagination">
+                                    <button class="btn" (click)="prevPage()" [disabled]="currentPage == 1">&lt;</button>
+                                    <ng-container *ngFor="let page of visiblePages">
+                                        <button (click)="goToPage(page)" [class.active]="currentPage == page">{{ page
+                                            }}</button>
+                                    </ng-container>
+                                    <button (click)="nextPage()" [disabled]="currentPage == totalPages">&gt;</button>
+
+
+                                    <label for="pageDropdown" class="pg-dp-label">Jump to </label>
+                                    <select class="form-select" id="pageDropdown" [value]="currentPage"
+                                        (change)="onPageChange($event)" style="width: 100px;">
+                                        <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                                    </select>
+                                </div>
+
+                                <!-- <div class="total">Total: <span>{{ apipoGrnDetails.length }}</span></div> -->
+                                <div class="total">Total: <span>{{ filterGrnDetails.length }}</span></div>
+                            </div>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+
+                    <div class="col-lg-12"
+                        *ngIf="editPurchaseData.status=='pending' || editPurchaseData.status=='onhold'">
+                        <div class="mt-3 d-flex" style="margin-bottom: 50px;">
+                            <button type="button" class="button-submit button-action me-3"
+                                (click)="siteOrderAction('accept')"
+                                [disabled]="!purchaseForm.valid"><span>Accept</span><img
+                                    src="../../../assets/svg/accept.svg"></button>
+                            <button type="button" class="button-back button-action reject"
+                                (click)="siteOrderAction('reject')"><span>Reject</span><img
+                                    src="../../../assets/svg/reject.svg"></button>
+                            <button type="button" class="button-back button-action hold"
+                                (click)="siteOrderAction('onhold')"><span>On Hold</span><img
+                                    src="../../../assets/svg/onhold.svg"></button>
+                            <button type="button" class="button-back button-action sent"
+                                (click)="siteOrderAction('sent-back')"><span>Send Back</span><img
+                                    src="../../../assets/svg/sentback.svg"></button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<button id="confirmModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#confirmModal">Open Confirm
+    Modal</button>
+<!-- Confirmation Modal -->
+<div class="modal fade close" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-confirm" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <p class="modal-title" id="myModalLabel2"><span>Alert</span></p>
+            </div>
+
+            <div class="modal-body text-center">
+                <p>{{confirmModalMessage}}</p>
+                <div class="my-1">
+                    <button type="submit" class="button-submit w-25" data-bs-toggle="modal"
+                        data-bs-target="#confirmModal" (click)="submitSiteController($event)">Yes</button>
+                    <button type="button" class="button-back w-25" data-bs-toggle="modal"
+                        data-bs-target="#confirmModal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<button id="barcodeModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#barcodeModal">Open Barcode
+    Modal</button>
+<!-- Barcode Modal -->
+<div class="modal fade" id="barcodeModal" data-bs-backdrop="static" tabindex="-1" role="dialog"> <!-- class="right" -->
+    <div class="modal-dialog modal-track" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel2">Barcode</h5>
+            </div>
+
+            <div class="modal-body">
+                <p>Barcode Number</p>
+                <p class="barcode_number">{{barcodeValue}}</p>
+                <p class="barcode_message">Barcode Number Has Been Successfully Generated</p>
+                <div class="my-1 text-center">
+                    <button type="submit" class="button-submit" data-bs-toggle="modal" data-bs-target="#barcodeModal"
+                        (click)="redirectToDashboard()">Ok</button>
+                    <!-- <button type="button" class="button-back" data-bs-toggle="modal" data-bs-target="#barcodeModal">Cancel</button> -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Filter -->
+<div class="modal right fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">Filter</h4>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="dynamicFilterForm">
+
+                    <div class="input-text-group">
+                        <label>Reference Number</label>
+                        <input type="text" placeholder="Enter Reference Number" formControlName="ref_number"
+                            class="input-text" />
+                    </div>
+
+                    <div class="bt-section mt-5">
+                        <button class="button-back" data-bs-dismiss="modal" (click)="resetFilter()">Reset</button>
+                        <button class="button-submit" data-bs-dismiss="modal" (click)="applyFilter()">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

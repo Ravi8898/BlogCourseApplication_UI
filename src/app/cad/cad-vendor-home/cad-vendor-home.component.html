@@ -1,0 +1,167 @@
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+
+            <div class="bd-tab-content">
+                <div class="bd-tab-content-inner">
+                    <p class="page-heading">Welcome to vSPEED</p>
+                    <button type="button" class="button-submit" data-bs-toggle="modal"
+                        data-bs-target="#chooseModal">Upload Invoice</button><!-- (click)="navigateToPurchase()" -->
+
+                </div>
+                <div class="d-flex mb-2">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-center">
+                            <!-- Tabs Section -->
+                            <div class="tabs">
+                                <div class="tab fw-bold" [class.active]="activeTab === 'tab1'">
+                                    <div (click)="activateTab('tab1')">
+                                        Invoice</div>
+                                </div>
+                                <div class="tab fw-bold" [class.active]="activeTab === 'tab2'">
+                                    <div (click)="activateTab('tab2')">
+                                        Retention Release / SCC</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content">
+                    <div *ngIf="activeTab == 'tab1'">
+
+                        <app-ad-table-ng [title]="'Invoice List'" [columns]="columns_cjpc" [tableData]="invoiceList"
+                            (goToEditing)="VendorHistory($event)" (goToDocument)="VendorDocument($event)"
+                            (goToViewPage)="viewCreditNote($event)">
+                        </app-ad-table-ng>
+                    </div>
+                    <div *ngIf="activeTab == 'tab2'">
+                        <app-ad-table-ng [title]="'Retention Release / Site Clearance Certificate (SCC)'"
+                            [columns]="columns_release" [tableData]="retentionList" (iconClick)="rowClick($event)">
+                        </app-ad-table-ng>
+                    </div>
+                    <div style="height: 50px;"> </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<app-custom-modal *ngIf="isAddHistoryModelOpen" (onClickCross)="closeHistoryModal()" [title]="'Tracking'"
+    class="history-modal">
+    <app-tracking-timeline [invoiceId]="InvoiceID"></app-tracking-timeline>
+</app-custom-modal>
+<!-- <app-custom-modal *ngIf="isAddDocumentModelOpen" (onClickCross)="closeDocumentModal()" [title]="'Document'"
+    class="history-modal">
+    <img src="../../../assets/img/document.png" alt="">
+</app-custom-modal> -->
+<app-custom-modal *ngIf="isAddDocumentModelOpen" (onClickCross)="closeDocumentModal()"
+    (closeModal)="closeDocumentModal()" [title]="'Document'" class="history-modal">
+    <div *ngIf="!isLoader">
+        <ngx-extended-pdf-viewer [base64Src]="base64String" [textLayer]="true"></ngx-extended-pdf-viewer>
+    </div>
+
+    <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </div>
+
+</app-custom-modal>
+<app-custom-modal *ngIf="isCreditNoteModelOpen" (onClickCross)="closeCreditNoteModal()" [title]="'Attach Credit Note'"
+    class="credit-note-modal">
+    <div class="row">
+        <div class="col-6">
+            <label for="Recovery">Recovery For</label>
+            <ng-select class="dropdown-list-autocomplete" [items]="recoveryOptions" bindLabel="recoverytypename"
+                bindValue="recoveryid" [(ngModel)]="selectedRecoveryOption" id="Recovery" placeholder="Select Recovery"
+                (change)="onRecoveryChange($event)">
+            </ng-select>
+        </div>
+
+        <div class="col-6 mb-3">
+            <label for="RecoveryAmount">Recovery Amount</label>
+            <div class="input-group">
+                <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                <input type="text" class="form-control lh-lg" id="RecoveryAmount" maxlength="18"
+                    placeholder="Enter Recovery Amount" appIndianCurrency readonly [(ngModel)]="recoveryAmount" />
+            </div>
+        </div>
+    </div>
+    <div>
+        <app-file-upload [label]="'Upload Credit Note'" [isRequired]="true" [allowedFormats]="'.pdf'"
+            [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)"></app-file-upload>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex mt-4">
+                <button *ngIf="!isLoader" type="button" id="bt_approve" class="button-submit button-left"
+                    (click)="attachCreditNote()">
+                    <span class="ps-5"> Submit</span>
+                    <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                        class="left-arrow" />
+                </button>
+                <button *ngIf="isLoader" type="button" id="bt_approve" class="button-submit button-left" disabled>
+                    <span class="ps-5"> Loading...</span>
+                    <span class="spinner-border spinner-border-sm text-white ms-2" role="status"
+                        aria-hidden="true"></span>
+                </button>
+                <button type="button" id="bt_reject" class="button-back button-left" (click)="closeCreditNoteModal()">
+                    <span class="ps-5"> Cancel</span>
+                    <img alt="" src="../../../assets/svg/reject.svg" style="margin-left: -31px" class="left-arrow" />
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="mt-4">
+            <app-simple-table [title]="'Credit Note History'" [columns]="columns_creditnote"
+                [tableData]="creditNoteList">
+            </app-simple-table>
+        </div>
+    </div>
+
+</app-custom-modal>
+
+<!-- Choose Modal -->
+<div class="modal right fade" id="chooseModal" tabindex="-1" role="dialog" aria-labelledby="chooseModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document" style="width: 400px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2">CHOOSE</h6>
+            </div>
+
+            <div class="modal-body">
+                <div class="options">
+                    <p class="" data-bs-toggle="modal" (click)="navigateToPurchase()">Invoice</p>
+                </div>
+                <!-- <div class="options">
+                    <p class="coming" data-bs-toggle="modal" data-bs-target="#comingModal">Coming Soon</p>
+                    <p class="" data-bs-toggle="modal" data-bs-target="#comingModal">Credit note with Reference</p>
+                </div> -->
+                <div class="options">
+                    <p class="coming">Coming Soon...</p>
+                    <p class="">Credit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon...</p>
+                    <p class="">Credit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon...</p>
+                    <p class="">Debit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon...</p>
+                    <p class="">Debit note without Reference</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-retention-release [retentionReleaseModal]="retentionReleaseModal" [retentionId]="retentionId"
+    (closeModal)="closeRetentionModal($event)"></app-retention-release>

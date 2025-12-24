@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-12">
+        <p class="page-heading">Invoice</p>
+
+        <div>
+            <app-ad-table-ng [title]="'Invoice List'" [columns]="columns_invoice" [tableData]="data_invoice"
+                (iconClick)="handleIconClick($event.columnName, $event.rowData)">
+
+            </app-ad-table-ng>
+
+            <div *ngIf="isLoader" id="ad-Table" class="loading">
+            </div>
+        </div>
+    </div>
+</div>

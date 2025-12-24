@@ -1,0 +1,158 @@
+<div class="row">
+    <div class="col-12">
+
+        <div class="row">
+
+            <div class="">
+                <div class="bd-tab-content">
+                    <div class="bd-tab-content-inner space-between">
+                        <p class="page-heading">Contract Details</p>
+
+                    </div>
+                    <div class="tab-content">
+                        <ng-container>
+                            <div class="feature-card">
+
+                                <div class="project">
+                                    <h1 class="">Contract Information</h1>
+                                    <div class="project-card-text row">
+                                        <div class="project-card col-2">
+                                            <p><strong>WO Number</strong></p>
+                                            <p>{{constractDetails?.contractnumber }}</p>
+                                        </div>
+
+                                        <div class="project-card col-2">
+                                            <p><strong>Company</strong></p>
+                                            <p> {{ constractDetails?.companyname}}</p>
+                                        </div>
+
+                                        <div class="project-card col-2">
+                                            <p><strong>Plant </strong></p>
+                                            <p> {{ constractDetails?.plantname }}</p>
+
+                                        </div>
+                                        <div class="project-card col-2">
+
+                                            <p><strong>Vendor Code</strong></p>
+                                            <p> {{ constractDetails?.vendorcode }}</p>
+
+                                        </div>
+                                        <div class="project-card col-2 ">
+                                            <p><strong>Vendor Name</strong></p>
+                                            <p>{{ constractDetails?.vendorname}}</p>
+
+
+                                        </div>
+                                        <div class="project-card col-2 ">
+                                            <p><strong>WBS No./Cast Center </strong></p>
+                                            <p> {{ constractDetails?.costcenter }}</p>
+                                        </div>
+
+                                        <div class="project-card col-2">
+                                            <p><strong>WBS /CC Description /Project Name & Location</strong></p>
+                                            <p>{{ constractDetails?.wbsccprojectname}}</p>
+
+
+                                        </div>
+                                        <div class="project-card col-2">
+                                            <p><strong>Package</strong></p>
+                                            <p> {{ constractDetails?.contractpackage }}</p>
+
+                                        </div>
+
+                                        <div class="project-card col-2">
+                                            <p><strong>TDS %</strong></p>
+                                            <p> {{ constractDetails?.tds }}</p>
+
+                                        </div>
+                                        <div class="project-card col-2">
+                                            <p><strong>Contract Start Date</strong></p>
+                                            <p>{{ constractDetails?.contractdate | date:'dd-MMM-yyyy'}}</p>
+
+                                        </div>
+                                        <div class="project-card col-2">
+                                            <p><strong>Value</strong></p>
+                                            <p>{{ constractDetails?.contractvalue | indianCurrency }}</p>
+
+                                        </div>
+                                        <div class="project-card col-2">
+                                            <p><strong>Currency</strong></p>
+                                            <p> {{ constractDetails?.currencycode ? constractDetails?.currencycode
+                                                :'--'}}</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <hr />
+
+
+                                <div class="project">
+                                    <div class="project-card-text row">
+                                        <div class="project-card col-2">
+                                            <p><strong>Last Amended Contract/ WO Value</strong></p>
+                                            <p> {{ constractDetails?.amendmentvalue | indianCurrency}}</p>
+                                        </div>
+                                        <div class="project-card col-2">
+                                            <p><strong>Date Of Last ADMT. </strong></p>
+                                            <p
+                                                [ngClass]="{ 'red-highlight':LastAmndDate_clr == 'red-highlight','orange-highlight':LastAmndDate_clr == 'orange-highlight','yellow-highlight': LastAmndDate_clr == 'yellow-highlight' ,'blink-background' :  blink_LastAmndDate }">
+                                                {{ constractDetails?.LastAmndDate | date:'dd-MMM-yyyy' }}</p>
+
+                                        </div>
+
+                                        <div class="project-card col-2 ">
+                                            <p><strong>Original Completion Date</strong></p>
+                                            <p
+                                                [ngClass]="{ 'red-highlight':OriginalDate_clr == 'red-highlight','orange-highlight':OriginalDate_clr == 'orange-highlight','yellow-highlight': OriginalDate_clr == 'yellow-highlight' ,'blink-background' :  blink_OriginalDate }">
+                                                {{ constractDetails?.ogCompletionDate | date:'dd-MMM-yyyy'}}</p>
+                                        </div>
+
+                                        <div class="project-card col-2 ">
+                                            <p><strong>Last Amended Completion Date</strong></p>
+                                            <p
+                                                [ngClass]="{ 'red-highlight':ActualComDate_clr == 'red-highlight','orange-highlight':ActualComDate_clr == 'orange-highlight','yellow-highlight': ActualComDate_clr == 'yellow-highlight' ,'blink-background' :  blink_ActualComDate }">
+                                                {{constractDetails?.lastAmndCompletionDate | date:'dd-MMM-yyyy'}}</p>
+                                        </div>
+
+                                        <div class="project-card col-2">
+                                            <p><strong>Vendor GSTN (From SAP)</strong></p>
+                                            <p>{{ constractDetails?.vendorgstn }}</p>
+                                        </div>
+
+                                        <div class="project-card col-2">
+                                            <p><strong>Client GSTN</strong></p>
+                                            <p> {{ constractDetails?.clientgstn }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="feature-card mt-4">
+                                <div class="project">
+                                    <app-work-order-advance></app-work-order-advance>
+                                </div>
+                            </div>
+
+                            <div class="feature-card mt-4">
+                                <div class="project">
+                                    <app-work-order-clause></app-work-order-clause>
+                                </div>
+                            </div>
+
+                            <div class="feature-card mt-4">
+                                <div class="project">
+                                    <app-statutory-compliance></app-statutory-compliance>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

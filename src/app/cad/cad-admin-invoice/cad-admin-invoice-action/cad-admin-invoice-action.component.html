@@ -1,0 +1,367 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<div class="row">
+  <div class="col-12">
+    <p class="page-heading">Invoice</p>
+
+    <div>
+      <div class="row">
+        <div class="col-12 mt-4 d-flex align-items-stretch">
+          <div class="feature-card w-100">
+
+            <form [formGroup]="billForm">
+              <div class="row">
+                <div class="col-12">
+                  <div>
+                    <h1 class="project-h1">BILL DETAILS</h1>
+                    <hr>
+                    <div class="row">
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Bill Type </label> <span class="asterisk"> *</span>
+                        <select class="form-select" formControlName="billType" (change)="invoiceCategorySelect($event)">
+                          <option value="">Select Bill Type</option>
+                          <option *ngFor="let item of optionInvoiceCategory" [value]="item.billInvoiceTypeId">
+                            {{item.invoiceTypeName}}</option>
+                        </select>
+                        <div *ngIf="billForm.controls['billType'].invalid && billForm.controls['billType'].touched"
+                          class="text-danger">
+                          Bill Type is required.
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Bill Number</label> <span class="asterisk"> *</span>
+                        <input type="text" class="form-control" placeholder="Enter Bill Number"
+                          formControlName="billNumber">
+                        <div *ngIf="billForm.controls['billNumber'].invalid && billForm.controls['billNumber'].touched"
+                          class="text-danger">
+                          Bill Number is required.
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Invoice Period Start Date</label> <span class="asterisk"> *</span>
+                        <input type="date" class="form-control" formControlName="invoicePeriodStart">
+                        <div
+                          *ngIf="billForm.controls['invoicePeriodStart'].invalid && billForm.controls['invoicePeriodStart'].touched"
+                          class="text-danger">
+                          Start Date is required.
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Invoice Period End Date</label> <span class="asterisk"> *</span>
+                        <input type="date" class="form-control" formControlName="invoicePeriodEnd">
+                        <div
+                          *ngIf="billForm.controls['invoicePeriodEnd'].invalid && billForm.controls['invoicePeriodEnd'].touched"
+                          class="text-danger">
+                          End Date is required.
+                        </div>
+                        <div *ngIf="billForm.errors?.['dateInvalid']" class="text-danger">
+                          End date cannot be before the start date.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Contractor's Bill Ref.</label> <span class="asterisk"> *</span>
+                        <input type="text" class="form-control" placeholder="Enter Bill Ref" formControlName="billRef">
+                        <div *ngIf="billForm.controls['billRef'].invalid && billForm.controls['billRef'].touched"
+                          class="text-danger">
+                          Bill Reference is required.
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Dated</label> <span class="asterisk"> *</span>
+                        <input type="date" class="form-control" formControlName="dated">
+                        <div *ngIf="billForm.controls['dated'].invalid && billForm.controls['dated'].touched"
+                          class="text-danger">
+                          Date is required.
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Invoice Amount</label> <span class="asterisk"> *</span>
+                        <div class="input-group">
+                          <span class="input-group-text">₹</span>
+                          <input type="text" class="form-control" placeholder="Enter Amount"
+                            formControlName="invoiceAmount" appIndianCurrency readonly>
+                        </div>
+                        <div
+                          *ngIf="billForm.controls['invoiceAmount'].invalid && billForm.controls['invoiceAmount'].touched"
+                          class="text-danger">
+                          <span *ngIf="billForm.controls['invoiceAmount'].errors?.['required']">Invoice Amount is
+                            required.</span>
+                          <span *ngIf="billForm.controls['invoiceAmount'].errors?.['pattern']">Only numbers are
+                            allowed.</span>
+                        </div>
+                        <div *ngIf="billForm.errors?.['invalidAmount']" class="mt-1 text-danger">
+                          <b>Invoice Amount</b> should be same as <b>Amount As Per Line Items </b>
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3" *ngIf="invoiceTypeId == '1'">
+                        <label class="form-label">Amount As Per Line Items</label> <span class="asterisk"> *</span>
+                        <div class="input-group">
+                          <span class="input-group-text">₹</span>
+                          <input type="text" class="form-control" placeholder="Enter Amount"
+                            formControlName="amountAsPerLineItems" appIndianCurrency readonly>
+                        </div>
+                        <div
+                          *ngIf="billForm.controls['amountAsPerLineItems'].invalid && billForm.controls['amountAsPerLineItems'].touched"
+                          class="text-danger">
+                          Amount is required.
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Complete Bill Rect. Date</label> <span class="asterisk"> *</span>
+                        <input type="date" class="form-control" formControlName="billReceiptDate">
+                        <div
+                          *ngIf="billForm.controls['billReceiptDate'].invalid && billForm.controls['billReceiptDate'].touched"
+                          class="text-danger">
+                          Bill Receipt Date is required.
+                        </div>
+                      </div>
+                      <div class="col-lg-3 col-md-3">
+                        <label class="form-label">Payment Due Time & Date</label>
+                        <input type="text" class="form-control" formControlName="paymentDueDate">
+                      </div>
+                      <!-- <div class="col-lg-3 col-md-3">
+                                        <label class="form-label">SES / DPR No.</label>
+                                        <input type="text" class="form-control" formControlName="sesDprNo" >
+                                      </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div>
+          <div class="acordion-item">
+            <div class="vertical-line" [style.height]="'100%'"></div>
+            <div *ngFor="let panel of panels; let i = index" class="feature-card accordion-header mt-4">
+              <div (click)="togglePanel(panel)">
+                <a href="javascript:void(0)">
+                  <div class="space-between align-items-center">
+                    <label>{{ panel.title }}</label>
+
+                    <div style="height: 35px; width: 35px;">
+                      <img src="../../../assets/img/down-arrow-circle.png" alt="" *ngIf="!panel.isOpen" />
+                      <img src="../../../assets/svg/up-arrow-circle.svg" alt="" *ngIf="panel.isOpen" />
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+
+              <div *ngIf="panel.isOpen && panel.title == 'PO Items'" class="mb-4">
+                <hr>
+                <app-po-items [poItems]="poItems"></app-po-items>
+              </div>
+              <div *ngIf="panel.isOpen && panel.title == 'Documents'" class="">
+                <hr>
+                <div class="row">
+                  <div class="col-12">
+                    <div class="d-flex ">
+                      <span style="margin-right: 20px;">
+                        <label for="" class="form-label m-0">Invoice PDF</label>
+                        <!-- <span class="asterisk"> *</span> -->
+                        <button type="button" id="bt_reject" class="button-view " (click)="openInvoiceDocumentModal()">
+                          <span>View Document</span>
+                        </button>
+                      </span>
+                      <span>
+                        <label for="" class="form-label m-0">Supported Document</label>
+                        <!-- <span class="asterisk"> *</span> -->
+                        <button type="button" id="bt_reject" class="button-view " (click)="rowAction()">
+                          <span>View Document</span>
+                        </button>
+                      </span>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+          <div *ngIf="isLoader" id="ad-Table" class="loading">
+          </div>
+        </div>
+        <div class="col-12 d-flex align-items-stretch" *ngIf="invoiceTypeId == '1' || invoiceTypeId == '2'">
+          <div class="feature-card w-100" style="padding: 8px !important;">
+            <button *ngIf="!isLoader" type="button" id="bt_approve" class="button-left button-generate m-0"
+              [disabled]="isSESGenerated || status !== 'Pending' " (click)="generateSES()">
+              <span class="ps-5">Generate SES</span>
+              <img alt="" src="../../../assets/svg/right-arrow-blue.svg" class="left-arrow" />
+            </button>
+            <button *ngIf="isLoader" class="button-generate m-0" type="button" disabled>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Loading...
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isSESGenerated" class="col-12 d-flex align-items-stretch mt-4">
+          <div class="feature-card w-100" style="padding: 8px !important;">
+            <p class="page-heading mb-0">SES</p>
+            <hr>
+
+            <app-simple-table [tableData]="poSesDetails" [columns]="simpleTableColumns"></app-simple-table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="mt-4">
+              <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex mt-4">
+          <button *ngIf="!isLoader" type="button" id="bt_approve"
+            [disabled]="(!isSESGenerated && (invoiceTypeId == '1' || invoiceTypeId == '2' ) )  || isLoader ||status !== 'Pending'"
+            class="button-submit button-left me-3" (click)="setCJPCStatus('Created')">
+            <span class="ps-5">Accept</span>
+            <img alt="" src="../../../assets/svg/accept.svg" style="margin-left: -33px" class="left-arrow" />
+          </button>
+
+          <!-- Temp.: Remove isSESGenerated condition -->
+          <!-- <button *ngIf="!isLoader" type="button" id="bt_approve" [disabled]=" isLoader ||status !== 'Pending'"
+            class="button-submit button-left me-3" (click)="setCJPCStatus('Created')" data-toggle="tooltip" title="Temporary Enable Accept Button">
+            <span class="ps-5">Accept</span>
+            <img alt="" src="../../../assets/svg/accept.svg" style="margin-left: -33px" class="left-arrow" />
+          </button> -->
+
+          <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+
+          <button type="button" id="bt_next" class="button-reject button-left me-3" style="margin-left: 20px;"
+            (click)="setCJPC('Reject')" data-bs-toggle="" data-bs-target=""
+            [disabled]="isSESGenerated ||isLoader || status !== 'Pending'">
+            <span class="">Reject</span><img src="assets/svg/white-bg-cancel.svg" style="margin-left: -33px"
+              class="left-arrow">
+          </button>
+          <!-- <button type="button" id="bt_next"  [disabled]="isSESGenerated ||isLoader ||status !== 'Pending'" class="button-back-black" data-bs-toggle=""
+            (click)="setCJPC('Send Back')">
+            <span class="">Send Back</span><img src="assets/svg/back-black.svg" class="icon-right">
+          </button> -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-custom-modal *ngIf="openDocumentListModal" [title]="'Supported Documents'"
+  (onClickCross)="openDocumentListModal =false" class="recoveries-modal">
+  <ng-container *ngIf="recoveryDocuments.length > 0">
+    <ng-container *ngFor="let item of recoveryDocuments">
+      <div class="row">
+        <div class="col-12 space-between-center m-1">
+          <div class="col-11">
+            <label><b>{{item?.documentname}}</b></label>
+          </div>
+          <div class="col-1">
+            <a href="javascript:void(0)" (click)="onViewDocument(item?.location)">
+              <img src="assets/svg/eye.svg" alt="Download" style="height: 30px;width: 30px;">
+            </a>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+  </ng-container>
+  <div *ngIf="recoveryDocuments.length==0">
+    <div class="row noRecond">
+      <div class="col">
+        <h3>No Documents found</h3>
+      </div>
+    </div>
+  </div>
+
+</app-custom-modal>
+
+<app-custom-modal *ngIf="docViewModelOpen" (onClickCross)="docViewModelOpen = false" [title]="'View Document'"
+  class="doc-vew-modal">
+
+  <div class="row">
+    <div class="col-12" *ngIf="bash64String && !isLoader">
+      <ngx-extended-pdf-viewer *ngIf="!isLoader" [base64Src]="bash64String" height="100%" [textLayer]="true"
+        [showDownloadButton]="false" [showPrintButton]="false" [showPagingButtons]="false"
+        [showPresentationModeButton]="false" [showOpenFileButton]="false"
+        [showBorders]="true"></ngx-extended-pdf-viewer>
+
+    </div>
+    <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Loading...
+    </div>
+    <div *ngIf="bash64String == '' && !isLoader">
+      <div class="row noRecond">
+        <div class="col">
+          <h3>No Document found</h3>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</app-custom-modal>
+
+
+<app-custom-modal *ngIf="remarkModal" (onClickCross)="closeRemarkModal()"
+  [title]=" status == 'Reject'? 'Reject Remarks' :'Send Back Remarks'" class="doc-vew-modal">
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="remarksForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group mt-2">
+              <label for="remark">Remark</label>
+              <label class="asterisk">*</label>
+              <textarea type="text" formControlName="remarks" [(ngModel)]="document_remarks" class="form-control"
+                id="remark" maxlength="2000" rows="6" placeholder="Enter Remark"
+                (input)="updateCharCount_Document()"></textarea>
+              <small>{{charCount}} / 2000</small>
+              <span id="remarkDoc_error" class="text-danger"
+                *ngIf="(remarksForm.get('remarks')?.touched) && remarksForm.get('remarks')?.errors?.['required']">
+                Remark is required
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="mt-4">
+                <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex justify-content-start mt-4">
+              <button type="button" id="bt_approve" [disabled]="isLoader" class="button-submit button-left me-3"
+                (click)="setCJPCStatus(this.status)">
+                <span class="ps-5">Submit</span>
+                <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+              </button>
+              <button type="button" id="bt_reject" [disabled]="isLoader" class="button-back button-left"
+                (click)="resetRemarks()">
+                <span class="ps-4">Reset</span>
+                <img alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+              </button>
+
+            </div>
+          </div>
+        </div>
+      </form>
+      <hr />
+    </div>
+  </div>
+</app-custom-modal>
+
+<div style="height: 10px;"></div>

@@ -1,0 +1,271 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<h4>Add bill to mapping Listing</h4>
+<div class="feature-card mt-2 px-3 text-start">
+    <div class="back-to-listing"><img src="assets/svg/left-arrow.svg" (click)="gotoMasterdata()" alt="Back"
+            style="width: 40px; height: 40px;" class="me-2"><span>Back to Listing</span></div>
+    <form class="bill-form" [formGroup]="addBillForm" (ngSubmit)="submitForm()">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-xs-2  mt-3 input-text-group">
+                <label for="" class="form-label m-0">AAA_PlantCode</label>
+                <label class="label-mandatory-field">*</label>
+
+                <ng-select class="dropdown-list-autocomplete" placeholder="Select Plant" name="plantId"
+                    formControlName="aaaPlantCode" (change)="onPlantCodeChange($event)">
+                    <ng-option value="">Select Plant</ng-option>
+                    <ng-option *ngFor="let item of plants" [value]="item.plantCode">
+                        {{ item.plantCode }}
+                    </ng-option>
+                </ng-select>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2  mt-3 input-text-group">
+                <label class="form-label m-0">AAA_Plant Name</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="aaaPlantName" name="plant_name"
+                    placeholder="Auto populated" readonly>
+            </div>
+
+
+            <div class="col-lg-3 col-md-3 col-xs-2  mt-3 input-text-group">
+                <label for="" class="form-label m-0">AAA_PlantAddress</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="aaaPlantAddress" name="plant_address"
+                    placeholder="Enter AAA_PlantAddress">
+                <div *ngIf="addBillForm.get('aaaPlantAddress')?.invalid && addBillForm.get('aaaPlantAddress')?.touched"
+                    class="text-danger">
+                    Plant address is required.
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2  mt-3 input-text-group">
+                <label for="" class="form-label m-0">AAA_PlantLocation</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="aaaLocation" name="plant_location"
+                    (blur)="trimSpaces('aaaLocation')" placeholder="Enter PlantLocation">
+                <div *ngIf="addBillForm.get('aaaLocation')?.invalid && addBillForm.get('aaaLocation')?.touched"
+                    class="text-danger">
+                    Plant Location is required.
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">AAA_Pincode</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="aaaPincode" name="aaa_pincode" maxlength="6"
+                    (blur)="trimSpaces('aaaPincode')" onkeypress="return event.charCode>= 46 && event.charCode<=57"
+                    placeholder="Enter AAA_Pincode" (paste)="paste()">
+                <div *ngIf="addBillForm.get('aaaPincode')?.touched">
+                    <div *ngIf="addBillForm.get('aaaPincode')?.errors?.['required']" class="text-danger">
+                        Pincode is required.
+                    </div>
+                    <div *ngIf="addBillForm.get('aaaPincode')?.errors?.['pattern']" class="text-danger">
+                        Enter a valid 6-digit pincode.
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">AAA_GSTNo</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" (keypress)="allowGSTINCharacters($event)" maxlength="15"
+                    (blur)="trimSpaces('aaaGstNo')" formControlName="aaaGstNo" name="aaa_GstNo"
+                    placeholder="Enter AAA_GSTNo">
+                <div *ngIf="addBillForm.get('aaaGstNo')?.invalid && addBillForm.get('aaaGstNo')?.touched"
+                    class="text-danger">
+                    GST Number is required.
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">AAA_PanNo</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="aaaPanNo" name="aaa_PanNo"
+                    (blur)="trimSpaces('aaaPanNo')" placeholder="Enter AAA_PanNo">
+                <div *ngIf="addBillForm.get('aaaPanNo')?.invalid && addBillForm.get('aaaPanNo')?.touched"
+                    class="text-danger">
+                    <small *ngIf="addBillForm.get('aaaPanNo')?.errors?.['required']">PAN No is required.</small>
+                    <small *ngIf="addBillForm.get('aaaPanNo')?.errors?.['pattern']">Enter valid PAN format
+                        (ABCDE1234F).</small>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">AAA_Customer Code</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="aaaCustomerCode" name="aaa_CustomerCode"
+                    placeholder="Enter AAA_CustomerCode">
+                <div *ngIf="addBillForm.get('aaaCustomerCode')?.invalid && addBillForm.get('aaaCustomerCode')?.touched"
+                    class="text-danger">
+                    Customer Code is required.
+                </div>
+                <div *ngIf="addBillForm.get('aaaCustomerCode')?.errors?.['pattern']" class="text-danger">
+                    Only numbers are allowed.
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">ALL_CompanyName</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="allCompanyName" name="all_CompanyName"
+                    placeholder="Enter ALL_CompanyName">
+                <div *ngIf="addBillForm.get('allCompanyName')?.invalid && addBillForm.get('allCompanyName')?.touched"
+                    class="text-danger">
+                    Company Name is required.
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">ALL_GSTNo</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="allGstNo" (blur)="trimSpaces('allGstNo')"
+                    (keypress)="allowGSTINCharacters($event)" name="all_GstNo" placeholder="Enter ALL_GSTNo">
+                <div *ngIf="addBillForm.get('allGstNo')?.invalid && addBillForm.get('allGstNo')?.touched"
+                    class="text-danger">
+                    <small *ngIf="addBillForm.get('allGstNo')?.errors?.['required']">GST No is required.</small>
+                    <small *ngIf="addBillForm.get('allGstNo')?.errors?.['pattern']">Enter valid GST No (e.g.
+                        27ABCDE1234F1Z5).</small>
+                </div>
+                <div *ngIf="addBillForm.get('allGstNo')?.touched && addBillForm.get('allGstNo')?.errors?.['gstMatch']"
+                    class="text-danger">
+                    <small>AAA GST No and ALL GST No cannot be the same.</small>
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">ALL_Customer Code</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="allCustomerCode" name="all_CustomerCode"
+                    placeholder="Enter ALL_CustomerCode" />
+
+                <div *ngIf="addBillForm.get('allCustomerCode')?.invalid && addBillForm.get('allCustomerCode')?.touched"
+                    class="text-danger">
+                    <small *ngIf="addBillForm.get('allCustomerCode')?.errors?.['required']">
+                        Customer Code is required.
+                    </small>
+                    <small *ngIf="addBillForm.get('allCustomerCode')?.errors?.['customerCodeMatch']">
+                        AAA and ALL Customer Code cannot be the same.
+                    </small>
+                </div>
+            </div>
+
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="rcm_fcm" class="form-label m-0">RCM_FCM</label>
+                <span class="asterisk">*</span>
+                <select class="form-select" formControlName="rcmFcm" name="rcm_fcm" id="rcm_fcm" required>
+                    <option value="" disabled selected>Select</option>
+                    <option value="RCM">RCM</option>
+                    <option value="FCM">FCM</option>
+                </select>
+                <div *ngIf="addBillForm.get('rcmFcm')?.invalid && addBillForm.get('rcmFcm')?.touched"
+                    class="text-danger">
+                    Select RCM or FCM
+                </div>
+            </div>
+
+
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">ALL_Location</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="allLocation" name="all_Location" required
+                    placeholder="Enter ALL_Location">
+                <div *ngIf="addBillForm.get('allLocation')?.invalid && addBillForm.get('allLocation')?.touched"
+                    class="text-danger">
+                    Location is required.
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">ALL_PinCode</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="allPincode" maxlength="6" name="all_Pincode"
+                    (blur)="trimSpaces('allPincode')" (keypress)="allowOnlyNumbers($event)"
+                    onkeypress="return event.charCode>= 46 && event.charCode<=57" required
+                    placeholder="Enter ALL_PinCode" (paste)="paste()">
+                <div *ngIf="addBillForm.get('allPincode')?.touched">
+                    <div *ngIf="addBillForm.get('allPincode')?.errors?.['required']" class="text-danger">
+                        Pincode is required.
+                    </div>
+                    <div *ngIf="addBillForm.get('allPincode')?.errors?.['pattern']" class="text-danger">
+                        Enter a valid 6-digit pincode.
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">ALL_GSTAddress</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="allGstAddress" name="all_GstAddress" required
+                    placeholder="Enter ALL_GSTAddress">
+                <div *ngIf="addBillForm.get('allGstAddress')?.invalid && addBillForm.get('allGstAddress')?.touched"
+                    class="text-danger">
+                    GstAddress is required.
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">RCM_GST(%)</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="rcmGstPercentage"
+                    (keypress)="allowOnlyNumbers($event)" name="rcmGstPercentage" placeholder="Enter RCM_GST(%)" />
+                <div *ngIf="addBillForm.get('rcmGstPercentage')?.invalid && addBillForm.get('rcmGstPercentage')?.touched"
+                    class="text-danger">
+                    <small *ngIf="addBillForm.get('rcmGstPercentage')?.errors?.['required']">RCM GST (%) is
+                        required.</small>
+                    <small *ngIf="addBillForm.get('rcmGstPercentage')?.errors?.['pattern']">Only numeric values
+                        allowed.</small>
+                </div>
+            </div>
+
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">FCM_GST(%)</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="fcmGstPercentage"
+                    (keypress)="allowOnlyNumbers($event)" name="fcmGstPercentage" placeholder="Enter FCM_GST(%)" />
+                <div *ngIf="addBillForm.get('fcmGstPercentage')?.invalid && addBillForm.get('fcmGstPercentage')?.touched"
+                    class="text-danger">
+                    <small *ngIf="addBillForm.get('fcmGstPercentage')?.errors?.['required']">FCM GST (%) is
+                        required.</small>
+                    <small *ngIf="addBillForm.get('fcmGstPercentage')?.errors?.['pattern']">Only numeric values
+                        allowed.</small>
+                </div>
+            </div>
+
+
+            <div class="col-lg-3 col-md-3 col-xs-2 mt-3 input-text-group">
+                <label for="" class="form-label m-0">ALL_PanNo</label>
+                <span class="asterisk">*</span>
+                <input type="text" class="form-control" formControlName="allPanNo" name="all_PanNo"
+                    (blur)="trimSpaces('allPanNo')" placeholder="Enter ALL_PanNo" />
+                <div *ngIf="addBillForm.get('allPanNo')?.invalid && addBillForm.get('allPanNo')?.touched"
+                    class="text-danger">
+                    <small *ngIf="addBillForm.get('allPanNo')?.errors?.['required']">PAN No is required.</small>
+                    <small *ngIf="addBillForm.get('allPanNo')?.errors?.['pattern']">Enter valid PAN format
+                        (ABCDE1234F).</small>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <div class="submitBtn mt-3">
+                    <button type="submit" [disabled]="addBillForm.invalid" class="button-submit">
+                        {{ MappingId ? 'Update' : 'Submit' }}
+                    </button>
+
+                    <img class="aligns" src="./assets/svg/right-arrow.svg" alt="" />
+                </div>
+
+                <div class="resetbtn mt-3">
+                    <button type="button" class="button-back ms-4 me-0" (click)="resetForm()">
+                        Reset
+                    </button>
+                    <img class="aligns" src="./assets/svg/reset.png" alt="" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

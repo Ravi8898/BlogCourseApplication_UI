@@ -1,0 +1,782 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div class="bg-color">
+
+    <div class="">
+        <h5 class="">PO Invoice Action</h5>
+
+        <div class="">
+            <mat-accordion>
+                <mat-expansion-panel class="mt-2" [expanded]="true">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            PO Invoice
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+
+                    <form [formGroup]="purchaseForm">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0">Invoice Type</label>
+                                <span class="asterisk"> *</span>
+                                <select class="form-select" formControlName="invoice_type"
+                                    aria-label="Default select example">
+                                    <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                    <option value="Freight">Freight</option>
+                                    <option value="Non-PO">Non-PO</option>
+                                    <option value="Material">Material</option>
+                                    <option value="Service">Service</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0">PO Number</label>
+                                <span class="asterisk"> *</span>
+                                <div class="input-group mb-13">
+                                    <input type="text" class="form-control" formControlName="po_number"
+                                        onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                        placeholder="Enter PO Number" aria-label="po numner"
+                                        aria-describedby="basic-addon1">
+                                    <!-- <div class="input-group-append">
+                                        <button class="btn-outline-secondary button-browser" [disabled]="!purchaseForm['controls']['po_number']['valid']" (click)="getPODetail(purchaseForm['value']['po_number'])">Get PO Detail</button>
+                                    </div> -->
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0">Invoice Number</label>
+                                <span class="asterisk"> *</span>
+                                <input type="text" placeholder="Enter Invoice Number"
+                                    (keypress)="allowInvoiceChars($event)" formControlName="invoice_number"
+                                    onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0">Invoice Date</label>
+                                <span class="asterisk"> *</span>
+                                <input type="date" formControlName="invoice_date" class="form-control"
+                                    [max]="currentDate" [value]="currentDate">
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Amount As Per Invoice</label>
+                                <span class="asterisk"> *</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon3"
+                                            style="font-size: 12px;">₹.</span>
+                                    </div>
+                                    <input type="text" placeholder="Enter Amount" formControlName="invoice_amount"
+                                        class="form-control" id="invoice_amount" aria-describedby="basic-addon3"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Total Amount As Per Line Items</label>
+                                <span class="asterisk"> *</span>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon3"
+                                            style="font-size: 12px;">₹.</span>
+                                    </div>
+                                    <input type="text" placeholder="Enter Amount" formControlName="invoice_amount_line"
+                                        class="form-control" id="invoice_amount" aria-describedby="basic-addon3"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3 d-flex justify-content-between">
+                                <div class="">
+                                    <label for="" class="form-label m-0 mt-3">Company</label>
+                                    <span class="asterisk"> *</span>
+                                    <select class="form-select" value="" formControlName="company"
+                                        aria-label="Default select example">
+                                        <option value="choose" [selected]="true" disabled="true">Company</option>
+                                        <option value="IN10">ACC</option>
+                                        <option value="IN20">Ambuja</option>
+                                    </select>
+                                </div>
+                                <div class="">
+                                    <label for="" class="form-label m-0 mt-3">Currency</label>
+                                    <input type="text" placeholder="Currency" formControlName="currency"
+                                        class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Plant Code</label>
+                                <input type="text" placeholder="Enter Plant Code" formControlName="plant_code"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Department</label>
+                                <select class="form-select" value="" formControlName="department"
+                                    aria-label="Default select example">
+                                    <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                    <option value="logistics">Logistics</option>
+                                    <option value="manufacturing">Manufacturing</option>
+                                    <option value="hr">HR</option>
+                                    <option value="it">IT</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Receiver GST Number</label>
+                                <input type="text" placeholder="Enter Receiver GST Number"
+                                    onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                    formControlName="rece_gst_no" class="form-control">
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Supplier GST Number</label>
+                                <span class="asterisk"> *</span>
+                                <input type="text" placeholder="Enter Supplier GST Number"
+                                    onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                    formControlName="supp_gst_no" class="form-control">
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Child GST</label>
+                                <span class="asterisk"> *</span>
+                                <input type="text" placeholder="Child GST" formControlName="child_gst"
+                                    class="form-control" [readonly]="true">
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Payment Mode</label>
+                                <span class="asterisk"> *</span>
+                                <select class="form-select" value="" formControlName="payment_mode"
+                                    aria-label="Default select example">
+                                    <!-- <option value="choose" selected disabled>Choose</option> -->
+                                    <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                    <option value="rtgs">RTGS</option>
+                                    <option value="neft">NEFT</option>
+                                    <option value="dd">DD</option>
+                                    <option value="cheque">Cheque</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Adani Contact Details</label>
+                                <input type="text" placeholder="Enter Adani Contact Details"
+                                    formControlName="adani_contact" class="form-control"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Submission To</label>
+                                <span class="asterisk"> *</span>
+                                <select class="form-select" aria-label="Default select example" [value]=""
+                                    formControlName="submission_to">
+                                    <!-- <option value="choose" selected disabled>Choose</option> -->
+                                    <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                    <!-- <option *ngFor="let item of submissionArr" [value]=item.loginId>{{item['employeeName']}}</option> -->
+                                    <option *ngFor="let item of submissionArr" [value]=item.createdBy>{{item['name']}}
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Payment Term To</label>
+                                <input type="text" placeholder="Payment Term To" formControlName="payment_term"
+                                    class="form-control" [readonly]="true">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Uploaded Invoice PDF</label>
+                                <span class="asterisk"> *</span>
+                                <div class="input-group mb-0">
+                                    <p class="hint mt-1 d-inline float-end pointer"
+                                        *ngIf="this.editPurchaseData['invoiceAttachment']" data-toggle="tooltip"
+                                        title="View Attachement" (click)="viewAttachment()">View Uploaded Invoice</p>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-3">Support Documents</label>
+                                <div class="mb-0">
+                                    <p class="hint my-0 pointer" *ngFor="let item of supportDocument"
+                                        data-toggle="tooltip" title="View Attachement"
+                                        (click)="viewSuppAttachment(item)">{{item['fileName']}}</p>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label mt-3">Invoice Series Type</label>
+                                <span class="asterisk"> *</span>
+                                <select class="form-select" formControlName="series_type"
+                                    aria-label="Default select example">
+                                    <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                    <option value='labour'>Labour</option>
+                                    <option value='normal'>Normal</option>
+                                    <option value='urgent'>Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-offset-lg-6 col-offset-md-6 col-offset-xs-6  col-lg-6 col-md-6 col-xs-6">
+                                <label for="" class="form-label m-0 mt-3">Remarks</label>
+                                <span class="asterisk"> *</span>
+                                <textarea type="text" formControlName="remarks" placeholder="Enter Remarks"
+                                    class="form-control" rows="3"></textarea>
+                                <span *ngIf="purchaseForm.get('remarks').hasError('maxlength')">Remarks exceeds max 256
+                                    character</span>
+                            </div>
+
+                            <div class="col-offset-lg-6 col-offset-md-6 col-offset-xs-6  col-lg-6 col-md-6 col-xs-6">
+                                <label for="" class="form-label m-0 mt-3">Reviewer Remarks</label>
+                                <span class="asterisk"> *</span>
+                                <textarea type="text" formControlName="reviewer_remarks"
+                                    placeholder="Enter Reviewer Remarks" class="form-control" rows="3"></textarea>
+                                <span *ngIf="purchaseForm.get('remarks').hasError('maxlength')">Remarks exceeds max 256
+                                    character</span>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- <div class="row">
+                        <div class="col-lg-12 col-md-12 col-xs-12 mt-3">
+                            <table class="table table-striped1 data-grid po-items" *ngIf="items.length>0 && selectedItemsArr.length>0">
+                                <thead class="data-grid-thead">
+                                    <tr>
+                                        <th scope="col">Purchase Order Item No.</th>
+                                        <th scope="col">HSN / SAC Code</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Rate</th>
+                                        <th scope="col">Net Amount</th>
+                                        <th scope="col">Tax</th>
+                                        <th scope="col">Gross Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of selectedItemsDataArr">
+                                        <td><input type="text" [value]="item['purchaseOrderItemNo']" readonly disabled></td>
+                                        <td><input type="text" [value]="item['hsnCode']" readonly disabled onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"></td>
+                                        <td><input type="text" [value]="item['quantity']" readonly disabled onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                        <td><input type="text" [value]="item['netPrice']" readonly disabled onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                                        <td><input type="text" [value]="item['netAmount']" readonly disabled></td>
+                                        <td><input type="text" [value]="item['tax']" readonly disabled></td>
+                                        <td><input type="text" [value]="item['grossAmount']" readonly disabled></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> -->
+                </mat-expansion-panel>
+
+                <mat-expansion-panel class="mt-2">
+                    <!--                     <mat-expansion-panel-header>
+                        <mat-panel-title>
+                        PO Items
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <table class="table table-striped" *ngIf="items.length>0">
+                        <thead class="data-grid-thead">
+                            <tr>
+                                <th scope="col">
+                                <th scope="col">Item No.</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Material Number</th>
+                                <th scope="col">PLant Code</th>
+                                <th scope="col">UoM</th>
+                                <th scope="col">Net Price</th>
+                                <th scope="col">Price Per Unit</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Remaining Quantity</th>
+                                <th scope="col" *ngIf="contractNoExist">Contract Number</th>
+                                <th scope="col" *ngIf="contractNoExist">Contract item Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of items">
+                                <td scope="row"><input class="form-check-input" type="checkbox" disabled [checked]="item['checked']" id="" (change)="poSelect($event, item)"></td>
+                                <td>{{item['purchaseOrderItemNo']}}</td>
+                                <td>{{item['itemDescription']}}</td>
+                                <td>{{item['materialNumber']}}</td>
+                                <td>{{item['plantCode']}}</td>
+                                <td>{{item['unitOfMeasure']}}</td>
+                                <td>{{item['netPrice']}}</td>
+                                <td>{{item['pricePerUnit']}}</td>
+                                <td>{{item['quantity']}}</td>
+                                <td>{{item['remainingQuantity']}}</td>
+                                <td *ngIf="contractNoExist">{{item['contractNo']}}</td>
+                                <td *ngIf="contractNoExist">{{item['contractItemNo']}}</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+
+                    <!-- <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            PO Services List
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <table class="table table-striped" *ngIf="items.length>0">
+                        <thead class="data-grid-thead">
+                            <tr>
+                                <th scope="col">
+                                <th scope="col">Package No.</th>
+                                <th scope="col">Sub Package No.</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Tax Code</th>
+                                <th scope="col">Tax Code Tariff</th>
+                                <th scope="col">Short Text</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="sesSubList.length>0">
+                            <tr *ngFor="let item of sesSubList">
+                                <td scope="row"><input class="form-check-input" type="checkbox" [checked]="true" [disabled]=true></td>
+                                <td>{{item['pckgNo']}}</td>
+                                <td>{{item['subPackageNo']}}</td>
+                                <td>{{item['quantity']}}</td>
+                                <td>{{item['taxCode']}}</td>
+                                <td>{{item['taxCodeTariff']}}</td>
+                                <td>{{item['shortText']}}</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            PO Details
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                        <label for="" class="form-label m-0 mt-3">PO Items</label>
+
+                        <div class="table-responsive" id="htmlData">
+                            <table class="table table-striped1 data-grid">
+                                <thead class="data-grid-thead">
+                                    <tr>
+                                        <th scope="col"><input class="" type="checkbox"></th>
+                                        <th scope="col">Item No.</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Material Number</th>
+                                        <th scope="col">Plant Code</th>
+                                        <th scope="col">UoM</th>
+                                        <th scope="col">Net Price</th>
+                                        <th scope="col">Price Per Unit</th>
+                                        <th scope="col">Quantity</th>
+                                        <!-- <th scope="col">Remaining Quantity</th> -->
+                                        <th scope="col" *ngIf="contractNoExist">Contract Number</th>
+                                        <th scope="col" *ngIf="contractNoExist">Contract item Number</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="items.length>0">
+                                    <tr *ngFor="let item of items">
+                                        <td scope="row"><input class="form-check-input1" type="checkbox"
+                                                [checked]="item['checked']"></td>
+                                        <td>{{item['purchaseOrderItemNo']}}</td>
+                                        <td>{{item['itemDescription']}}</td>
+                                        <td>{{item['materialNumber'] ? item['materialNumber'] : '-'}}</td>
+                                        <td>{{item['plantCode']}}</td>
+                                        <td>{{item['unitOfMeasure']}}</td>
+                                        <td>{{item['netPrice']}}</td>
+                                        <td>{{item['pricePerUnit']}}</td>
+                                        <td>{{item['quantity']}}</td>
+                                        <!-- <td>{{item['remainingQuantity']}}</td> -->
+                                        <td *ngIf="contractNoExist">{{item['contractNo']}}</td>
+                                        <td *ngIf="contractNoExist">{{item['contractItemNo']}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive mt-4" *ngIf="sesSubList.length>0">
+                        <label for="" class="form-label m-0 mt-3">PO Services List</label>
+
+                        <div class="table-responsive" id="seshtmlData">
+                            <table class="table table-striped1 data-grid">
+                                <thead class="data-grid-thead">
+                                    <tr>
+                                        <th scope="col"><input class="" type="checkbox"></th>
+                                        <th scope="col">Package No.</th>
+                                        <th scope="col">PO Number</th>
+                                        <th scope="col">Sub Package No.</th>
+                                        <th scope="col">Quantity</th>
+                                        <!-- <th scope="col">Remaining Quantity</th> -->
+                                        <th scope="col">Tax Code</th>
+                                        <th scope="col">Tax Code Tariff</th>
+                                        <th scope="col">Short Text</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="sesSubList.length>0">
+                                    <tr *ngFor="let item of sesSubList">
+                                        <td scope="row"><input class="form-check-input1" type="checkbox"
+                                                [checked]="item['checked']"></td>
+                                        <td>{{item['pckgNo']}}</td>
+                                        <td>{{item['poNumber']}}</td>
+                                        <td>{{item['subPackageNo']}}</td>
+                                        <td>{{item['quantity']}}</td>
+                                        <!-- <td>{{item['remQty']}}</td> -->
+                                        <td>{{item['taxCode']}}</td>
+                                        <td>{{item['taxCodeTariff']}}</td>
+                                        <td>{{item['shortText']}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive mt-4"
+                        *ngIf="selectedSesSubItems.length>0">
+                        <label for="" class="form-label m-0 mt-3">Selected Services</label>
+
+                        <table class="table table-striped1 data-grid po-items" *ngIf="selectedSesSubItems.length>0">
+                            <thead class="data-grid-thead">
+                                <tr>
+                                    <th scope="col">Line No.</th>
+                                    <th scope="col">Package No.</th>
+                                    <th scope="col">Sub Package No.</th>
+                                    <!-- <th scope="col">HSN / SAC Code</th> -->
+                                    <th scopr="col">Quantity</th>
+                                    <!-- <th scope="col">Tax Rate</th> -->
+                                    <th scope="col">Net Amount</th>
+                                    <!-- <th scope="col">Tax</th> -->
+                                    <th scope="col">Gross Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of selectedSesSubItems">
+                                    <td><input type="text" [value]="item['extLineNo']" readonly disabled></td>
+                                    <td><input type="text" [value]="item['pckgNo']" readonly disabled></td>
+                                    <td><input type="text" [value]="item['subPackageNo']" readonly disabled></td>
+                                    <!-- <td>
+                                            <input type="text" [value]="item['taxCodeTariff']" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" readonly disabled>
+                                        </td> -->
+                                    <td>
+                                        <input type="text" [value]="item['quantity']"
+                                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                            readonly disabled>
+                                    </td>
+                                    <!--  <td>
+                                            <input type="text" [value]="item['taxRate']*100" readonly disabled>
+                                        </td> -->
+                                    <td>
+                                        <input type="text" [value]="item['netAmount']"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
+                                            readonly disabled>
+                                    </td>
+
+                                    <!-- <td><input type="text" [value]="item['tax']" readonly disabled></td> -->
+                                    <td><input type="text" [value]="item['grossAmount']" readonly disabled></td>
+                                </tr>
+                                <tr>
+                                    <!-- <td></td> -->
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <!-- <td></td> -->
+                                    <td>
+                                        <p>Total</p>
+                                    </td>
+                                    <td><input type="text" [value]="sesTotalNetAmount" readonly disabled></td>
+                                    <!-- <td><input type="text" [value]="sesTotalTax" readonly disabled></td> -->
+                                    <td><input type="text" [value]="sesTotalGrossAmount" readonly disabled></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="input-group-append mt-4">
+                        <button class="btn btn-outline-secondary py-0" (click)="createSES=true;">Create Service</button>
+                    </div>
+
+                    <!-- <form [formGroup]="serviceForm" *ngIf="createSES==true">
+                        <div class="d-flex justify-content-between">
+                            <div class="">
+                                <label for="" class="form-label m-0 mt-2">PO Number</label>
+                                <input type="text" formControlName="po_number" class="form-control" readonly disable>
+                            </div>
+                            <div class="">
+                                <label for="" class="form-label m-0 mt-2">PO Item Number</label>
+                                <input type="text" formControlName="po_item_no" class="form-control" readonly disable>
+                            </div>
+                            <div class="">
+                                <label for="" class="form-label m-0 mt-2">Quantity</label>
+                                <input type="text" formControlName="quantity" class="form-control"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
+                                    (focusout)="calculateServiceAmount($event)">
+                            </div>
+                            <div class="">
+                                <label for="" class="form-label m-0 mt-2">Gr Rate(Rs)</label>
+                                <input type="text" formControlName="gr_price" class="form-control" readonly disable>
+                            </div>
+                            <div class="">
+                                <label for="" class="form-label m-0 mt-2">Amount(Rs)</label>
+                                <input type="text" formControlName="amount" class="form-control" readonly disable>
+                                <p *ngIf="serviceForm.get('amount').hasError('mismatch')" class="mismatch-error m-0"
+                                    style="word-break: break-word; width: 150px;">SES Amount should match invoice amount
+                                </p>
+                            </div>
+                            <div class=""
+                                *ngIf="editPurchaseData.status=='processing' || editPurchaseData.status=='accept'">
+                                <label for="" class="form-label m-0 mt-2">Service Sheet No.</label>
+                                <input type="text" formControlName="service_sheet_no" class="form-control" readonly
+                                    disable>
+                            </div>
+                        </div>
+                        <button type="button" *ngIf="editPurchaseData.status=='pending'"
+                            class="button-submit button-action mx-0 mt-2"
+                            [disabled]="!this.purchaseForm.value.reviewer_remarks || !serviceForm.valid"
+                            (click)="submitServiceForm()"><span>Submit</span><img
+                                src="../../../assets/svg/accept.svg"></button>
+                    </form> -->
+
+                    <form [formGroup]="serviceForm1" *ngIf="createSES">
+                        <div formArrayName="services">
+                            <div *ngFor="let group of services.controls; let i = index" [formGroupName]="i"
+                                class="d-flex justify-content-between mb-3">
+                                <div>
+                                    <label class="form-label m-0 mt-2">PO Number</label>
+                                    <input type="text" formControlName="po_number" class="form-control" readonly>
+                                </div>
+                                <div>
+                                    <label class="form-label m-0 mt-2">PO Item Number</label>
+                                    <input type="text" formControlName="po_item_no" class="form-control" readonly>
+                                </div>
+                                <div>
+                                    <label class="form-label m-0 mt-2">Quantity</label>
+                                    <input type="text" formControlName="quantity" class="form-control"
+                                        (focusout)="calculateServiceAmount()" readonly>
+                                </div>
+                                <!-- <div>
+        <label class="form-label m-0 mt-2">Gr Rate(Rs)</label>
+        <input type="text" formControlName="gr_price" class="form-control" readonly>
+      </div> -->
+                                <div>
+                                    <label class="form-label m-0 mt-2">Amount(Rs)</label>
+                                    <input type="text" formControlName="amount" class="form-control" readonly>
+                                    <p *ngIf="group.get('amount')?.hasError('mismatch')" class="mismatch-error m-0"
+                                        style="word-break: break-word; width: 150px;">SES Amount should match invoice
+                                        amount</p>
+                                </div>
+                                <div
+                                    *ngIf="editPurchaseData.status === 'processing' || editPurchaseData.status === 'accept'">
+                                    <label class="form-label m-0 mt-2">Service Sheet No.</label>
+                                    <input type="text" formControlName="service_sheet_no" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" *ngIf="editPurchaseData.status === 'pending'"
+                            class="button-submit button-action mx-0 mt-2"
+                            [disabled]="!purchaseForm.value.reviewer_remarks " (click)="submitServiceForm()">
+                            <span>Submit</span>
+                            <img src="../../../assets/svg/accept.svg">
+                        </button>
+                    </form>
+
+                </mat-expansion-panel>
+
+                <mat-expansion-panel class="mt-2" style="display: none;">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            PO Services List
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <table class="table table-striped" *ngIf="items.length>0">
+                        <thead class="data-grid-thead">
+                            <tr>
+                                <th scope="col">
+                                <th scope="col">Package No.</th>
+                                <th scope="col">Sub Package No.</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Remaining Quantity</th>
+                                <th scope="col">Tax Code</th>
+                                <th scope="col">Tax Code Tariff</th>
+                                <th scope="col">Short Text</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="sesSubList.length>0">
+                            <tr *ngFor="let item of sesSubList">
+                                <td scope="row"><input class="form-check-input1" type="checkbox" [checked]="true"
+                                        [disabled]=true></td>
+                                <td>{{item['pckgNo']}}</td>
+                                <td>{{item['subPackageNo']}}</td>
+                                <td>{{item['quantity']}}</td>
+                                <td>{{item['remQty']}}</td>
+                                <td>{{item['taxCode']}}</td>
+                                <td>{{item['taxCodeTariff']}}</td>
+                                <td>{{item['shortText']}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel class="mt-2" style="display: none;">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Selected Service
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <table class="table table-striped1 data-grid po-items" *ngIf="selectedSesSubItems.length>0">
+                        <thead class="data-grid-thead">
+                            <tr>
+                                <th scope="col">Line No.</th>
+                                <th scope="col">Package No.</th>
+                                <th scope="col">Sub Package No.</th>
+                                <!-- <th scope="col">HSN / SAC Code</th> -->
+                                <th scopr="col">Quantity</th>
+                                <!-- <th scope="col">Tax Rate</th> -->
+                                <th scope="col">Net Amount</th>
+                                <!-- <th scope="col">Tax</th> -->
+                                <th scope="col">Gross Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of selectedSesSubItems">
+                                <td><input type="text" [value]="item['extLineNo']" readonly disabled></td>
+                                <td><input type="text" [value]="item['pckgNo']" readonly disabled></td>
+                                <td><input type="text" [value]="item['subPackageNo']" readonly disabled></td>
+                                <td>
+                                    <!-- <input type="text" [value]="item['taxCodeTariff']" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" (focusout)="sesUpdateTotal($event, 'taxCodeTariff', item)"> -->
+                                    <input type="text" [value]="item['taxCodeTariff']"
+                                        onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                        readonly disabled>
+                                    <!-- <p class="m-0 quantity_error" [ngClass]="{show:!item['taxCodeTariff'], hide:item['taxCodeTariff']}">Please Enter HSN Code</p> -->
+                                </td>
+                                <td>
+                                    <!-- <input type="text" [value]="item['quantity']" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" (focusout)="sesUpdateTotal($event, 'quantity', item)"> -->
+                                    <input type="text" [value]="item['quantity']"
+                                        onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                        readonly disabled>
+                                    <!-- <p class="m-0 quantity_error" [ngClass]="{show:!item['quantity']}">Please Enter Quantity</p> -->
+                                </td>
+                                <!-- <td>
+                                    <input type="text" [value]="item['taxRate']*100" readonly disabled>
+                                </td> -->
+                                <td>
+                                    <!-- <input type="text" [value]="item['netAmount']" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46" (focusout)="sesUpdateTotal($event, 'netAmount', item)"> -->
+                                    <input type="text" [value]="item['netAmount']"
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
+                                        readonly disabled>
+                                    <!-- <p class="m-0 quantity_error hide">Amount exceed net value</p> -->
+                                    <!-- <p class="m-0 quantity_error hide">Invalid Number</p> -->
+                                </td>
+
+                                <!-- <td><input type="text" [value]="item['tax']" readonly disabled></td> -->
+                                <td><input type="text" [value]="item['grossAmount']" readonly disabled></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <p>Total</p>
+                                </td>
+                                <td><input type="text" [value]="sesTotalNetAmount" readonly disabled></td>
+                                <td><input type="text" [value]="sesTotalTax" readonly disabled></td>
+                                <td><input type="text" [value]="sesTotalGrossAmount" readonly disabled></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary py-0" (click)="onCreateServiceClick()">Create
+                            Service</button>
+                    </div>
+
+                    <!-- <form [formGroup]="serviceForm" *ngIf="createSES==true">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-2">PO Number</label>
+                                <input type="text" formControlName="po_number" class="form-control">
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-2">PO Item Number</label>
+                                <input type="text" formControlName="po_item_no" class="form-control">
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-xs-3">
+                                <label for="" class="form-label m-0 mt-2">Quantity</label>
+                                <input type="text" formControlName="quantity" class="form-control">
+                            </div>
+                        </div>
+                        <button type="button" *ngIf="editPurchaseData.status=='pending'"
+                            class="button-submit button-action mx-0 mt-2"
+                            [disabled]="!serviceForm.valid"><span>Submit</span><img
+                                src="../../../assets/svg/accept.svg"></button>
+                    </form> -->
+                    <!-- <form [formGroup]="serviceForm1" *ngIf="createSES">
+  <div formArrayName="serviceFormArray">
+    <div *ngFor="let group of serviceFormArray.controls; let i = index" [formGroupName]="i" class="row">
+      <div class="col-lg-3 col-md-3 col-xs-3">
+        <label class="form-label m-0 mt-2">PO Number</label>
+        <input type="text" formControlName="po_number" class="form-control">
+      </div>
+      <div class="col-lg-3 col-md-3 col-xs-3">
+        <label class="form-label m-0 mt-2">PO Item Number</label>
+        <input type="text" formControlName="po_item_no" class="form-control">
+      </div>
+      <div class="col-lg-3 col-md-3 col-xs-3">
+        <label class="form-label m-0 mt-2">Quantity</label>
+        <input type="text" formControlName="quantity" class="form-control">
+      </div>
+    </div>
+  </div>
+
+  <button type="button"
+          *ngIf="editPurchaseData.status === 'pending'"
+          class="button-submit button-action mx-0 mt-2"
+          [disabled]="!serviceForm.valid"
+         >
+    <span>Submit</span>
+    <img src="../../../assets/svg/accept.svg">
+  </button>
+</form> -->
+
+                </mat-expansion-panel>
+            </mat-accordion>
+
+            <div class="col-lg-12" *ngIf="editPurchaseData.status=='pending'">
+                <!-- *ngIf="editPurchaseData.status=='pending' || editPurchaseData.status=='onhold'" -->
+                <div class="mt-3 d-flex" style="margin-bottom: 50px;">
+                    <button type="button" class="button-back button-action reject"
+                        (click)="siteOrderAction('reject')"><span>Reject</span><img
+                            src="../../../assets/svg/reject.svg"></button>
+                    <button type="button" class="button-back button-action sent"
+                        (click)="siteOrderAction('sent-back')"><span>Send Back</span><img
+                            src="../../../assets/svg/sentback.svg"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirmation Modal -->
+<button id="confirmModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#confirmModal">Open Confirm
+    Modal</button>
+<div class="modal fade close" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-confirm" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <p class="modal-title" id="myModalLabel2"><span>Alert</span></p>
+            </div>
+
+            <div class="modal-body text-center">
+                <p>{{confirmModalMessage}}</p>
+                <div class="my-1">
+                    <button type="submit" class="button-submit w-25" data-bs-toggle="modal"
+                        data-bs-target="#confirmModal" (click)="submitSiteController($event)">Yes</button>
+                    <button type="button" class="button-back w-25" data-bs-toggle="modal"
+                        data-bs-target="#confirmModal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

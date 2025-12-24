@@ -1,0 +1,61 @@
+<nav aria-label="breadcrumb" style="display: none;">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" *ngFor="let item of breadcrumb; let last = last">
+            <ng-container *ngIf="!last">
+                <a [routerLink]="item.url">{{ item.label | title }}</a>
+            </ng-container>
+            <ng-container *ngIf="last">
+                {{ item.label | title }}
+            </ng-container>
+            <!-- <a [routerLink]="item.url">{{ item.label }}</a> -->
+        </li>
+    </ol>
+</nav>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item" *ngIf="roleName=='LogisticOfficer' && roleName !='CAD Admin'"><a
+                [routerLink]="['/dashboard/logistic']">Home Page</a></li>
+        <li class="breadcrumb-item" *ngIf="!urlPage.includes('paperless-work')"><a [routerLink]="['/dashboard/home']">Home Page</a></li> <!-- *ngIf="roleName=='SiteController' || roleName == 'RawMaterialIncharge'" -->
+        <li class="breadcrumb-item"
+            *ngIf="(roleName=='CAD Admin' || roleName=='Checker' || roleName == 'Project Manager')"><a
+                [routerLink]="['/CAD']">Home</a></li>
+        <!-- <li class="breadcrumb-item" *ngIf="roleName !='CAD Admin'"><a [routerLink]="['/dashboard/home']">Home Page</a></li> *ngIf="roleName=='SiteController' || roleName == 'RawMaterialIncharge'" -->
+        <li class="breadcrumb-item" *ngFor="let item of breadcrumbArray; let last = last">
+            <ng-container *ngIf="!last">
+                <a href="javascript:void()" (click)="navigateToUrl(item['url'])">{{ item.label | title }}</a>
+            </ng-container>
+            <ng-container *ngIf="last">
+                {{ item.label | title }}
+            </ng-container>
+        </li>
+    </ol>
+</nav>
+
+<!-- <nav aria-label="breadcrumb" style="display: none;">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item" *ngFor="let item of breadcrumb; let last = last">
+            <ng-container *ngIf="!last">
+                <a [routerLink]="item.url">{{ item.label }}</a>
+            </ng-container>
+            <ng-container *ngIf="last">
+                {{ item.label }}
+            </ng-container>
+        </li>
+    </ol>
+</nav>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item" *ngIf="roleName=='LogisticOfficer'"><a [routerLink]="['/dashboard/logistic']">Home Page</a></li>
+        <li class="breadcrumb-item"><a [routerLink]="['/dashboard/home']">Home Page</a></li>
+        <li class="breadcrumb-item" *ngFor="let item of breadcrumbArray; let last = last">
+            <ng-container *ngIf="!last">
+                <a href="javascript:void()" (click)="navigateToUrl(item['url'])">{{ item.label}}</a>
+            </ng-container>
+            <ng-container *ngIf="last">
+                {{ item.label}}
+            </ng-container>
+        </li>
+    </ol>
+</nav> -->

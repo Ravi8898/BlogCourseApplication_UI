@@ -1,0 +1,19 @@
+<div class="tracking-card">
+<div class="timeline">
+    <div *ngFor="let step of trackingSteps; let i = index" class="timeline-item">
+        <div class="timeline-date">
+            <div class="date">{{ step.date }}</div>
+            <div class="time">{{ step.time }}</div>
+        </div>
+        <div class="timeline-status" [attr.ngClass]="{'has-next': i < trackingSteps.length - 1}">
+            <!-- <div class="status-icon" [ngClass]="getStatusClass(step.status)"></div> -->
+            <div class="status-info">
+                <span class="status-details">{{ step.newRate }}</span>
+                <p class="status-details">{{ step.details }}</p>
+                <p *ngIf="step.reference" class="reference">{{ step.reference }}</p>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>

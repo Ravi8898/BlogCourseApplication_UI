@@ -1,0 +1,92 @@
+<p class="page-heading">Project Configuration</p>
+
+<div class="acordion-item">
+    <div class="vertical-line" [style.height]="'100%'"></div>
+    <div *ngFor="let panel of panels; let i = index" class="accordion-header">
+        <div class="step-circle">{{ i + 1 }}</div>
+        <!-- <div *ngIf="i < panels.length - 1" class="line"></div> -->
+        <div (click)="togglePanel(panel)">
+            <a href="javascript:void(0)">
+                <div class="space-between align-items-center">
+                    <label>{{ panel.title }}</label>
+
+                    <div style="height: 35px; width: 35px;">
+                        <img src="../../../assets/img/down-arrow-circle.png" alt="" *ngIf="!panel.isOpen" />
+                        <img src="../../../assets/svg/up-arrow-circle.svg" alt="" *ngIf="panel.isOpen" />
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+        <div *ngIf="panel.isOpen && panel.title == 'Currency'" class="mb-4">
+            <hr>
+
+            <app-currency></app-currency>
+        </div>
+
+        <div *ngIf="panel.isOpen && panel.title == 'Department'" class="mb-4">
+            <hr>
+
+            <app-department></app-department>
+        </div>
+
+        <div *ngIf="panel.isOpen && panel.title == 'Document Type'" class="mb-4">
+            <hr>
+
+            <app-document-type></app-document-type>
+        </div>
+
+        <div *ngIf="panel.isOpen && panel.title == 'Advance Type'" class="mb-4">
+            <hr>
+
+            <app-advance-type></app-advance-type>
+        </div>
+
+        <div *ngIf="panel.isOpen && panel.title == 'Retention'" class="mb-4">
+            <hr>
+
+            <app-retention></app-retention>
+        </div>
+
+        <div *ngIf="panel.isOpen && panel.title == 'Invoice Type'" class="mb-4">
+            <hr>
+
+            <app-invoice-type></app-invoice-type>
+
+        </div>
+        <div *ngIf="panel.isOpen && panel.title == 'Clause Type'" class="mb-4">
+            <hr>
+
+            <app-clouse-type></app-clouse-type>
+        </div>
+
+        <div *ngIf="panel.isOpen && panel.title == 'Compliance Category'" class="mb-4">
+            <hr>
+
+            <app-compliance-category></app-compliance-category>
+
+        </div>
+
+        <div *ngIf="panel.isOpen && panel.title == 'Compliance Type'" class="mb-4">
+            <hr>
+
+            <app-compliance-type></app-compliance-type>
+        </div>
+        <div *ngIf="panel.isOpen && panel.title == 'Hold Type'" class="mb-4">
+            <hr>
+
+            <app-hold-type></app-hold-type>
+        </div>
+        <div *ngIf="panel.isOpen && panel.title == 'Recovery Type'" class="mb-4">
+            <hr>
+
+           <app-recovery-type></app-recovery-type>
+        </div>
+        <div *ngIf="panel.isOpen && panel.title == 'Tax Deduction Type'" class="mb-4">
+            <hr>
+
+            <app-tax-deduction-type></app-tax-deduction-type>
+        </div>
+        
+    </div>

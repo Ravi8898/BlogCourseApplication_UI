@@ -1,0 +1,293 @@
+<!-- <app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message> -->
+
+<div class="bd-tab-content-ss card shadow border-transparent">
+    <div class="bd-tab-content">
+        <div class="d-flex justify-content-center align-items-center adani-logo">
+            <img src="../../../assets/svg/Adani-logo-1.svg" alt="" />
+        </div>
+        <div class="tabs">
+            <div class="tab" [class.active]="activeTab === 'tab1'" (click)="changeTab('tab1')">Employee</div>
+            <div class="tab" [class.active]="activeTab === 'tab2'" (click)="changeTab('tab2')">Vendor</div>
+        </div>
+
+        <div class="bd-tab-content">
+            <div *ngIf="activeTab === 'tab1'">
+                <div class="login-panel">
+                    <div class="login-section">
+
+                        <!-- <form [formGroup]="loginForm" name="loginForm" (ngSubmit)="onSubmit()">
+
+                            <div class="mb-1 mt-1">
+                                <label class="form-label">Division</label>
+                                <span class="asterisk"> *</span>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option value="Select Division" disabled="true">Select Division</option>
+                                    <option value="Cement">Cement</option>
+                                    <option value="AEML">AEML</option>
+                                    <option value="APSEZ">APSEZ</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-1 mt-1">
+                                <label for="username" class="form-label">AD ID</label>
+                                <input type="email" class="form-control" id="username" placeholder="Enter your AD ID"
+                                    formControlName="username" maxLength="50" minlength="6" autocomplete="off">
+
+                                <div *ngIf="loginForm.get('username')?.value" class="error-message">
+                                    {{loginForm.get('username')?.getError('customError')}}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="*********"
+                                    formControlName="password" maxLength="50">
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="login-button" type="submit" [disabled]="loginForm.invalid">Login</button>
+
+                                <button *ngIf="isLoader" class="login-button" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            </div>
+
+                        </form>
+                        <button *ngIf="isProduction" class="login-button mt-2 mb-2 w-100" (click)="samllogin()">
+                            SAML-SSO LOGIN
+                        </button>
+
+                        <p class="login-tnc">By continuing, You agree to our <a
+                                href="https://www.acclimited.com/welcome/disclaimer" target="_blank">T&C</a> and <a
+                                href="https://www.acclimited.com/about/privacy-policy" target="_blank">Privacy
+                                Policy.</a></p>
+                        <div *ngIf="errMsg">
+                            <p class="error-message">{{errMsg}}</p>
+                        </div> -->
+                        <form *ngIf="!production" [formGroup]="siteLoginForm" name="siteLoginForm">
+
+                            <!-- <div class="mb-1 mt-1">
+                                <label class="form-label">Division</label>
+                                <span class="asterisk"> *</span>
+                                <select class="form-select" aria-label="Default select example"
+                                    formControlName="division">
+                                    <option value="Select Division" disabled="true">Select Division</option>
+                                    <option value="Cement">Cement</option>
+                                    <option value="AEML">AEML</option>
+                                    <option value="APSEZ">APSEZ</option>
+                                </select>
+                                <span
+                                    *ngIf="siteLoginForm.get('division')?.touched && siteLoginForm.get('division').hasError('required')"
+                                    class="error-message">
+                                    Division is Required
+                                </span>
+                            </div> -->
+                            <div class="py-2 text-start">
+                                <label for="username" class="form-label">AD ID</label>
+                                <input type="email" class="form-control" id="username" placeholder="Enter your AD ID"
+                                    formControlName="username" maxLength="51" minlength="4">
+
+
+                                <span *ngIf="siteLoginForm.get('username').hasError('maxlength')" class="error-message">
+                                    username exceeds max 50 characters
+                                </span>
+                            </div>
+                            <div class="py-2">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" placeholder="*********"
+                                    formControlName="password" maxLength="50">
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button *ngIf="!isLoader" class="login-button" type="submit"
+                                    [disabled]="siteLoginForm.invalid" (click)="loginSite($event)">Login</button>
+
+                                <button *ngIf="isLoader" class="login-button" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            </div>
+
+                            <div *ngIf="production" class="login-tnc mt-2 mb-2">
+                                <a href="https://vspeed.adani.com/saml/login">Use SAML Authentication</a>
+                            </div>
+
+                        </form>
+                        <button *ngIf="production" class="login-button mt-2 mb-2 w-100" (click)="samllogin()">
+                            SAML-SSO LOGIN
+                        </button>
+                        <div *ngIf="errMsg">
+                            <p class="error-message">{{errMsg}}</p>
+                        </div>
+                        <div *ngIf="loginErrorMsg">
+                            <div class="error-message">{{loginErrorMsg}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="activeTab === 'tab2'">
+                <div class="login-panel">
+                    <div class="login-section">
+                        <form [formGroup]="vendorLoginForm" class="login-input-ad" name="vendorLoginForm">
+                            <div class="mb-1 mt-1">
+                                <label class="form-label">Division</label>
+                                <span class="asterisk"> *</span>
+                                <select class="form-select" aria-label="Default select example"
+                                    formControlName="division">
+                                    <option value="Select Division" disabled="true">Select Division</option>
+                                    <option value="Cement">Cement</option>
+                                    <option value="AEML">AEML</option>
+                                    <option value="APSEZ">APSEZ</option>
+                                </select>
+                                <span
+                                    *ngIf="vendorLoginForm.get('division')?.touched && vendorLoginForm.get('division').hasError('required')"
+                                    class="error-message">
+                                    Division is Required
+                                </span>
+                            </div>
+                            <div class="pt-3 text-start">
+                                <label for="username" class="form-label">Email / Mobile Number</label>
+                                <input type="text" class="form-control" placeholder="Enter your Email / Mobile Number"
+                                    id="username" required formControlName="username" id="username"
+                                    (blur)="resetField()" (input)="onInputChange()" maxlength="50" />
+                                <div *ngIf="vendorLoginForm.get('username')?.value">
+                                    <span class="error-message">{{
+                                        vendorLoginForm.get('username')?.getError('customError')
+                                        ?
+                                        vendorLoginForm.get('username')?.getError('customError') : loginErr
+                                        }}</span>
+                                </div>
+                            </div>
+
+                            <div class="pt-3 text-start">
+                                <label for="username" class="form-label">Vendor Number - Name</label>
+                                <select class="form-control form-select" aria-label="Default select example" [value]=""
+                                    formControlName="vendor_number">
+                                    <option value="choose" [selected]="true" disabled="true">Select</option>
+                                    <option *ngFor="let item of vendorArr" [value]=item>{{item}}</option>
+                                </select>
+                            </div>
+
+                            <div class="pt-3" *ngIf="showOTPField">
+                                <label for="otp" class="form-label">Enter OTP</label>
+                                <input class="form-control" type="password" placeholder="Enter OTP" pattern="[0-9]{6}"
+                                    maxlength="6" formControlName="otp" id="otp" (blur)="resetField()"
+                                    autocomplete="off"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                <span class="error danger" *ngIf="otpErr">{{ otpErr }}</span>
+                                <div class="reset-otp text-start">
+                                    <label [hidden]='hideTimer'>OTP Expires In {{timeLeft}} Seconds</label>
+                                    <button class="send-otp-btn" *ngIf="hideTimer" id="resendOTP" (click)="resendOTP()"
+                                        type="submit" mdbBtn mdbWavesEffect>Resend
+                                        OTP</button>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2" *ngIf="!showOTPField">
+                                <button *ngIf="!isLoader" class="login-button" type="button"
+                                    [disabled]="!vendorLoginForm.get('username')?.hasError('invalidToken')"
+                                    (click)="sendOTP()">Send OTP</button>
+                                <button *ngIf="isLoader" class="login-button" type="button" [disabled]="true"
+                                    (click)="sendOTP()">
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            </div>
+
+                            <div class="d-grid gap-2" *ngIf="showOTPField">
+                                <button *ngIf="!isLoader" [disabled]="!vendorLoginForm.valid"
+                                    (click)="loginVendor($event)" id="loginVendor" type="button" class="login-button"
+                                    mdbBtn mdbWavesEffect>Login</button>
+                                <button *ngIf="isLoader" [disabled]="!vendorLoginForm.valid" class="login-button"
+                                    type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            </div>
+                        </form>
+                        <!-- <div *ngIf="errMsg">
+                            <p class="error-message">{{errMsg}}</p>
+                        </div> -->
+                        <!-- <form [formGroup]="loginUserForm" class="login-input-ad" name="loginUserForm"
+                            (ngSubmit)="sendOTP()">
+                            <div class="mb-1 mt-1">
+                                <label class="form-label">Division</label>
+                                <span class="asterisk"> *</span>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option value="Select Division" disabled="true">Select Division</option>
+                                    <option value="Cement">Cement</option>
+                                    <option value="AEML">AEML</option>
+                                    <option value="APSEZ">APSEZ</option>
+                                </select>
+                            </div>
+                            <div class="mb-1 mt-1">
+                                <label for="username" class="form-label">Email/Mobile Number</label>
+                                <input type="text" class="form-control" placeholder="Enter your Email/Mobile Number"
+                                    id="username" required formControlName="username" id="username"
+                                    (blur)="resetField()" (input)="onInputChange()" maxlength="50" autocomplete="off" />
+                                <div *ngIf="loginUserForm.get('username')?.value">
+                                    <span class="error-message">{{
+                                        loginUserForm.get('username')?.getError('customError')
+                                        ?
+                                        loginUserForm.get('username')?.getError('customError') : loginErr }}</span>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="login-button" type="submit"
+                                    [disabled]="!loginUserForm.get('username')?.hasError('invalidToken')">Send
+                                    OTP</button>
+
+                                <button *ngIf="isLoader" class="login-button" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+
+                            </div>
+
+
+                        </form>
+                        <form *ngIf="isShown" [formGroup]="otpForm" class="login-input-ad" name="otpForm">
+                            <div class="mb-1 mt-1">
+                                <label for="otp" class="form-label">Enter OTP</label>
+                                <input class="form-control" type="password" placeholder="Enter OTP" pattern="[0-9]{4}"
+                                    maxlength="4" formControlName="otp" id="otp" required (blur)="resetField()"
+                                    autocomplete="off"
+                                    onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                <span class="error danger" *ngIf="otpErr">{{ otpErr }}</span>
+                                <div class="reset-otp">
+                                    <label [hidden]='hideTimer'>OTP Expires In {{timeLeft}} Seconds</label>
+                                    <a href="javascript:void(0);" class="send-otp-btn" *ngIf="hideTimer" id="resendOTTP"
+                                        (click)="resendOTTP()" type="submit" mdbBtn mdbWavesEffect>Resend
+                                        OTP</a>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button [disabled]="!otpForm.valid" (click)="submitOTP()" id="submitOTP" type="submit"
+                                    class="login-button" mdbBtn mdbWavesEffect>Login</button>
+
+                                <button *ngIf="isLoader" class="login-button" type="button" disabled>
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Loading...
+                                </button>
+                            </div>
+                        </form> -->
+                        <p class="login-tnc">By continuing, You agree to our <a
+                                href="https://www.acclimited.com/welcome/disclaimer" target="_blank">T&C</a> and <a
+                                href="https://www.acclimited.com/about/privacy-policy" target="_blank">Privacy
+                                Policy.</a></p>
+                        <div *ngIf="loginErrorMsg">
+                            <div class="error-message">{{loginErrorMsg}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

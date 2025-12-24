@@ -1,0 +1,29 @@
+<footer class="footer row m-0">
+    <div class="col-lg-6 col-md-6 col-sm-12 d-sm-center" *ngIf="!showElement">
+        <label class="footer-label">
+            ©vSPEED
+        </label>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12 d-sm-center" *ngIf="!showElement">
+        <div class="footer-help ">
+            <div class="help-call">
+                <img src="../../../../assets/svg/Headset.svg" alt="" />
+            </div>
+            <label class="footer-label">1800-121-4444-66</label>
+            <div class="circle"></div>
+            <div class="help-email">
+                <img src="../../../../assets/svg/Email.svg" alt="" />
+            </div>
+            <!-- <label class="footer-label">Cement.ITHelpdesk@vendorportal.com</label> -->
+            <label class="footer-label"><a href="mailto:Cement.ITHelpdesk@adani.com">Cement.ITHelpdesk@adani.com</a></label>
+        </div>
+    </div>
+
+    <div *ngIf="showElement">
+        <div class="col-12 text-center">
+            <label class="footer-label">
+                All Rights Reserved © 2023 Indian Concrete Journal
+            </label>
+        </div>
+    </div>
+</footer>

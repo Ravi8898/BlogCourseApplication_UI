@@ -1,0 +1,222 @@
+<form [formGroup]="form">
+    <h1 class="sideHeading">ADVANCE</h1>
+    <div class="row">
+        <div class="col-3">
+            <!-- <label class="form-label m-0">Maximum Amount Paid / Hold</label> -->
+            <label class="form-label m-0">Advance Paid (DPR AMT.)</label>
+            <label class="asterisk">*</label>
+            <div class="input-group">
+                <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                <input type="text" class="form-control lh-lg" formControlName="maxAmountPaidHold"
+                    placeholder="Enter Amount" maxlength="18" appIndianCurrency readonly>
+            </div>
+            <small class="text-danger"
+                *ngIf="form.get('maxAmountPaidHold')?.touched && form.get('maxAmountPaidHold')?.invalid">
+                Required & must be a valid number
+            </small>
+        </div>
+
+        <div class="col-3">
+            <!-- <label class="form-label m-0">Recovered Balance Amount</label> -->
+            <label class="form-label m-0">Recovered Amount</label>
+            <label class="asterisk">*</label>
+            <div class="input-group">
+                <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                <input type="text" class="form-control lh-lg" formControlName="currentBalance"
+                    placeholder="Enter Amount" maxlength="18" appIndianCurrency readonly>
+            </div>
+            <small class="text-danger"
+                *ngIf="form.get('currentBalance')?.touched && form.get('currentBalance')?.invalid">
+                Required & must be a valid number
+            </small>
+        </div>
+
+        <div class="col-3">
+            <label class="form-label m-0">Unadjusted Balance</label>
+            <div class="input-group">
+                <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                <input type="text" class="form-control lh-lg" [value]="unadjustedBalance"
+                     placeholder="Enter Amount" maxlength="18" appIndianCurrency
+                    readonly>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="row mt-1">
+        <div class="col-3">
+            <label class="form-label m-0">Advance Recovery %</label>
+            <label class="asterisk">*</label>
+            <div class="input-group">
+                <input type="text" class="form-control lh-lg" formControlName="advanceRecoveryPercent"
+                    placeholder="Enter Percentage" maxlength="6" appOnlyDecimal>
+                <button type="button" class="bt-text-include" (click)="calculateAmountValue()">Apply</button>
+            </div>
+            <small class="text-danger"
+                *ngIf="form.get('advanceRecoveryPercent')?.touched && form.get('advanceRecoveryPercent')?.invalid">
+                Required & must be a valid percentage
+            </small>
+        </div>
+
+        <div class="col-3">
+            <label class="form-label m-0">Calculate Amount (Current Bill)</label>
+            <div class="input-group">
+                <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                <input type="text" class="form-control lh-lg" formControlName="calculateAmount"
+                    placeholder="Auto populated" maxlength="18" appIndianCurrency readonly>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+    <h1 class="sideHeading">RETENTION</h1>
+
+    <div class="row">
+
+        <div class="col-12">
+            <h1 class="project-h1">PBG</h1>
+            <div class="row">
+                <div class="col-3">
+                    <label class="form-label m-0">Values</label>
+                    <label class="asterisk">*</label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                        <input type="text" class="form-control lh-lg" formControlName="pbgCurrentBalance"
+                            placeholder="Enter Amount" maxlength="18" appIndianCurrency>
+                    </div>
+                    <small class="text-danger"
+                        *ngIf="form.get('pbgCurrentBalance')?.touched && form.get('pbgCurrentBalance')?.invalid">
+                        Required & must be a valid number
+                    </small>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label m-0">Retention Percentage (%)</label>
+                    <label class="asterisk">*</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control lh-lg" formControlName="pbgRetentionPercent"
+                            placeholder="Enter Percentage" maxlength="6" appOnlyDecimal>
+                        <button type="button" class="bt-text-include" (click)="updateRetentionBPG()">Apply</button>
+
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label m-0">Calculate Amount (Current Bill)</label>
+                    <label class="asterisk">*</label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                        <input type="text" class="form-control lh-lg" formControlName="pbgCalculateRetentionAmount"
+                            placeholder="Enter Amount" maxlength="18" appIndianCurrency readonly>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label m-0">Total Retention Amount</label>
+                    <label class="asterisk">*</label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                        <input type="text" class="form-control lh-lg" formControlName="pbgTotalRetentionAmount"
+                            placeholder="Enter Amount" maxlength="18" appIndianCurrency readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12">
+            <h1 class="project-h1">CPBG</h1>
+            <div class="row">
+                <div class="col-3">
+                  <label class="form-label m-0">Values</label>
+                    <label class="asterisk">*</label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                        <input type="text" class="form-control lh-lg" formControlName="cbpgvlues"
+                            placeholder="Enter Amount" maxlength="18" appIndianCurrency>
+                    </div>
+                    <small class="text-danger"
+                        *ngIf="form.get('cbpgvlues')?.touched && form.get('cbpgvlues')?.invalid">
+                        Required & must be a valid number
+                    </small>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label m-0">Retention Percentage (%)</label>
+                    <label class="asterisk">*</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control lh-lg" formControlName="retentionValues"
+                            placeholder="Enter Percentage" maxlength="6" appOnlyDecimal>
+                        <button type="button" class="bt-text-include" (click)="updateRetentionCBPG()">Apply</button>
+                    </div>
+                    <small class="text-danger"
+                        *ngIf="form.get('retentionValues')?.touched && form.get('retentionValues')?.invalid">
+                        Required & must be a valid percentage
+                    </small>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label m-0">Calculate Amount (Current Bill)</label>
+                    <label class="asterisk">*</label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                        <input type="text" class="form-control lh-lg" formControlName="retentionCalculateBalance"
+                            placeholder="Enter Amount" maxlength="18" appIndianCurrency readonly>
+                    </div>
+                    <small class="text-danger"
+                        *ngIf="form.get('retentionCalculateBalance')?.touched && form.get('retentionCalculateBalance')?.invalid">
+                        Required & must be a valid number
+                    </small>
+                </div>
+
+                <div class="col-3">
+                    <label class="form-label m-0">Total Retention Amount</label>
+                    <label class="asterisk">*</label>
+                    <div class="input-group">
+                        <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                        <input type="text" class="form-control lh-lg" formControlName="retentionCurrentBalance"
+                            placeholder="Enter Amount" maxlength="18" appIndianCurrency readonly>
+                    </div>
+                    <small class="text-danger"
+                        *ngIf="form.get('retentionCurrentBalance')?.touched && form.get('retentionCurrentBalance')?.invalid">
+                        Required & must be a valid number
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <hr>
+    <h1 class="sideHeading">ADHOC AGAINST RA BILLS</h1>
+
+    <div class="row">
+        <div class="col-3">
+            <label class="form-label m-0">Maximum Amount Paid / Hold %</label>
+            <div class="input-group">
+                <input type="text" class="form-control lh-lg" formControlName="adhocMaxAmountPaidHoldPercent"
+                    placeholder="Enter Amount Percentage" maxlength="6" appOnlyDecimal>
+            </div>
+            <small class="text-danger"
+                *ngIf="form.get('adhocMaxAmountPaidHoldPercent')?.touched && form.get('adhocMaxAmountPaidHoldPercent')?.invalid">
+                Required & must be a valid percentage
+            </small>
+        </div>
+
+        <div class="col-3">
+            <label class="form-label m-0">Current Balance</label>
+            <label class="asterisk">*</label>
+            <div class="input-group">
+                <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+                <input type="text" class="form-control lh-lg" formControlName="adhocCurrentBalance"
+                    placeholder="Enter Amount" maxlength="18" appIndianCurrency>
+            </div>
+            <small class="text-danger"
+                *ngIf="form.get('adhocCurrentBalance')?.touched && form.get('adhocCurrentBalance')?.invalid">
+                Required & must be a valid number
+            </small>
+        </div>
+    </div>
+</form>

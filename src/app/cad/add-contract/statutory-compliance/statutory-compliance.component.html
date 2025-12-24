@@ -1,0 +1,270 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<div class="row">
+  <div class="col-12">
+    <div class="d-flex justify-content-between space-between-center project-label mb-2">
+      <label>Statutory Compliance</label>
+
+      <button *ngIf="roleName !== 'Project Manager' && roleName !== 'Checker'" type="button"
+        class="button-submit m-0 d-flex" (click)="addStatutoryCompliance()"><span class="insit-img"><img
+            src="../../../assets/svg/add.svg"></span><span style="margin-top: 10px;">
+          Add</span></button>
+
+    </div>
+
+  </div>
+
+
+  <div class="row m-0 mt-2">
+    <hr>
+    <div class="col-12 p-0 d-flex justify-content-center">
+      <div class="tabs w-40">
+        <div class="tab" [class.active]="activeTab === 'Policy'" (click)="changeTab('Policy')">Policy</div>
+        <div class="tab" [class.active]="activeTab === 'Certification'" (click)="changeTab('Certification')">Certificate
+        </div>
+        <div class="tab" [class.active]="activeTab === 'License'" (click)="changeTab('License')">License</div>
+        <div class="tab" [class.active]="activeTab === 'Other'" (click)="changeTab('Other')">Other</div>
+
+      </div>
+    </div>
+    <div class="col-12 p-0">
+      <app-simple-table [tableData]="StatutoryList" [columns]="statutoryColumn" (handleEdit)="onEdit($event)"
+        (handleDelete)="onDelete($event)" (handleView)="openDocumentModal($event)"></app-simple-table>
+    </div>
+  </div>
+
+</div>
+<app-custom-modal *ngIf="StatutoryCompliancesModal" (onClickCross)="closeStatutoryCompliancesModal()"
+  class="StatutoryCompliances-modal" [title]="'Statutory Compliances'">
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="complainceForm">
+
+        <div class="form-group ">
+
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <label for="" class="form-label m-0">Category</label>
+              <span class="asterisk"> *</span>
+            </div>
+            <a style="cursor: pointer;" (click)="openCategoryModal()">
+              <img src="../../../../assets/svg/add.svg" alt="" class="form-icon">
+            </a>
+          </div>
+          <ng-select formControlName="Category" class="dropdown-list-autocomplete" placeholder="Select Category" (change)="onCategoryChange($event)">
+            <ng-option value="">Select Category</ng-option>
+            <ng-option *ngFor="let item of CategroyList" [value]="item.compliancecategoryid">
+              {{item.compliancecategoryname}}</ng-option>
+          </ng-select>
+          <span id="Category_error" class="text-danger"
+            *ngIf="(complainceForm.get('Category')?.touched ||submitted) && complainceForm.get('Category')?.errors?.['required']">
+            Category is required
+          </span>
+
+        </div>
+
+        <div class="form-group ">
+
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <label for="" class="form-label m-0">Type</label>
+              <span class="asterisk"> *</span>
+            </div>
+            <a style="cursor: pointer;" (click)="openCategoryTypeModal()">
+              <img src="../../../../assets/svg/add.svg" alt="" class="form-icon">
+            </a>
+          </div>
+          <ng-select formControlName="CType" class="dropdown-list-autocomplete" placeholder="Select Type">
+            <ng-option value="">Select Type</ng-option>
+            <ng-option *ngFor="let item of TypeList" [value]="item.compliancetypeid">
+              {{item.compliancetypename}}</ng-option>
+          </ng-select>
+          <div
+            *ngIf="(complainceForm.get('CType')?.touched || submitted) && complainceForm.get('CType')?.errors?.['required']"
+            class="text-danger">
+            <small>Type is required.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="" class="form-label m-0">Identifier</label>
+          <span class="asterisk"> *</span>
+          <input type="text" maxlength="9" placeholder="Enter Identifier" class=" form-control lh-lg"
+            formControlName="Identifier">
+          <span id="Id_error" class="text-danger"
+            *ngIf="(complainceForm.get('Id')?.touched ||submitted) && complainceForm.get('Id')?.errors?.['required']">
+            Identifier is required
+          </span>
+        </div>
+
+        <div class="form-group ">
+
+          <label for="" class="form-label m-0">Value</label>
+          <span class="asterisk"> *</span>
+          <input type="text" maxlength="9" placeholder="Enter Value" class="form-control lh-lg" formControlName="value"
+            (keypress)="allowOnlyNumbers($event)">
+          <span id="value_error" class="text-danger"
+            *ngIf="(complainceForm.get('value')?.touched ||submitted) && complainceForm.get('value')?.errors?.['required']">
+            Value is required
+          </span>
+        </div>
+
+        <div class="form-group ">
+
+          <label for="" class="form-label m-0">Description</label>
+          <span class="asterisk"> *</span>
+          <input type="text" placeholder="Enter Description" class="form-control lh-lg" formControlName="Description"
+            maxlength="240">
+          <span id="Description_error" class="text-danger"
+            *ngIf="(complainceForm.get('Description')?.touched ||submitted) && complainceForm.get('Description')?.errors?.['required']">
+            Description is required
+          </span>
+        </div>
+
+        <div class="form-group ">
+          <label for="" class="form-label m-0">Start Date</label>
+          <span class="asterisk"> *</span>
+          <input type="date" class="form-control lh-lg" formControlName="startDate" (change)="onStartDateChange()"
+            (input)="restrictDateInput($event)" max="9999-12-31" [max]="currentDate">
+          <span id="startDate_error" class="text-danger"
+            *ngIf="(complainceForm.get('startDate')?.touched ||submitted) && complainceForm.get('startDate')?.errors?.['required']">
+            Start Date is required
+          </span>
+        </div>
+        <div class="form-group ">
+          <label for="" class="form-label m-0">Expires on</label>
+          <span class="asterisk"> *</span>
+          <input type="date" class="form-control lh-lg" formControlName="expires" [min]="minExpiresDate"
+            (input)="restrictDateInput($event)" max="9999-12-31">
+          <span id="expires_error" class="text-danger"
+            *ngIf="(complainceForm.get('expires')?.touched ||submitted) && complainceForm.get('expires')?.errors?.['required']">
+            Expires on is required
+          </span>
+          <span class="text-danger" *ngIf="complainceForm.get('expires')?.errors?.['invalidDate']">
+            Expires date must be greater than Start Date
+          </span>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex mt-4">
+              <button *ngIf="!isLoaderDoc" type="button" [disabled]="!isUpdated && isEdit" id="bt_approve"
+                class="button-submit button-left" (click)="saveData()">
+                <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+              </button>
+              <button *ngIf="isLoaderDoc" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
+              <button type="button" id="bt_reject" class="button-back button-left"
+                (click)="isEdit ? closeStatutoryCompliancesModal() :resetFormDoc()">
+                <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+                  class="left-arrow" />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="mt-4">
+              <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="documentViewModal" (onClickCross)="closeDocumentModal()" (closeModal)="closeDocumentModal()"
+  title="DOCUMENTS" class="document-modal">
+  <form [formGroup]="documentForm">
+    <div class="row">
+      <div class="col-12">
+
+        <div class="row pb-2">
+          <div class="form-group col-6">
+
+            <label for="" class="form-label m-0">Document Type</label>
+            <span class="asterisk"> *</span>
+            <ng-select class="dropdown-list-autocomplete" formControlName="documentType"
+              placeholder="Select Document Type" (change)="onDocumentTypeChange($event)">
+              <ng-option value="">Select Document Type</ng-option>
+              <ng-option *ngFor="let document of optionDocumentType"
+                [value]="document.documentTypeId">{{document.documentTypeName}}</ng-option>
+            </ng-select>
+            <span id="documentType_error" class="text-danger"
+              *ngIf="(documentForm.get('documentType')?.touched ||submitted) && documentForm.get('documentType')?.errors?.['required']">
+              Document Type is required
+            </span>
+          </div>
+
+          <div class="form-group col-6">
+
+            <label for="" class="form-label m-0">Version</label>
+            <span class="asterisk"> *</span>
+            <input type="text" [ngModel]="var_version" formControlName="docVersion" maxlength="6"
+              placeholder="Enter Version" class="form-control lh-lg">
+            <span id="docVersion_error" class="text-danger"
+              *ngIf="(documentForm.get('docVersion')?.touched ||submitted) && documentForm.get('docVersion')?.errors?.['required']">
+              Version is required
+            </span>
+            <span id="docVersion_error" class="text-danger" *ngIf="documentForm.get('docVersion')?.errors?.['pattern']">
+              Invalid format! Please enter a number with exactly 1 digits before and 1 digits after the
+              decimal.
+            </span>
+          </div>
+        </div>
+
+        <app-file-upload label="Document Upload" [isRequired]="true" [allowedFormats]="'.pdf,.doc,.docx'"
+          [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)">
+        </app-file-upload>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex mt-4">
+          <button *ngIf="!isLoaderDoc && roleName != 'Checker'" type="button" id="bt_approve"
+            class="button-submit button-left m-0" (click)="uploadDocument()">
+            <span class="ps-5"> {{isEdit ? 'Update':'Submit'}}</span>
+            <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+          </button>
+          <button *ngIf="isLoaderDoc" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+          <button type="button" id="bt_reject" class="button-back button-left" (click)="resetFormDocument()">
+            <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+            <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+            <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+              class="left-arrow" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="mt-4">
+          <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <app-simple-table [columns]="documentColumns" [tableData]="documentDetails" (handleEdit)="onEditDoc($event)"
+          (downloadDocument)="DownloadDoc($event)"></app-simple-table>
+      </div>
+    </div>
+  </form>
+</app-custom-modal>
+
+<app-center-modal *ngIf="categoryModal" (closeModal)="closeCategoryModal()">
+  <app-compliance-category></app-compliance-category>
+</app-center-modal>
+
+<app-center-modal *ngIf="categoryTypeModal" (closeModal)="closeCategoryTypeModal()">
+  <app-compliance-type></app-compliance-type>
+</app-center-modal>

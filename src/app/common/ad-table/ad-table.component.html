@@ -1,0 +1,550 @@
+
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div>
+    <!-- <div *ngIf="pagedData && pagedData.length > 0"> -->
+    <div>
+        <div class="row mt-2">
+            <div class="col-sm">
+                <h2 *ngIf="isTableTile" class="page-sub-header m-t-revert">{{tableTitle}}</h2>
+            </div>
+
+            <div class="col-sm-7" style="padding-right: 30px;" *ngIf="pagedData.length>0">
+                <!-- <div class="user-action" *ngIf="pagedData && pagedData.length > 0"> -->
+                <div class="user-action">
+                    <!-- <input value="Search Primary Sales Data" type="text"
+                    class=" input-text-ty1 icon-border d-inline-block search-icon" id="searchinput" ngModel
+                    *ngIf="tableData.length >= 0" (keyup)="searchKeyword('searchinput','table')"> -->
+                    <input placeholder="Search..." (input)="applyFilter($event)" type="text"
+                     class=" input-text-ty1 icon-border d-inline-block search-icon" id="searchinput" [(ngModel)]="searchText"
+                        *ngIf="isSearchShow">
+
+
+                    <div class="fliter icon-border" *ngIf="isTableFilter">
+                        <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal"
+                            data-bs-target="#filterModal">
+                    </div>
+
+                    <div class="user-setting icon-border" *ngIf="isTableFilter">
+                        <img src="../../../assets/img/icons/user-setting.png" class="" data-bs-toggle="modal"
+                            data-bs-target="#settingModal">
+                    </div>
+
+                    <!-- <img src=" ../../../../assets/img/icons/excel.png" (click)="exportToExcel()" class="excel icon-border"
+                    alt="" *ngIf="isTableFilter"> -->
+
+                    <div class="dropdown excel icon-border" *ngIf="isTableFilter">
+
+                        <img src=" ../../../assets/img/icons/excel.png" class="" alt="">
+
+                        <div class="dropdown-content">
+                            <a href="javascript:void(0);" (click)="exportToExcel()">Excel</a>
+                            <!-- <a href="javascript:void(0);" (click)="openPDF()">PDF</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Data Available -->
+            <div class="col-sm-7" style="padding-right: 30px;" *ngIf="pagedData.length==0">
+                <div class="user-action no-data">
+                    <input placeholder="Search here..." (input)="applyFilter($event)" type="text" [(ngModel)]="searchText"
+                        class=" input-text-ty1 icon-border d-inline-block search-icon" id="searchinput" *ngIf="isSearchShow">
+
+                    <div class="fliter icon-border" *ngIf="isTableFilter">
+                        <img src="../../../assets/img/icons/filter.png" class="" alt="" data-bs-toggle="modal" data-bs-target="#filterModal">
+                    </div>
+
+                    <div class="user-setting icon-border" *ngIf="isTableFilter">
+                        <img src="../../../assets/img/icons/user-setting.png" class="" alt="">
+                    </div>
+
+                    <div class="dropdown excel icon-border" *ngIf="isTableFilter">
+                        <img src=" ../../../assets/img/icons/excel.png" class="" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="table-responsive" *ngIf="pagedData && pagedData.length > 0"> -->
+        <!-- <div class="table-responsive" id="htmlData"> -->
+        <div class="table-responsive" id="htmlData"> <!-- *ngIf="pagedData && pagedData.length > 0" -->
+            <table class="table table-striped data-grid mt-0" id="datatable">
+                <thead class="data-grid-thead">
+                    <tr>
+
+                        <!-- <th>SrNo.</th> -->
+                        <ng-container *ngFor="let column of displayedColumns; let i = index">
+                            <th *ngIf="column != 'ID' && column != 'History'">{{ column }}</th>
+                        </ng-container>
+                        <ng-container *ngIf="showAction == true">
+                            <th *ngIf="loginType=='vendor'" style="width:170px">Action</th>
+                            <th *ngIf="loginType=='sitecontroller'">Invoice Action</th>
+                            <th *ngIf="showHistory!=false">History</th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody class="data-grid-tbody" id="table" *ngIf="pagedData && pagedData.length > 0">
+
+                    <tr *ngFor="let item of pagedData;let sr = index">
+
+                        <!-- <td>{{serialNumberStart+sr}}</td> -->
+                        <ng-container *ngFor="let column of displayedColumns; let i = index">
+                            <td *ngIf="column !== 'ID' && column != 'History'" [ngClass]="{
+                            'number' :columnDataTypes[i] === 'number',
+                            'string': columnDataTypes[i] === 'string',
+                            'datetime':columnDataTypes[i] === 'datetime',
+                            'status': column === 'Status'
+                          }">
+                                <!-- <a routerLink="/subscription/subscriberdetails" *ngIf="column === 'ICJ Number'"
+                                    (click)="goToLinkPage(item['ICJ Number'])">
+                                    {{ item[column] }}</a>
+                                {{ column ==='ICJ Number' ? null : item[column] }} -->
+                                <ng-container *ngIf="column.includes('Date')">
+                                    <p class="m-0 text-truncate">{{item[column] | date:'dd-MMM-yyyy'}}</p>
+                                </ng-container>
+                                <ng-container *ngIf="column == 'Attachment' || column == 'Download Invoice'">
+                                    <!-- <a href="javscript:void()" (click)="download($event)">{{item[column]}}</a> -->
+                                    <!-- <a href="javscript:void()" (click)="viewAttachment(item)">Click Here</a> -->
+                                    <a href="javascript:void(0);" class="bt-action-section bt-action" title="Download Attachment" (click)="viewAttachment(item)">
+                                        <img src="../../../assets/svg/download-data.svg" alt="" />
+                                    </a>
+                                </ng-container>
+                                <ng-container *ngIf="column == 'Checklist'">
+                                    <!-- <a href="javscript:void()" (click)="viewChecklist(item)" *ngIf="item['Checklist']">View</a> -->
+                                    <a *ngIf="item['Checklist']" href="javascript:void(0);" class="bt-action-section bt-action" title="Download Checklist" (click)="viewChecklist(item)">
+                                        <img src="../../../assets/svg/download-data.svg" alt="" />
+                                    </a>
+                                </ng-container>
+
+                                <!-- <ng-container *ngIf="column == 'Upload Invoice'">
+                                    <a href="javascript:void(0);" class="bt-action-section bt-action" data-bs-toggle="modal" data-toggle="tooltip" [attr.data-bs-target]="" (click)="uploadPDF()">
+                                        <img src="../../../assets/svg/upload-invoice-data.svg" alt="" />
+                                    </a>
+                                    <input id="upload_pdf" type="file" (change)="uploadPDFFile($event)" style="display: none;">
+                                </ng-container> -->
+                                <ng-container *ngIf="column == 'Status'">
+                                   <!-- <p class="m-0 btn-status sent" [ngClass]="{'sent' : item[column]=='sent-back', 'reject' : item[column]=='reject', 'accept' : item[column]=='accept', 'hold' : item[column]=='hold'}">{{item[column]}}</p> -->
+                                   <!-- <p *ngIf="roleName=='SiteController'" class="m-0 btn-status sent" [ngClass]="{'sent' : item[column]=='sent-back', 'reject' : item[column]=='reject', 'accept' : item[column]=='accept' || item[column]=='Approved', 'hold' : item[column]=='onhold', 'pending':item[column]=='pending', 'processing':item[column]=='processing'}">{{item[column]=='pending'?'Pending':item[column]=='sent-back'?'Sent Back': item[column]=='reject'? 'Rejected': item[column]=='accept'?'Accepted': item[column]=='onhold'?'On Hold' : item[column]=='processing'?'Processing' : item[column]}}</p> -->
+                                   <p class="m-0 btn-status sent"
+                                      [ngClass]="{
+                                        'sent': item[column]=='sent-back' || item[column]=='resubmitted',
+                                        'reject': item[column]=='reject',
+                                        'accept': item[column]=='accept' || item[column]=='Approved',
+                                        'hold': item[column]=='onhold',
+                                        'correction_required': item[column]=='correction_required',
+                                        'pending':item[column]=='pending',
+                                        'processing':item[column]=='processing',
+                                        'submitted':item[column]=='submitted',
+                                        'error':item[column]=='error'
+                                      }"
+                                      (click)="retrySES(item)">
+                                     {{
+                                       item[column]=='pending' ? 'Pending' :
+                                       item[column]=='sent-back' ? 'Sent Back' :
+                                       item[column]=='resubmitted' ? 'Resubmitted' :
+                                       item[column]=='correction_required' ? 'Correction Required' :
+                                       item[column]=='reject' ? 'Rejected' :
+                                       item[column]=='accept' ? 'Accepted' :
+                                       item[column]=='onhold' ? 'On Hold' :
+                                       item[column]=='processing' ? 'Processing' :
+                                       item['status']=='submitted' ? 'Submitted' :
+                                       item['Status']=='error' ? 'Error/Retry' :
+                                       item[column] | titlecase
+                                     }}
+                                   </p>
+                                   <p *ngIf="roleName=='LogisticOfficer'" class="m-0 btn-status"
+                                      [ngClass]="{
+                                        'reject': item[column].includes('Reject'),
+                                        'accept': item[column].includes('Approved'),
+                                        'pending':item[column].includes('Pending')
+                                      }">
+                                     {{item[column]}}
+
+
+                                   </p>
+                                </ng-container>
+                                <ng-container *ngIf="!((column=='Attachment') || (column=='Download Invoice') || (column=='Checklist') || (column=='Upload Invoice') || (column =='Status') || (column.includes('Date')))">
+                                    <p class="m-0 text-truncate" style="max-width: 150px;" data-toggle="tooltip" title="{{item[column] && item[column].length>20?item[column]:''}}">{{item[column]}}</p>
+                                </ng-container>
+                            </td>
+                        </ng-container>
+
+                        <td *ngIf="showAction == true">
+                            <div class="bt-action-section" *ngIf="loginType=='vendor'">
+
+                                <!-- <a href="javascript:void(0);" class="bt-action" data-bs-toggle="modal"
+                                    [attr.data-bs-target]="modalElementId" (click)="goToEdit(item)">
+                                    <img src="../../../assets/svg/Edit.svg" alt="" /></a> -->
+                                <!-- <a *ngIf="item['Status']=='sent-back'" href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Edit"
+                                    [attr.data-bs-target]="" (click)="goToEdit(item)">
+                                    <img src="../../../assets/svg/Edit.svg" alt="" /></a> -->
+                                <div *ngIf="roleName!='PRIMARY'">
+                                  <a [ngClass]="{'hide': item['Status']=='sent-back' || item['Status']=='correction_required'}"
+                                    href="javascript:void(0);" class="bt-action" data-toggle="tooltip" title="View Invoice"
+                                    (click)="goToVendorView(item)">
+                                    <img src="../../../assets/svg/eye.svg" alt="" />
+                                  </a>
+                                  <a [ngClass]="{'visible-hidden': (item['Status']!='sent-back' && item['Status']!='correction_required')}"
+                                    href="javascript:void(0);" class="bt-action abc" data-bs-toggle="modal" data-toggle="tooltip" title="Edit"
+                                    [attr.data-bs-target]="" (click)="goToEdit(item)">
+                                    <img src="../../../assets/svg/Edit.svg" alt="" />
+                                  </a>
+                                  <!-- <a [ngClass]="{'visible-hidden': item['Status']!='sent-back' && item['Status']!='correction_required'}"
+                                       href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Delete"
+                                       (click)="goToDelete(item)" data-bs-target="#deleteModal">
+                                       <img src="../../../assets/svg/Delete.svg" alt="" />
+                                    </a> -->
+                                </div>
+                                <!-- <button class="button-submit m-0" style="width: 110px; height: 30px; font-size: 12px;"><span>Submit</span> <img src="../../../assets/svg/right-arrow.svg"></button> -->
+                                <!-- <button *ngIf="roleName=='PRIMARY'" class="button-submit m-0" style="width: 110px; height: 30px; font-size: 12px;" (click)="getInvoice(item)"><span>Submit</span></button> -->
+                                </div>
+
+                            <div class="bt-action-section" *ngIf="loginType=='sitecontroller'">
+                                <a  href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Invoice Action"
+                                    [attr.data-bs-target]="searchModal" (click)="goToEdit(item, 'view')">
+                                    <img src="../../../assets/svg/site-action.svg" alt="" />
+                                </a>
+                                <!-- <a  href="javascript:void(0);" *ngIf="roleName=='RawMaterialIncharge'" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" [title]="'Edit'"
+                                    [attr.data-bs-target]="searchModal">
+                                    <img src="../../../assets/svg/Edit.svg" alt="" (click)="goToEdit(item, 'edit')">
+                                </a> -->
+                                <a  href="javascript:void(0);" *ngIf="roleName=='RawMaterialIncharge'" class="bt-action" [title]="'Edit'">
+                                    <img src="../../../assets/svg/Edit.svg" alt="" class="opac3" *ngIf="item['Status']=='submitted'" style="opacity: 0.3; cursor: no-drop;">
+                                    <img src="../../../assets/svg/Edit.svg" alt="" *ngIf="item['Status']!='submitted'" (click)="goToEdit(item, 'edit')">
+                                </a>
+                            </div>
+
+                            <div class="bt-action-section" *ngIf="loginType=='sitecontroller' && roleName=='SuperUser'">
+                                <a  href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Edit"
+                                    [attr.data-bs-target]="searchModal"> <!-- (click)="goToEdit(item)" -->
+                                    <img src="../../../assets/svg/Edit.svg" alt="" />
+                                </a>
+                            </div>
+                        </td>
+
+                        <td *ngIf="showHistory!=false">
+                            <div class="bt-action-section">
+                                <a href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" title="View History"
+                                    (click)="goToViewHistory(item['History'])" data-bs-target="#trackModal"><img
+                                        src="../../../assets/svg/history.svg" alt="" /></a>
+                                <!-- <a href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-bs-target="#trackModal">
+                                    <img src="../../../assets/svg/eye.svg" data-toggle="tooltip" title="View history" alt="" /></a> -->
+                            </div>
+                        </td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination-content mb-4" *ngIf="pagedData && pagedData.length > 0">
+            <div class="pagination">
+                <button class="btn" (click)="prevPage()" [disabled]="currentPage === 1">&lt;</button>
+                <!-- <ng-container *ngFor="let page of pages"> -->
+                <ng-container *ngFor="let page of visiblePages">
+                    <button (click)="goToPage(page)" [class.active]="currentPage == page">{{ page
+                        }}</button>
+                </ng-container>
+                <button (click)="nextPage()" [disabled]="currentPage == totalPages">&gt;</button>
+
+                <!-- Dropdown Pagination -->
+                <label for="pageDropdown" class="pg-dp-label">Jump to </label>
+                <select class="form-select" id="pageDropdown" [(ngModel)]="currentPage" (change)="onPageChange($event)">
+                    <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                </select>
+            </div>
+
+            <div class="total">Total: <span>{{ totalItems }}</span></div>
+        </div>
+    </div>
+
+    <div *ngIf="pagedData.length==0">
+        <div class="row noRecond">
+            <div class="col">
+                <h3>No records found</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- Left Modal -->
+<!-- <div class="modal left fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Left Sidebar</h4>
+				</div>
+
+				<div class="modal-body">
+					<p>Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+					</p>
+				</div>
+
+			</div>
+
+		</div>
+
+	</div> -->
+<!-- modal -->
+
+<!-- Right Modal -->
+<div class="modal right fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">Filter</h4>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="dynamicSearchForm" style="text-align:justify">
+                    <!-- <div *ngFor="let controlName of getFormKeys()"> -->
+                    <div *ngFor="let controlName of searchObject">
+
+                        <div class="input-text-group">
+                            <label>{{ controlName.forLabel }}</label>
+                            <!-- <input *ngIf="controlName.forContrl !== 'BagType'" [formControlName]="controlName.forContrl"
+                                [id]="controlName.forContrl" class="input-text"
+                                [type]="(controlName.forLabel != 'Date' || !controlName.forLabel.includes('date'))?'text':'date'" /> -->
+                            <input *ngIf="controlName.forContrl != 'status'" [placeholder]="controlName.forPlace" [formControlName]="controlName.forContrl"
+                                [id]="controlName.forContrl" class="input-text"
+                                [type]="(!controlName.forContrl.includes('Date'))?'text':'date'" />
+
+                            <select *ngIf="controlName.forContrl == 'status'" [formControlName]="controlName.forContrl" [id]="controlName.forContrl" class="dropdown-list">
+                                <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                <option value="reject">Reject</option>
+                                <option value="onhold">On Hold</option>
+                                <option value="pending">Pending</option>
+                                <option value="accept">Accepted</option>
+                            </select>
+
+
+                        </div>
+                    </div>
+                    <div class="bt-section mt-5">
+                        <button class="button-back" data-bs-dismiss="modal" (click)="resetSearch()">Reset</button>
+                        <button class="button-submit" data-bs-dismiss="modal" (click)="applySearch()">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<!-- Right Modal -->
+<div class="modal right fade" id="settingModal" tabindex="-1" role="dialog" aria-labelledby="settingModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">Setting</h4>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="columnForm" style="text-align:justify">
+                    <div *ngFor="let column of displayedColumns_constant">
+                        <label *ngIf="column != 'ID'">
+                            <input type="checkbox" [formControlName]="column" />
+                            {{ column }}
+                        </label>
+                    </div>
+                    <div class="bt-section mt-5">
+                        <button class="button-back" data-bs-dismiss="modal" (click)="resetSetting()">Reset</button>
+                        <button type="submit" class="button-submit" data-bs-dismiss="modal"
+                            (click)="applySetting()">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel">Delete</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="body">
+                Are you sure, you want to delete this row ?
+            </div>
+            <div class="bt-section footer">
+                <button type="button" class="button-back" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="button-submit" data-bs-dismiss="modal"
+                    (click)="confirmDelete(deleteItemId)">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal right fade" id="trackModal" tabindex="-1" role="dialog" aria-labelledby="trackModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2">Tracking</h6>
+            </div>
+
+            <div *ngIf="selectedInvoiceType !== 'Material' && selectedInvoiceType !== 'Service'" class="modal-body">
+                <!-- <form [formGroup]="stockForm">
+
+                </form> -->
+                <div class="d-flex trackData" *ngFor="let item of trackData">
+                    <div class="col-md-2">
+                        <p class="m-0">{{item['date'] | date:'dd-MM-yyyy'}}</p>
+                        <!-- <p class="m-0">10:20 AM</p> -->
+                        <p class="m-0">{{item['date'] | date:'hh:mm a'}}</p>
+
+                    </div>
+                    <div class="col-md-1 pt-1 px-2">
+                        <div class="circle" [ngClass]="{'accept':item['status']=='accept'}"></div>
+                        <div class="pvr"></div>
+                    </div>
+                    <div class="col-md-9">
+                        <!-- <h5>Send Back</h5>
+                        <p class="m-0 text-break">https://www.figma.com/proto/pvevbbwFwx06PeJCZ4Qxnc/Vendor-Portal?page-id=0%3A1&type=design&node-id=10-412&viewport=-3858%2C-780%2C0.63&t=hNasISsB2aB71LA3-1&scaling=scale-down-width&starting-point-node-id=77%3A2809</p> -->
+                        <!-- <p class="status">{{item['status'] | titlecase}}</p> -->
+                        <p class="status">{{item['status']=='pending'?'Pending':item['status']=='sent-back'?'Sent Back': item['status']=='reject'? 'Rejected': item['status']=='accept'?'Accepted': item['status']=='onhold'?'On Hold' :''}}</p>
+                        <p class="updatedby">By {{item['updatedby']}}</p>
+                        <p class="updatedby" *ngIf="item['barcode']">Barcode Number :- {{item['barcode']}}</p>
+                        <p class="m-0 text-break">{{item['content']}}</p>
+                    </div>
+                </div>
+
+                <div *ngIf="sesData['sesRemark']" class="d-flex trackData">
+                    <p class="col-md-3" style="margin: 0px; white-space: break-spaces; width: 75px;">SES Status</p>
+                    <div class="col-md-1 pt-1 px-2">
+                        <div class="circle"></div>
+                        <div class="pvr"></div>
+                    </div>
+                    <p class="col-md-8 updatedby m-0">
+                        <span>{{sesData['sesRemark']}}</span>
+                        <span class="d-block">{{sesData['ses']}}</span>
+                        <span class="d-block">{{sesData['creationDate_']}} {{sesData['checklistCreationTime_']}}</span>
+                    </p>
+                </div>
+
+                <div *ngIf="sesData['checklistRemark']" class="d-flex trackData">
+                    <p class="col-md-3" style="margin: 0px; white-space: break-spaces; width: 75px;">Checklist Status</p>
+                    <div class="col-md-1 pt-1 px-2">
+                        <div class="circle"></div>
+                        <div class="pvr"></div>
+                    </div>
+                    <p class="col-md-8 updatedby m-0">
+                        <span>{{sesData['checklistRemark']}}</span>
+                        <span class="d-block">{{sesData['checklist']}}</span>
+                        <span class="d-block">{{sesData['creationDate_']}} {{sesData['checklistCreationTime_']}}</span>
+                    </p>
+                </div>
+
+                <div *ngIf="sesData['utrNumber']" class="d-flex trackData">
+                    <p class="col-md-3" style="margin: 0px; white-space: break-spaces; width: 75px;">UTR Number</p>
+                    <div class="col-md-1 pt-1 px-2">
+                        <div class="circle"></div>
+                        <div class="pvr"></div>
+                    </div>
+                    <p class="col-md-8 updatedby m-0">
+                        <span>{{sesData['utrNumber']}}</span>
+                        <!-- <span class="d-block">{{sesData['utrDate'] | date: 'dd-MMM-yyyy hh:mm'}}</span> -->
+                        <span class="d-block">{{sesData['utrDate_']}}</span>
+                    </p>
+                </div>
+
+                <p class="d-flex mt-2" *ngIf="sapStatus['VIM_STATUS']" style="margin: 0px; font-size: 14px; font-weight: 600;">Payment Status</p>
+                <div class="d-flex trackData" *ngIf="sapStatus['VIM_STATUS']">
+                    <div class="col-md-2">
+                        <p class="m-0">Status</p>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="pvr"></div>
+                    </div>
+                    <div class="col-md-9">
+                        <p class="m-0 text-break">{{sapStatus['VIM_STATUS']}}</p>
+                    </div>
+                </div>
+
+                <div  class="d-flex trackData pt-0" *ngIf="sapStatus['FI_DOC']">
+                    <div class="col-md-2">
+                        <p class="m-0">FI_DOC</p>
+                    </div>
+                    <div class="col-md-1">
+                        <div class="pvr"></div>
+                    </div>
+                    <div class="col-md-9">
+                        <p class="m-0 text-break">{{sapStatus['FI_DOC']}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="selectedInvoiceType === 'Material' || selectedInvoiceType == 'Service'"  class="modal-body">
+              <div class="d-flex trackData" *ngFor="let item of trackData">
+                <div class="col-md-2">
+                  <p class="m-0">{{item['date'] | date:'dd-MM-yyyy'}}</p>
+                  <p class="m-0">{{item['date'] | date:'hh:mm a'}}</p>
+                </div>
+
+                <div class="col-md-1 pt-1 px-2">
+                  <div class="circle" [ngClass]="{
+                  'pending': item.status.toLowerCase() === 'pending',
+                  'under-review': item.status.toLowerCase() === 'under_review',
+                  'in-process': item.status.toLowerCase() === 'in_process',
+                  'in-progress': item.status.toLowerCase() === 'in_progress',
+                  'correction-required': item.status.toLowerCase() === 'correction_required',
+                  'posted': item.status.toLowerCase() === 'posted',
+                  'reject': item.status.toLowerCase() === 'reject',
+                  'resubmitted': item.status.toLowerCase() === 'resubmitted',
+                  'sent-back': item.status.toLowerCase() === 'sent-back',
+                  'rejected': item.status.toLowerCase() === 'rejected',
+                  'accept': item.status.toLowerCase() === 'accept',
+                  'submitted': item.status.toLowerCase() === 'submitted',
+                  'onhold': item.status.toLowerCase() === 'onhold'
+                }">
+                  </div>
+
+                  <div class="pvr"></div>
+                </div>
+
+                <div class="col-md-9">
+                  <p class="status">
+                    {{
+                    item.status.toLowerCase() === 'pending' ? 'Pending' :
+                    item.status.toLowerCase() === 'under_review' ? 'Under Review' :
+                    item.status.toLowerCase() === 'in_process' ? 'In Process' :
+                    item.status.toLowerCase() === 'in_progress' ? 'In Progress' :
+                    item.status.toLowerCase() === 'correction_required' ? 'Correction Required' :
+                    item.status.toLowerCase() === 'posted' ? 'Posted' :
+                    item.status.toLowerCase() === 'reject' ? 'Reject' :
+                    item.status.toLowerCase() === 'resubmitted' ? 'Resubmitted' :
+                    item.status.toLowerCase() === 'sent-back' ? 'Sent Back' :
+                    item.status.toLowerCase() === 'rejected' ? 'Rejected' :
+                    item.status.toLowerCase() === 'accept' ? 'Accepted' :
+                    item.status.toLowerCase() === 'submitted' ? 'Submitted' :
+                    item.status.toLowerCase() === 'onhold' ? 'On Hold' :
+                    item.status
+                    }}
+                  </p>
+
+                  <p class="updatedby">By {{item['updatedby']}}</p>
+                  <p class="updatedby" *ngIf="item['barcode']">Barcode Number :- {{item['barcode']}}</p>
+                  <p class="m-0 text-break">{{item['content']}}</p>
+                </div>
+
+                </div>
+                </div>
+
+
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->

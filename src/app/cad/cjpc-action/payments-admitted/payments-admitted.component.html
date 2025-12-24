@@ -1,0 +1,185 @@
+<div class="row">
+    <div class="col-3">
+        <label for="" class="form-label m-0">Gross amount against work done (SITC)</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter gross Amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [value]="paymentDetails?.BillAmt| indianCurrency" [disabled]="true">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">Mobilisation Advance</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter Mobilisation" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [disabled]="true"
+                [value]="paymentDetails?.advRecovery | indianCurrency">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">Hold Amount</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [disabled]="true"
+                [value]="(paymentDetails?.holdAmt - paymentDetails?.holdRelAmt) | indianCurrency">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">Recovery Amount</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [disabled]="true"
+                [value]="paymentDetails?.recoveryAmt | indianCurrency">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">PBG Retention Amount</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [disabled]="true" [value]="paymentDetails?.pbgRetentionAmount">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">CPBG Retention Amount</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [disabled]="true" [value]="paymentDetails?.cpbgRetentionAmount">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">Adhoc payment</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [disabled]="true">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">CGST (Payable in addition to Contract Price)</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [value]="paymentDetails?.cgstRate" [disabled]="true">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">SGST (Payable in addition to Contract Price)</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [value]="paymentDetails?.sgstRate" [disabled]="true">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">IGST (Payable in addition to Contract Price)</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [value]="paymentDetails?.igstRate" [disabled]="true">
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">TCS / TDS Amount</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter TCS / TDS Amount" class="form-control right-corner-radius-0 lh-lg"
+                name="WONumber" maxlength="250" [value]="paymentDetails?.TDSAmount" [disabled]="true">
+        </div>
+    </div>
+</div>
+<h1 class="sideHeading mt-3">Subtotal : {{paymentDetails?.grossAmt | indianCurrency}}</h1>
+
+<div class="row">
+    <div class="col-12">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Upto Previous Bill</th>
+                    <th>This Bill</th>
+                    <th>Cumulative Upto Bill</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Gross Amount</td>
+                    <td>{{SummaryDetailsA[0]?.billamount | indianCurrency}}</td>
+                    <td>{{paymentDetails?.BillAmt | indianCurrency}}</td>
+                    <td>{{SummaryDetailsA[0]?.billamount + paymentDetails?.BillAmt | indianCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mobilization Advance</td>
+                    <td>{{(SummaryDetailsA[0]?.advancerecoveryamount) *-1 | indianCurrency}}</td>
+                    <td>{{(paymentDetails?.advRecovery) *-1 | indianCurrency}}</td>
+                    <td>{{(SummaryDetailsA[0]?.advancerecoveryamount + paymentDetails?.advRecovery) *-1 |
+                        indianCurrency}}</td>
+                </tr>
+                <tr>
+                    <td>Hold Amount</td>
+                    <td>{{(SummaryDetailsA[0]?.holdamount) * -1 | indianCurrency}}</td>
+                    <td>{{(paymentDetails?.holdAmt) *-1 | indianCurrency}}</td>
+                    <td>{{(SummaryDetailsA[0]?.holdamount + paymentDetails?.holdAmt) *-1 | indianCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Hold Release Amount</td>
+                    <td>{{SummaryDetailsA[0]?.holdreleaseamount | indianCurrency}}</td>
+                    <td>{{paymentDetails?.holdRelAmt | indianCurrency}}</td>
+                    <td>{{SummaryDetailsA[0]?.holdreleaseamount + paymentDetails?.holdRelAmt |
+                        indianCurrency}}</td>
+                </tr>
+                <tr>
+                    <td>Recoveries Amount</td>
+                    <td>{{(SummaryDetailsA[0]?.recoveryamount) *-1 | indianCurrency}}</td>
+                    <td>{{(paymentDetails?.recoveryAmt) *-1 | indianCurrency}}</td>
+                    <td>{{(SummaryDetailsA[0]?.recoveryamount + paymentDetails?.recoveryAmt) *-1 |
+                        indianCurrency}}</td>
+                </tr>
+                <tr>
+                    <td>PBG Retention Amount</td>
+                    <td>{{(SummaryDetailsA[0]?.pbgamount) *-1 | indianCurrency}}</td>
+                    <td>{{(paymentDetails?.pbgRetentionAmount) *-1 | indianCurrency}}</td>
+                    <td>{{(SummaryDetailsA[0]?.pbgamount + paymentDetails?.pbgRetentionAmount) *-1 |
+                        indianCurrency}}</td>
+                </tr>
+                <tr>
+                    <td>CPBG Retention Amount</td>
+                    <td>{{(SummaryDetailsA[0]?.cpbgamount) *-1 | indianCurrency}}</td>
+                    <td>{{(paymentDetails?.cpbgRetentionAmount) *-1 | indianCurrency}}</td>
+                    <td>{{(SummaryDetailsA[0]?.cpbgamount + paymentDetails?.cpbgRetentionAmount) *-1 |
+                        indianCurrency}}</td>
+                </tr>
+                <tr>
+                    <td>CGST</td>
+                    <td>{{SummaryDetailsA[0]?.cgstrate | indianCurrency}}</td>
+                    <td>{{paymentDetails?.cgstRate | indianCurrency}}</td>
+                    <td>{{SummaryDetailsA[0]?.cgstrate + paymentDetails?.cgstRate | indianCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>SGST</td>
+                    <td>{{SummaryDetailsA[0]?.sgstrate | indianCurrency}}</td>
+                    <td>{{paymentDetails?.sgstRate | indianCurrency}}</td>
+                    <td>{{SummaryDetailsA[0]?.sgstrate + paymentDetails?.sgstRate | indianCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>IGST</td>
+                    <td>{{SummaryDetailsA[0]?.igstrate | indianCurrency}}</td>
+                    <td>{{paymentDetails?.igstRate | indianCurrency}}</td>
+                    <td>{{SummaryDetailsA[0]?.igstrate + paymentDetails?.igstRate | indianCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>TCS/TDS Amount</td>
+                    <td>{{(SummaryDetailsA[0]?.tdsamount) *-1 | indianCurrency}}</td>
+                    <td>{{(paymentDetails?.TDSAmount) *-1 | indianCurrency}}</td>
+                    <td>{{(SummaryDetailsA[0]?.tdsamount + paymentDetails?.TDSAmount) *-1 |
+                        indianCurrency}}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Net Amount Payable</strong></td>
+                    <td><strong>{{SummaryDetailsA[0]?.grossamount | indianCurrency}}</strong></td>
+                    <td><strong>{{paymentDetails?.grossAmt | indianCurrency}}</strong></td>
+                    <td><strong>{{SummaryDetailsA[0]?.grossamount + paymentDetails?.grossAmt |
+                            indianCurrency}}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

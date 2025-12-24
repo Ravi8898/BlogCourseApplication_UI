@@ -1,0 +1,35 @@
+<div class="popup" *ngIf="showPopup">
+    <div class="row">
+        <div class="col-12">
+            <img src="../../../../assets/svg/tick-success.svg" alt="insit-logo" class="insit-logo">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="success">SUCCESSFULLY</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="success-msg">{{popupMessage}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-end mt-4">
+                <button type="button" class="button-submit m-0 pt-2" (click)="hide()">
+                    OK
+                    <div class="insit-img-right"><img src="../../../../assets/svg/right-arrow.svg"></div>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <div class="row w-100">
+        <div class="col-12">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+</div>

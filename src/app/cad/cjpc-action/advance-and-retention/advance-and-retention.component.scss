@@ -1,0 +1,35 @@
+.sideHeading {
+    font-size: 18px;
+    color: #0B74B0;
+    font-weight: 600;
+}
+label {
+    font-weight: 600;
+    font-size: 14px;
+}
+.project h1,
+.project-h1 {
+    font-size: 16px;
+    font-weight: 600;
+    // color: #0B74B0;
+}
+
+.bt-text-include {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 600;
+    border: 0;
+}
+
+.bt-text-include:active {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    background: #0B74B0;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 600;
+    border: 0;
+}

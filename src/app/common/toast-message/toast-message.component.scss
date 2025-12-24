@@ -1,0 +1,73 @@
+.toast-content-success {
+    width: 368px;
+    min-height: 48px;
+    padding: 10px;
+
+    position: fixed;
+    top: 60px;
+    right: -400px;
+    transition: right 5s ease-in-out;
+    // right: 0;
+
+    background: linear-gradient(0deg, #DEFBE6, #DEFBE6),
+        linear-gradient(0deg, rgba(36, 161, 72, 0.3), rgba(36, 161, 72, 0.3));
+
+    border: 1px solid #24A1484D;
+
+    border-left: 4px solid #24A148;
+
+    z-index: 1000;
+}
+
+.toast-content-error {
+    width: 368px;
+    min-height: 48px;
+    padding: 10px;
+
+    position: fixed;
+    top: 60px;
+    right: -400px;
+    transition: right 5s ease-in-out;
+    // right: 0;
+    background: linear-gradient(0deg, #FFF1F1, #FFF1F1),
+        linear-gradient(0deg, rgba(218, 30, 40, 0.3), rgba(218, 30, 40, 0.3));
+
+    border: 1px solid #DA1E284D;
+
+    border-left: 4px solid #DA1E28;
+
+    z-index: 1000;
+}
+
+.toast-content-success.show-toast {
+    right: 0;
+    z-index: 9999;
+}
+
+.toast-content-error.show-toast {
+    right: 0;
+    z-index: 9999;
+}
+
+.bd-toast {
+    justify-content: space-between;
+}
+
+.btn-close {
+    width: 6px;
+    height: 6px;
+    margin-top: 6px;
+    cursor: pointer !important;
+}
+
+.toast-text {
+    font-size: 15px;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+//   /* Optional: Hover effect */
+// .btn-close:hover {
+//     background-color: #0056b3;
+
+// }

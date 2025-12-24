@@ -1,0 +1,356 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+
+<div class="row">
+    <div class="col-12">
+        <div class="justify-content-between space-between-center project-label mb-2">
+            <label>Listing Of Recovery</label>
+            <span [matTooltip]="cjpcStatus == 'Complete' ? 'Can not add Recovery after CJPC is completed.' : ''">
+                <button [disabled]="cjpcStatus === 'Complete'" type="button" class="button-submit d-flex m-0"
+                    (click)="AddRecovery()">
+                    <span class="insit-img"><img src="../../../assets/svg/add.svg"></span>
+                    <span style="margin-top: 10px;">ADD</span>
+                </button>
+            </span>
+        </div>
+
+        <app-simple-table [columns]="columns" [tableData]="RecoveriesList" (handleEdit)="onEdit($event)"
+            (handleClickHere)="rowAction($event)" (handleDelete)="onDelete($event)"></app-simple-table>
+    </div>
+
+</div>
+<h1 class="sideHeading mt-3">Subtotal : {{totalRecoveryAmount | indianCurrency}}</h1>
+
+<!-- <div class="row">
+    <div class="col-12">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Upto Previous Bill</th>
+                    <th>This Bill</th>
+                    <th>Cumulative Upto Bill</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of recoveryTable">
+                    <td>{{ item.recoverytypename | indianCurrency}}</td>
+                    <td>{{ item.uptoPreviousBill | indianCurrency }}</td>
+                    <td>{{ item.thisBill | indianCurrency }}</td>
+                    <td>{{ item.cumulative | indianCurrency }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</div> -->
+
+<app-custom-modal *ngIf="isAddRecoveryModelOpen" (onClickCross)="closeRecoveryModal()" [title]="'Add Recoveries'"
+    class="recoveries-modal">
+    <form [formGroup]="recoveryForm">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="cjpcId">CJPC Id</label>
+                            <input type="text" maxlength="250" placeholder="Auto Populated" class=" form-control lh-lg"
+                                formControlName="cjpcId" [readOnly]="true">
+                            <span id="department_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('cjpcId')?.touched || submitted) && recoveryForm.get('cjpcId')?.errors?.['required']">
+                                CJPC Id is required
+                            </span>
+                        </div>
+                    </div>
+                    <!-- <div class="col"> -->
+                    <!-- <div class="form-group">
+                            <label for="invoiceId">Invoice Id</label>
+                            <input type="text" maxlength="250" placeholder="Auto Populated" class=" form-control lh-lg"
+                                formControlName="invoiceId" [readOnly]="true">
+                        </div> -->
+                    <!-- </div> -->
+                    <div class="col-6">
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <label for="department">Department</label>
+                                    <label class="asterisk">*</label>
+                                </div>
+                                <a style="cursor: pointer;" (click)="openDepartmentModal()">
+                                    <img src="../../../../assets/svg/add.svg" alt="" class="form-icon">
+                                </a>
+                            </div>
+                            <ng-select formControlName="department" class="dropdown-list-autocomplete"
+                                placeholder="Select Department" (change)="onChangeDepartment($event)">
+                                <ng-option value="">Select Department</ng-option>
+                                <ng-option *ngFor="let department of optionsDepatment"
+                                    [value]="department.departmentId">
+                                    {{ department.departmentName }}
+                                </ng-option>
+                            </ng-select>
+                            <span id="department_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('department')?.touched || submitted) && recoveryForm.get('department')?.errors?.['required']">
+                                Department is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <label for="recoveryfor">Recoveries For</label>
+                                    <label class="asterisk">*</label>
+                                </div>
+                                <a style="cursor: pointer;" (click)="openRecoveryForModal()">
+                                    <img src="../../../../assets/svg/add.svg" alt="" class="form-icon">
+                                </a>
+                            </div>
+                            <ng-select formControlName="recoveryfor" class="dropdown-list-autocomplete"
+                                placeholder="Select Recoveries For" (change)="onChangeRecoveryFor($event)">
+                                <ng-option value="">Select Recoveries For</ng-option>
+                                <ng-option *ngFor="let recovery of optionsRecoveries" [value]="recovery.recoverytypeid">
+                                    {{ recovery.holdtypename }}
+                                </ng-option>
+                            </ng-select>
+                            <span id="recoveryfor_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('recoveryfor')?.touched || submitted) && recoveryForm.get('recoveryfor')?.errors?.['required']">
+                                Recovery For is required
+                            </span>
+                        </div>
+                    </div>
+                    <!-- <div class="col-6">
+                        <div class="form-group">
+                            <label for="maxvalue">Max Value</label>
+                            <label class="asterisk">*</label>
+                            <input type="text" maxlength="250" placeholder="Auto Populated" class=" form-control lh-lg"
+                                formControlName="maxvalue">
+                            <span id="maxvalue_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('maxvalue')?.touched || submitted) && recoveryForm.get('maxvalue')?.errors?.['required']">
+                                Max Value is required
+                            </span>
+                        </div>
+                    </div> -->
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="recAmt">Recovery Amount</label>
+                            <label class="asterisk">*</label>
+                            <input type="text" maxlength="18" placeholder="Enter Recovery Amount"
+                                class=" form-control lh-lg" formControlName="recAmt" appOnlyNumbers>
+                            <span id="recAmt_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('recAmt')?.touched || submitted) && recoveryForm.get('recAmt')?.errors?.['required']">
+                                Recovery Amount is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-4">
+                        <div class="form-group">
+                            <label for="remark">Remarks</label>
+                            <input type="text" maxlength="250" placeholder="Enter Remamrk" class=" form-control lh-lg"
+                                formControlName="remark">
+                        </div>
+                    </div>
+
+                    <ng-container *ngFor="let item of documentList">
+                        <div class="col-12">
+                            <div class="space-between" style="align-items: center;">
+                                <label for="remark">{{item?.doctypename}}</label>
+                                <a *ngIf="item?.docId==0" (click)="openDocumentModal_f(item?.documenttypeid)"
+                                    href="javascript:void(0)"><img src="assets/svg/upload-admin.svg" alt="Upload"
+                                        style="height: 40px;width: 40px;"></a>
+                                <a *ngIf="item?.docId!=0" href="javascript:void(0)" class="mt-1"><img
+                                        src="assets/svg/tick-success.svg" alt="Upload"
+                                        style="height: 30px;width: 36px;"></a>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <!-- <div class="col-6 mt-4">
+                        <label for="remark">ALREADY RECOVERED</label>
+                        <p>Rs. 5,78,5400.00</p>
+                    </div>
+                    <div class="col-6 mt-4">
+                        <label for="remark">TOTAL AMOUNT</label>
+                        <p>Rs. 8,85,5221.00</p>
+                    </div> -->
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex mt-4">
+                    <button *ngIf="!isLoader" type="submit" [disabled]="!isUpdated && isEdit" id="bt_approve"
+                        class="button-submit button-left" (click)="saveData()">
+                        <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                        <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                            class="left-arrow" />
+                    </button>
+                    <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button type="button" id="bt_reject" class="button-back button-left"
+                        (click)="isEdit ? closeRecoveryModal() :resetForm()">
+                        <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                        <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                        <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+                            class="left-arrow" />
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-4">
+                    <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="openReleaseModal" [title]="'Release Amount'" (onClickCross)="openReleaseModal = false">
+
+    <div class="row">
+        <div class="col-12">
+
+            <div class="form-group">
+                <label for="releaseAmount">Release Amount</label>
+                <input type="text" id="releaseAmount" [(ngModel)]="releaseAmount" maxlength="250"
+                    placeholder="Auto Populated" class=" form-control lh-lg" [readOnly]="true">
+
+            </div>
+
+            <textarea class="form-control mt-2" rows="5" placeholder="Enter Remarks"
+                [(ngModel)]="releaseRemarks"></textarea>
+            <span id="department_error" class="text-danger" *ngIf="(releaseRemarks ==''  && submitted) ">
+                Remarks is required
+            </span>
+
+            <div class="d-flex mt-2">
+                <button type="button" id="bt_approve" class="button-submit button-left" (click)="onReleaseAmount()">
+                    <span class="ps-5">Submit</span>
+                    <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -40px"
+                        class="left-arrow" />
+                </button>
+                <button type="button" id="bt_reject" class="button-back button-left" (click)="openReleaseModal = false">
+                    <span class="ps-5">Cancel</span>
+                    <img alt="" src="../../../assets/svg/reject.svg" class="left-arrow" style="margin-left: -31px" />
+                </button>
+            </div>
+        </div>
+    </div>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="openDocumentModal" [title]="'Upload Document'" (onClickCross)="closeDocumentModal()"
+    class="recoveries-modal">
+    <div class="row">
+        <div class="col-12">
+            <app-file-upload label="Document Upload" [isRequired]="true" [allowedFormats]="'.pdf'"
+                [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)">
+            </app-file-upload>
+
+            <button *ngIf="!uploading" type="button" class="button-submit w-100 m-0 mt-2" (click)="onUploadDocument()">
+                <span style="margin-top: 10px;">Upload</span>
+            </button>
+            <button *ngIf="uploading" id="bt_loader" class="button-submit w-100 m-0 mt-2" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </button>
+
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-2">
+                    <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</app-custom-modal>
+
+<app-custom-modal *ngIf="openDocumentListModal" [title]="'List Document'" (onClickCross)="openDocumentListModal =false"
+    class="recoveries-modal">
+    <ng-container *ngFor="let item of recoveryDocuments">
+        <div class="row">
+            <div class="col-12 space-between-center">
+                <div class="col-6">
+                    <label>{{item?.name}}</label>
+                </div>
+                <div class="6">
+                    <a href="javascript:void(0)" (click)="openDoceModal(item?.location)">
+                        <img src="assets/svg/eye.svg" alt="Download" style="height: 30px;width: 30px;">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+</app-custom-modal>
+
+<app-custom-modal *ngIf="docViewModelOpen" (closeModal)="closeDoceModal()" (onClickCross)="closeDoceModal()"
+    [title]="'View Document'" class="doc-vew-modal">
+
+    <div class="row">
+        <div class="col-12">
+            <ngx-extended-pdf-viewer [base64Src]="bash64String" height="100%" [showDownloadButton]="false"
+                [showPrintButton]="false" [showPagingButtons]="false" [showPresentationModeButton]="false"
+                [showOpenFileButton]="false" [showBorders]="true"></ngx-extended-pdf-viewer>
+        </div>
+    </div>
+
+</app-custom-modal>
+
+<app-custom-modal *ngIf="creditNoteDocModal" (closeModal)="creditNoteDocModal = false"
+    (onClickCross)="creditNoteDocModal = false" [title]="'Credit Note Document'" class="doc-vew-modal">
+
+    <div class="row">
+        <div class="col-12">
+            <ngx-extended-pdf-viewer [base64Src]="bash64String" height="100%" [showDownloadButton]="false"
+                [showPrintButton]="false" [showPagingButtons]="false" [showPresentationModeButton]="false"
+                [showOpenFileButton]="false" [showBorders]="true"></ngx-extended-pdf-viewer>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="creditNoteStatus != 'Approved' && creditNoteStatus != 'Rejected'">
+        <div class="col-12">
+            <div class="d-flex mt-4">
+                <button *ngIf="!isLoader" type="submit" id="bt_approve" class="button-submit button-left"
+                    (click)="approveRejectCN('Approved')">
+                    <span class="ps-5"> Approve</span>
+                    <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                        class="left-arrow" />
+                </button>
+                <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+                <button *ngIf="!isLoader" type="button" id="bt_reject" class="button-back button-left"
+                    (click)="approveRejectCN('Rejected')">
+                    <span class="ps-5">Reject</span>
+                    <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                    <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+                        class="left-arrow" />
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="mt-4">
+                <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+        </div>
+    </div>
+
+</app-custom-modal>
+
+<app-center-modal *ngIf="departmentModal" (closeModal)="closeDepartmentModal()">
+    <app-department></app-department>
+</app-center-modal>
+
+<app-center-modal *ngIf="recoveryForModal" (closeModal)="closeRecoveryForModal()">
+    <app-recovery-type></app-recovery-type>
+</app-center-modal>

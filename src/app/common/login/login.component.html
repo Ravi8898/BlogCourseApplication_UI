@@ -1,0 +1,228 @@
+<!-- <div class="position-header">
+    <app-header></app-header>
+</div> -->
+
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<!-- <div class="container-fluid bg-image">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 p-0">
+            <div>
+                <img src="../assets/img/desktop_graphics_for_login.png" alt="" width="100" height="100">
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12 p-0" style="text-align: -webkit-center;">
+            <div class="bd-tab-content-ss pt-3" style="width: 70%;">
+                <div class="bd-tab-content">
+                    <div class="tabs">
+                        <div class="tab" [class.active]="activeTab === 'tab1'" (click)="changeTab('tab1')">Employee
+                        </div>
+                        <div class="tab" [class.active]="activeTab === 'tab2'" (click)="changeTab('tab2')">Vendor</div>
+                    </div>
+                    <div class="lock-label-section">
+                        <div class="lock-svg">
+                            <img src="../../../assets/svg/Lock.svg" alt="" />
+                        </div>
+                        <label class="login-text">Login to vSPEED</label>
+                    </div>
+
+                    <div class="tab-content">
+                        <div *ngIf="activeTab === 'tab1'">
+                            <div class="login-panel">
+                                <div class="login-section">
+
+                                    <form *ngIf="!production" [formGroup]="siteLoginForm" name="siteLoginForm">
+                                        <div class="py-2 text-start">
+                                            <label for="username" class="form-label">AD ID</label>
+                                            <input type="email" class="form-control" id="username"
+                                                placeholder="Enter your AD ID" formControlName="username" maxLength="51"
+                                                minlength="6">
+
+                                         
+                                            <span *ngIf="siteLoginForm.get('username').hasError('maxlength')"
+                                                class="error-message">
+                                                username exceeds max 50 characters
+                                            </span>
+                                        </div>
+                                        <div class="py-2">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="password"
+                                                placeholder="*********" formControlName="password" maxLength="50">
+                                        </div>
+                                        <div class="d-grid gap-2">
+                                            <button *ngIf="!isLoader" class="login-button" type="submit"
+                                                [disabled]="siteLoginForm.invalid"
+                                                (click)="loginSite($event)">Login</button>
+
+                                            <button *ngIf="isLoader" class="login-button" type="button" disabled>
+                                                <span class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span>
+                                                Loading...
+                                            </button>
+                                        </div>
+
+                                        <div *ngIf="production" class="login-tnc mt-2 mb-2">
+                                            <a href="https://vspeed.adani.com/saml/login">Use SAML Authentication</a>
+                                        </div>
+
+                                    </form>
+                                    <button *ngIf="production" class="login-button mt-2 mb-2 w-100" (click)="samllogin()">
+                                        SAML-SSO LOGIN
+                                    </button>
+                                    <div *ngIf="errMsg">
+                                        <p class="error-message">{{errMsg}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="activeTab === 'tab2'">
+                            <div class="login-panel">
+                                <div class="login-section">
+
+                                    <form [formGroup]="vendorLoginForm" class="login-input-ad" name="vendorLoginForm">
+                                        <div class="pt-3 text-start">
+                                            <label for="username" class="form-label">Email / Mobile Number</label>
+                                            <input type="text" class="form-control"
+                                                placeholder="Enter your Email / Mobile Number" id="username" required
+                                                formControlName="username" id="username" (blur)="resetField()"
+                                                (input)="onInputChange()" maxlength="50" />
+                                            <div *ngIf="vendorLoginForm.get('username')?.value">
+                                                <span class="error-message">{{
+                                                    vendorLoginForm.get('username')?.getError('customError')
+                                                    ?
+                                                    vendorLoginForm.get('username')?.getError('customError') : loginErr
+                                                    }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="pt-3 text-start">
+                                            <label for="username" class="form-label">Vendor Number - Name</label>
+                                            <select class="form-control form-select" aria-label="Default select example" [value]="" formControlName="vendor_number">
+                                                <option value="choose" [selected]="true" disabled="true">Select</option>
+                                                <option *ngFor="let item of vendorArr" [value]=item>{{item}}</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="pt-3" *ngIf="showOTPField">
+                                            <label for="otp" class="form-label">Enter OTP</label>
+                                            <input class="form-control" type="password" placeholder="Enter OTP"
+                                                pattern="[0-9]{6}" maxlength="6" formControlName="otp" id="otp"
+                                                (blur)="resetField()" autocomplete="off"
+                                                onkeypress="return event.charCode >= 48 && event.charCode <= 57" />
+                                            <span class="error danger" *ngIf="otpErr">{{ otpErr }}</span>
+                                            <div class="reset-otp text-start">
+                                                <label [hidden]='hideTimer'>OTP Expires In {{timeLeft}} Seconds</label>
+                                                <button class="send-otp-btn" *ngIf="hideTimer" id="resendOTP"
+                                                    (click)="resendOTP()" type="submit" mdbBtn mdbWavesEffect>Resend
+                                                    OTP</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-grid gap-2" *ngIf="!showOTPField">
+                                            <button *ngIf="!isLoader" class="login-button" type="button"
+                                                [disabled]="!vendorLoginForm.get('username')?.hasError('invalidToken')"
+                                                (click)="sendOTP()">Send OTP</button>
+                                            <button *ngIf="isLoader" class="login-button" type="button"
+                                                [disabled]="true" (click)="sendOTP()">
+                                                <span class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span>
+                                                Loading...
+                                            </button>
+                                        </div>
+
+                                        <div class="d-grid gap-2" *ngIf="showOTPField">
+                                            <button *ngIf="!isLoader" [disabled]="!vendorLoginForm.valid"
+                                                (click)="loginVendor($event)" id="loginVendor" type="button"
+                                                class="login-button" mdbBtn mdbWavesEffect>Login</button>
+                                            <button *ngIf="isLoader" [disabled]="!vendorLoginForm.valid"
+                                                class="login-button" type="button" disabled>
+                                                <span class="spinner-border spinner-border-sm" role="status"
+                                                    aria-hidden="true"></span>
+                                                Loading...
+                                            </button>
+                                        </div>
+                                    </form>
+                                    <div *ngIf="errMsg">
+                                        <p class="error-message">{{errMsg}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="login-tnc">By continuing, You agree to our <a
+                                href="https://www.acclimited.com/welcome/disclaimer" target="_blank">T&C</a>
+                            and <a href="https://www.acclimited.com/about/privacy-policy" target="_blank">Privacy
+                                Policy.</a>
+                        </p>
+
+                        <p class="errMsg">{{loginErrorMsg}}</p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row ps-3 pe-3 pb-4">
+        <div class="col-lg-6 col-sm-12">
+            <div class="logininformationarea">
+                <h4>Important Notices</h4>
+                <p>1) Introducing, the new toll-free number to call our Customer Care and avail our helpline services :
+                    1800 121 4444 66</p>
+                <p>2) Alternatively you can contact the Cement IT Helpdesk at <a href="mailto:cement.ithelpdesk@adani.com">cement.ithelpdesk@adani.com</a>. Please
+                    mention application name, issue as well as any other information that might be useful to diagnose
+                    and resolve your issue satisfactorily.</p>
+                <p>3) Please ensure latest microsoft edge or chrome browser are used for accessing the application.</p>
+                <p>4) If you are using an old versions of browser, please update to the latest version immediately, to
+                    enjoy a seamless Arieh application experience.
+
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-sm-12">
+            <div class="logininformationarea">
+                <h4>Important security information:</h4>
+                <p>1) Before logging in, please ensure that the URL address on the address bar of your internet browser
+                    starts with https://vspeed.adani.com.</p>
+                <p>2) Never provide your User ID or password to any one on phone or in response to a mail.
+                    <span><br>Report a suspicious mail.</span>
+                </p>
+                <p>3) Do not enter login or other sensitive information in any pop up window.</p>
+                <p>4) Verify the site's security certificate by clicking on the padlock icon of your internet browser.
+                    For more details, click here.</p>
+
+                <h4>Digital Security:</h4>
+                <p>https://vspeed.adani.com has been verified by Entrust. The communication of your private
+                    information from any address beginning with "https" is encrypted and secured using SSL.</p>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="container-fluid bd-container">
+  <div class="row m-0 bd-body min-vh-100">
+    
+    <div class="col-lg-7 col-md-6 col-sm-12 p-0 bg-black d-flex align-items-center justify-content-center">
+      <div class="w-100">
+        <video class="w-100 h-auto mt-5" autoplay muted playsinline loop>
+          <source src="../../../assets/video/Mushkilon_Ki_Nahi_Sunte_.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <div class="col-lg-5 col-md-6 col-sm-12 p-4 d-flex justify-content-center align-items-center bg-light">
+      <div class="w-100">
+        <app-login-input></app-login-input>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- <div class="position-footer">
+    <app-footer></app-footer>
+</div> -->

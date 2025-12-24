@@ -1,0 +1,150 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple">
+    <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div class="bd-container">
+
+    <div class=""> <!-- m-4 -->
+        <div class="" style="text-align: -webkit-center">
+            <p class="page-heading">Welcome to vSPEED</p>
+            <div class="bt-section" style="position: absolute;right: 26px;width: 330px;margin-top: -52px;" *ngIf="activeTab == 'on'">
+                <button type="button" id="bt_upload" class="button-submit button-right" data-bs-toggle="modal" data-bs-target="#UploadModal"> <!-- data-bs-toggle="modal" data-bs-target="#vendorStatusModal" -->
+                    <!-- <img src="assets/svg/upload.svg" class="right-arrow"> -->
+                    <img src="assets/svg/upload-admin.svg" class="right-arrow">
+                    <span class="">Upload Employee</span>
+                </button>
+            </div>
+        </div>
+        <div class="feature-card mt-4">
+            <app-ad-table *ngIf="!isLoader" [tableData]="employeeList" [isTableTile]="true"
+                [isTableFilter]="true" [loginType]="loginType" [isSearchShow]="true"
+                (searchParamObj)="applyEmployeeSearch($event)" [searchObject]="employeeSearchObject"
+                [modalElementId]="modalName" [showHistory]="false" [showAction]="false"
+                (deleteConfirmed)="onDeleteConfirmedEmployee($event)">
+            </app-ad-table>
+        </div>
+    </div>
+
+    <!-- <div class="position-footer">
+        <app-footer></app-footer>
+    </div> -->
+</div>
+
+<div class="modal right fade" #UploadModal id="UploadModal" tabindex="-1" role="dialog"
+    aria-labelledby="UploadModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2">Upload Employee</h6>
+            </div>
+
+            <div class="modal-body">
+
+                <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)"
+                    [uploader]="uploader" (onFileDrop)="onFileSelected($event)" (click)="fileInput.click()"
+                    class="well my-drop-zone mt-2" class="container upload-block">
+                    <div class="d-flex justify-content-center">
+                        <img src="../../../../assets/img/icons/upload.png" style="height: 80px;width: 80px;">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <i class="bi bi-arrow-up-circle"></i>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <p>Drag & drop files or <span>Browse</span></p>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <h6>Supported formats: Excel files only having extension of .Xls or .Xlsx.</h6>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="file" #fileInput ng2FileSelect [uploader]="uploader"
+                            (onFileSelected)="onFileSelected($event)" class="d-none" accept=".xls,.xlsx," />
+                        <!-- multiple -->
+                    </div>
+                </div>
+
+                <!-- <ng-container *ngIf="uploader?.queue?.length >= 0"> -->
+                <ng-container *ngIf="uploader">
+                    <div class="row m-0 upload-item" *ngFor="let item of uploader.queue">
+                        <div class="col-9 file-label">{{ item?.file?.name }}</div>
+                        <div class="col-2" (click)="item.remove(); cancelData()"><img class="delete_img" src="../../../../assets/svg/Delete.svg" alt="">
+                        </div>
+                        <!-- <button type="button" class="button-ty1 mt-3 button-submit" style="float:right"
+                            (click)="uploader.uploadAll()"> -->
+                        <button *ngIf="!isLoader" type="button" class="button-ty1 mt-3 button-submit"
+                            style="float:right; margin:0px" (click)="uploadFile()">
+                            <i class="fas fa-upload pr-2" title="Upload all files"></i> Upload File
+                        </button>
+
+                        <button *ngIf="isLoader" class="button-ty1 mt-3 button-submit" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+
+                        <span class="error-message" id="error-message">{{errorMsg}}</span>
+                        <span *ngIf="ExceptionErrorMsg.length>0" class="error-message">
+                            <ng-container *ngFor="let error of ExceptionErrorMsg; let i = index">
+                                <ng-container *ngIf="i < 5">
+                                    {{ error }}
+                                </ng-container>
+                                <ng-container *ngIf="i === 4 && ExceptionErrorMsg.length > 5">
+                                    etc...
+                                </ng-container>
+                            </ng-container>
+                        </span>
+
+                    </div>
+                </ng-container>
+
+                <div class="bt-section mt-4">
+                    <button type="button" class="button-back cancel" id="cancel"
+                        (click)="cancelData()" data-bs-dismiss="modal">Cancel</button><!-- data-bs-dismiss="modal" -->
+                    <button class="button-submit" (click)="downLoadTemplate()">Download Template</button>
+                </div>
+
+            </div>
+
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<button id="vendorStatusModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#vendorStatusModal">Open Barcode Modal</button>
+<div class="modal fade" id="vendorStatusModal" data-bs-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-track" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel2">Upload Employee Status</h5>
+            </div>
+
+            <div class="modal-body">
+                <div style="max-height: 200px; overflow-x: auto;">
+                    <table class="border w-100 table table-striped data-grid m-0">
+                        <thead class="data-grid-thead" style="position: sticky; top: 0px;">
+                            <th>Employee Code</th>
+                            <th>ADID</th>
+                            <th>Message</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of employeeUploadStatus">
+                                <td>{{item['employeeCode']}}</td>
+                                <td>{{item['adid']}}</td>
+                                <td>{{item['message']}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="my-3 text-center">
+                    <button type="submit" class="button-submit" data-bs-toggle="modal" data-bs-target="#vendorStatusModal">Ok</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

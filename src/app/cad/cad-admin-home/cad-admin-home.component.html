@@ -1,0 +1,204 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="row">
+            <div class="bd-tab-content">
+                <div class="bd-tab-content-inner">
+                    <p class="page-heading">WELCOME TO vSPEED</p>
+                    <button type="button" class="button-submit" *ngIf="loginType =='vendor'" data-bs-toggle="modal"
+                        data-bs-target="#chooseModal">Upload Invoice</button><!-- (click)="navigateToPurchase()" -->
+                </div>
+                <div class="d-flex mb-2" *ngIf="roleName =='CAD Admin'">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-center">
+                            <!-- Tabs Section -->
+                            <div class="tabs">
+                                <div class="tab fw-bold" [class.active]="activeTab === 'tab1'">
+                                    <div (click)="activateTab('tab1')">
+                                        Pending CJPC</div>
+                                </div>
+                                <div class="tab fw-bold" [class.active]="activeTab === 'tab2'">
+                                    <div (click)="activateTab('tab2')">
+                                        Pending
+                                        Invoice</div>
+                                </div>
+                                <div class="tab fw-bold" [class.active]="activeTab === 'tab3'">
+                                    <div (click)="activateTab('tab3')">
+                                        Pending
+                                        Release Approval</div>
+                                </div>
+                                <div class="tab fw-bold" [class.active]="activeTab === 'tab4'">
+                                    <div (click)="activateTab('tab4')">
+                                        Pending Retention Release / SCC</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-content">
+
+                    <div *ngIf="activeTab == 'tab1'">
+                        <!-- <app-ad-table *ngIf="!isLoader" [tableData]="data" [isTableTile]="true"
+                                    [isTableFilter]="true" [loginType]="loginType" [isSearchShow]="true"
+                                    (searchParamObj)="applyPurchaseSearch($event)" [searchObject]="purchaseSearchObject"
+                                    [modalElementId]="modalName" [searchModal]="searchModal"></app-ad-table> -->
+
+                        <app-ad-table-ng [title]="'CJPC List'" [columns]="columns_cjpc" [tableData]="data_cjpc">
+                        </app-ad-table-ng>
+                        <div style="height: 50px;">
+                        </div>
+                        <div *ngIf="isLoader" id="ad-Table" class="loading">
+                        </div>
+                    </div>
+
+                    <div *ngIf="activeTab == 'tab2'">
+                        <app-ad-table-ng [title]="'Invoice'" [columns]="columns_invoice" [tableData]="data_invoice"
+                            (iconClick)="handleIconClick($event.columnName, $event.rowData)">
+                        </app-ad-table-ng>
+                        <div style="height: 50px;">
+                        </div>
+
+                        <div *ngIf="isLoader" id="ad-Table" class="loading">
+                        </div>
+                    </div>
+
+                    <div *ngIf="activeTab == 'tab3'">
+                        <app-ad-table-ng [title]="'Request for Release'" [columns]="columns_release"
+                            [tableData]="data_release" (iconClick)="handleIconClick($event.columnName, $event.rowData)">
+                        </app-ad-table-ng>
+                        <div style="height: 50px;">
+                        </div>
+
+                        <div *ngIf="isLoader" id="ad-Table" class="loading">
+                        </div>
+                    </div>
+
+                    <div *ngIf="activeTab == 'tab4'">
+                        <app-ad-table-ng [title]="'Retention Release / Site Clearance Certificate (SCC)'" [columns]="columns_retention"
+                            [tableData]="data_retention"
+                            (iconClick)="handleIconClick($event.columnName, $event.rowData)">
+                        </app-ad-table-ng>
+                        <div style="height: 50px;">
+                        </div>
+
+                        <div *ngIf="isLoader" id="ad-Table" class="loading">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<app-custom-modal *ngIf="showReleaseModal" [title]="'RELEASE HOLD REQUEST'" (onClickCross)="closeReleaseModal()"
+    class="release-modal">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="form-group">
+                <label class="form-label m-0">Hold Release ID</label>
+                <input type="text" class="form-control lh-lg" [(ngModel)]="holdReleaseId"
+                    placeholder="Enter Hold Release ID" [disabled]="true">
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="form-label m-0">Department</label>
+                <input type="text" class="form-control lh-lg" [(ngModel)]="Department" placeholder="Enter Department"
+                    [disabled]="true">
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="form-label m-0">Hold For</label>
+                <input type="text" class="form-control lh-lg" [(ngModel)]="holdFor" placeholder="Enter Hold For"
+                    [disabled]="true">
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="form-label m-0">Hold Release Reason</label>
+                <input class="form-control lh-lg" [(ngModel)]="holdReleaseAmount"
+                    placeholder="Enter Hold Release Amount" appIndianCurrency readonly />
+            </div>
+
+            <div class="form-group mt-2">
+                <label class="form-label m-0">Remark <span class="text-danger">*</span></label>
+                <textarea class="form-control lh-lg" [(ngModel)]="holdReleaseRemark"
+                    placeholder="Enter Hold Release Remark"></textarea>
+            </div>
+
+            <div class="mt-2">
+                <app-simple-table [title]="'DOCUMENTS LSIT'" [columns]="columns_document"
+                    [tableData]="releaseDocumentList" (handleView)="documentView($event)"></app-simple-table>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex mt-4">
+                <button *ngIf="!isLoader" type="button" id="bt_approve" class="button-submit button-left"
+                    (click)="approveReleaseHold('Approved')">
+                    <span class="ps-5"> Approve</span>
+                    <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                        class="left-arrow" />
+                </button>
+                <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+                <button *ngIf="!isLoader" type="button" id="bt_reject" class="button-back button-left"
+                    (click)="approveReleaseHold('Rejected')">
+                    <span class="ps-5">Reject</span>
+                    <img alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                    <!-- <img  style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg" class="left-arrow" /> -->
+                </button>
+                <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="mt-4">
+                <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+        </div>
+    </div>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="docViewModelOpen" (onClickCross)="docViewModelOpen = false" [title]="'View Document'"
+    class="doc-vew-modal" (closeModal)="docViewModelOpen = false">
+
+    <div class="row">
+        <div class="col-12" *ngIf="bash64String && !isLoader">
+            <ngx-extended-pdf-viewer *ngIf="!isLoader" [base64Src]="bash64String" height="100%" [textLayer]="true"
+                [showDownloadButton]="false" [showPrintButton]="false" [showPagingButtons]="false"
+                [showPresentationModeButton]="false" [showOpenFileButton]="false"
+                [showBorders]="true"></ngx-extended-pdf-viewer>
+
+        </div>
+        <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </div>
+        <div *ngIf="bash64String == '' && !isLoader">
+            <div class="row noRecond">
+                <div class="col">
+                    <h3>No Document found</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</app-custom-modal>
+
+<app-retention-release [retentionReleaseModal]="retentionReleaseModal" [retentionId]="retentionId"
+    (closeModal)="closeRetentionModal($event)" [viewMode]="'Approval'"></app-retention-release>

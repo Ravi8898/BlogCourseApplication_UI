@@ -1,0 +1,150 @@
+.login-panel {
+    // display: flex;
+    // justify-content: flex-end;
+    // margin-right: 159px;
+    // margin-top: 0px;
+}
+
+.login-section {
+    // width: 435px;
+}
+
+.lock-svg {
+    width: 18px;
+    margin-top: 5px !important;
+}
+
+.lock-label-section {
+    display: flex;
+    align-items: center;
+    margin-top: 22px;
+}
+
+.lock-label-section .login-text {
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 38px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #000;
+    padding-top: 9px;
+    padding-left: 15px;
+}
+
+.login-section .form-label {
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 0;
+    letter-spacing: 0;
+    text-align: left;
+    color: #0B74B0;
+    float: left;
+}
+
+.login-button {
+    background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+    border: 0;
+    border-radius: 30px;
+    height: 39px;
+    color: #FFF;
+    margin-top: 7px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+// .login-section .login-tnc {
+.login-tnc {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 19px;
+    letter-spacing: 0em;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.form-control {
+    line-height: 2;
+}
+
+.bd-tab-content-ss {
+    // display: flex;
+    // justify-content: center;
+}
+
+.bd-tab-content {
+    // margin-left: 22px;
+    // margin-right: 22px;
+    // margin-top: 91px;
+    margin-top: 50px;
+}
+
+.bd-tab-content .tabs {
+    display: flex;
+    margin-bottom: 10px;
+    outline: solid 1px #0b74b0;
+    outline-offset: 0px;
+    border-radius: 60px;
+    background-color: #fff;
+    opacity: 0.8;
+    height: 48px;
+}
+
+.bd-tab-content .tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 50%;
+    color: #0b74b0;
+    font-weight: 700;
+    text-align: center;
+    padding-top: 13px;
+    font-size: 14.36px;
+}
+
+.bd-tab-content .tab.active {
+    background-color: #fff;
+    border-bottom: none;
+    width: 50%;
+    border-radius: 60px;
+    background-image: linear-gradient(270deg, #0b74b0ff 0%, #75479cff 51%, #bd3861ff 100%);
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    padding-top: 13px;
+    font-size: 15px;
+}
+
+.bd-tab-content .tab-content {
+    // padding: 10px;
+    // width: 430px;
+    // height: 213px;
+}
+
+.bg-image {
+    background-image: url('../../../assets/img/login-background.png');
+    padding-bottom: 40px;
+}
+
+.send-otp-btn {
+    border: 2px solid #F9F9F9;
+    padding: 2px 5px !important;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    margin-top: 5px;
+    background: linear-gradient(270deg, #0b74b0ff 0%, #75479cff 51%, #bd3861ff 100%);
+}
+
+.errMsg {
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    padding-left: 10px;
+    color: red;
+}
+
+@media screen and (max-width: 767px) {
+    .login-panel {
+        margin-right: 0;
+        justify-content: center;
+    }
+}

@@ -1,0 +1,165 @@
+<div *ngIf="isLoader" class="loader-overlay">
+  <div class="loader"></div>
+</div>
+
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div contenteditable="false" tabindex="-1" style="user-select: none;" class="feature-card mt-2 px-3 text-start">
+  <div (mousedown)="$event.preventDefault()" class="back-to-listing"><img src="assets/svg/left-arrow.svg"
+      (click)="gotoFrieght()" alt="Back" style="width: 40px; height: 40px;" class="me-2"><span>Back to Frieght
+      Listing</span></div>
+  <form class="bill-form" [formGroup]="addfrieghtform" (ngSubmit)="submitForm()">
+    <div class="row">
+
+      <div class="col-lg-4 col-md-3 col-xs-2  mt-3 input-text-group">
+        <label for="" class="form-label m-0">Plant Name</label>
+        <label class="label-mandatory-field">*</label>
+
+        <ng-select class="dropdown-list-autocomplete" placeholder="Select Plant" name="plantId" formControlName="plant"
+          (change)="onPlantSelected($event)" [clearable]="!!addfrieghtform.get('plant')?.value">
+          <ng-option value="">Select Plant</ng-option>
+          <ng-option *ngFor="let item of plants" [value]="item.plantCode">
+            {{ item.plantName }} : {{item.plantCode}}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="col-lg-4 col-md-3 col-xs-2  mt-3 input-text-group">
+        <label for="" class="form-label m-0">ALL Vendor Code</label>
+        <label class="label-mandatory-field">*</label>
+        <!-- <input type="text" class="form-control" placeholder="Enter PO Item " formControlName="poItem"> -->
+         <ng-select class="dropdown-list-autocomplete" (change)="onVendorSelected($event)" [clearable]="!!addfrieghtform.get('vendorName')?.value"
+          placeholder="Select vendor name" formControlName="vendorName">
+          <ng-option value="">Select Vendor name</ng-option>
+          <ng-option *ngFor="let v of vendorCodeList" [value]="v">
+            {{v}}
+          </ng-option>
+
+
+        </ng-select>
+      </div>
+      <div class="col-lg-4 col-md-3 col-xs-2  mt-3 input-text-group">
+        <label for="" class="form-label m-0">Commodity</label>
+        <label class="label-mandatory-field">*</label>
+
+        <ng-select class="dropdown-list-autocomplete" placeholder="Select Commodity" name="plantId"
+          formControlName="commodity" [clearable]="!!addfrieghtform.get('commodity')?.value"
+          (change)="onCommodity($event)">
+          <ng-option value="">Select Commodity</ng-option>
+          <ng-option *ngFor="let item of commodities" [value]="item.commodityId">
+            {{ item.commodityType }}
+          </ng-option>
+        </ng-select>
+      </div>
+       <div class="col-lg-4 col-md-3 col-xs-2  mt-3 input-text-group">
+        <label for="" class="form-label m-0"> Condition Type </label>
+        <label class="label-mandatory-field">*</label>
+        <!-- <input type="text" class="form-control" placeholder="Enter Vendor code " formControlName="conditiontype"> -->
+        <ng-select class="dropdown-list-autocomplete" placeholder="Select condition type" name="plantId"
+          formControlName="conditiontype" [clearable]="!!addfrieghtform.get('conditiontype')?.value">
+          <ng-option value="">Select ConditionType</ng-option>
+          <ng-option *ngFor="let item of conditions" [value]="item.conditionId">
+            {{ item.conditionType }}
+          </ng-option>
+
+
+        </ng-select>
+      </div>
+
+      <div class="col-lg-4 col-md-3 col-xs-2  mt-3 input-text-group">
+        <label for="" class="form-label m-0">PO Number</label>
+        <label class="label-mandatory-field">*</label>
+        <!-- <input type="text" class="form-control" appOnlyNumbersInput placeholder="Enter PO Number " formControlName="poNumber"> -->
+        <ng-select class="dropdown-list-autocomplete" placeholder="Select PO Number" name="plantId"
+          (change)="onPoNumberChange($event)" [clearable]="!!addfrieghtform.get('poItem')?.value"
+          (change)="getPoItemRates()" formControlName="poNumber">
+          <ng-option value="">Select PO Number</ng-option>
+          <ng-option *ngFor="let item of poNumberToPoVendorMap" [value]="item.poNumber">
+            {{ item.poNumber }}
+          </ng-option>
+        </ng-select>
+        <p class="m-0" *ngIf="actualPOVendor" style="font-size: 12px;">
+          Vendor: <strong>{{ actualPOVendor }}</strong>
+        </p>
+
+
+      </div>
+       <div class="col-lg-4 col-md-3 col-xs-2 mt-3 input-text-group">
+        <label class="form-label m-0">Child Vendor Name</label>
+        <label class="label-mandatory-field">*</label>
+
+
+
+        <ng-select class="dropdown-list-autocomplete " placeholder="Select Child Vendors" formControlName="childVendor"
+          [multiple]="true" [clearable]="true" (change)="getPoItemRates()" (change)="onChildVendorChange($event)">
+
+          <ng-option [value]="'all'" (click)="selectAllVendors()">Select All</ng-option>
+
+
+
+          <ng-option *ngFor="let item of childVendors" [value]="item.childVendorCode">
+            <!-- <input type="checkbox" [checked]="
+        addfrieghtform.get('childVendor')?.value?.includes(item.childVendorCode)" (change)="onChildVendorCheckboxChange(item.childVendorCode, $event)" (click)="$event.stopPropagation()"style="margin-right: 8px" /> -->
+            {{ item.childVendorName }}:{{item.childVendorCode}}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="col-lg-4 col-md-3 col-xs-2  mt-3 input-text-group">
+        <label for="" class="form-label m-0">PO Item</label>
+        <label class="label-mandatory-field">*</label>
+        <!-- <input type="text" class="form-control" placeholder="Enter PO Item " formControlName="poItem"> -->
+        <ng-select class="dropdown-list-autocomplete"  [clearable]="!!addfrieghtform.get('poItem')?.value"
+          placeholder="Select PO Item" name="plantId" (change)="onPoItemChange($event)" formControlName="poItem">
+          <ng-option value="">Select PO Items</ng-option>
+          <ng-option *ngFor="let item of poItems" [value]="item.poItem">
+            {{ item.poItem }}
+          </ng-option>
+
+
+        </ng-select>
+      </div>
+
+
+
+
+
+      <div class="col-lg-4 col-md-3 col-xs-2  mt-3 input-text-group">
+        <label for="" class="form-label m-0">AAA Rates</label>
+        <label class="label-mandatory-field">*</label>
+        <input type="text" class="form-control" readonly appOnlyNumbersInput placeholder="Enter AAA Rates "
+          appOnlyDecimal formControlName="aaarate">
+
+      </div>
+      <div class="col-lg-4 col-md-3 col-xs-2  mt-3 input-text-group">
+        <label for="" class="form-label m-0">ALL Rates</label>
+        <label class="label-mandatory-field">*</label>
+        <input type="text" class="form-control" appOnlyNumbersInput placeholder="Enter ALL Rates " appOnlyDecimal
+          formControlName="allrate">
+        <div *ngIf="addfrieghtform.get('allrate')?.touched && addfrieghtform.get('allrate')?.hasError('nonZero')"
+          class="text-danger" style="font-size: 12px;">
+          All rate cannot be zero.
+        </div>
+      </div>
+
+      <!-- <app-simple-table class="mt-4"  [columns]="columns" [tableData]="tableData">
+
+</app-simple-table> -->
+
+      <div class="buttons">
+        <div class="submitBtn mt-3">
+          <button type="submit" [disabled]="this.addfrieghtform.invalid" class="button-submit">
+            {{ frateId ? 'Update' : 'Submit' }}
+          </button>
+
+          <img class="aligns" src="./assets/svg/right-arrow.svg" alt="" />
+        </div>
+
+        <div class="resetbtn mt-3">
+          <button type="button" class="button-back ms-4 me-0" (click)="resetForm()">
+            Reset
+          </button>
+          <img class="aligns" src="./assets/svg/reset.png" alt="" />
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

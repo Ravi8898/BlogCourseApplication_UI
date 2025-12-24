@@ -1,0 +1,56 @@
+<div class="row">
+    <div class="col-12">
+
+        <div class="row">
+
+            <div class="">
+                <div class="bd-tab-content">
+                    <div class="bd-tab-content-inner space-between">
+                        <p class="page-heading">Contract</p>
+                        <div class="">
+                            <button *ngIf="roleName == 'CAD Admin'" type="button" class="button-submit m-0 d-flex"
+                                (click)="goToAdd()"><span class="insit-img"><img
+                                        src="../../../assets/svg/add.svg"></span><span style="margin-top: 10px;">
+                                    Add Contract</span></button>
+
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <ng-container>
+                            <div>
+                                <!-- <app-ad-table *ngIf="!isLoader" [tableData]="contractList" [isTableTile]="true"
+                                    [tableTitle]="'Work Order Contracts Listing'"
+                                    [isTableFilter]="true" [loginType]="loginType" [isSearchShow]="true"
+                                    (searchParamObj)="applyPurchaseSearch($event)" [searchObject]="contractSearchObject"
+                                    [modalElementId]="modalName" (activateTab)="activateTab($event)"
+                                    (deleteConfirmed)="onDeleteConfirmedPurchase($event)" [showHistory]="false" [showAction]="false"
+                                    [searchModal]="searchModal" (editId)="onEdit($event)"></app-ad-table> -->
+
+                                <app-ad-table-ng *ngIf="!isLoader" [tableData]="contractList" [columns]="columns"
+                                    [title]="'Work Order Contracts Listing'" (goToEditing)="onEdit($event)"
+                                    (goToViewPage)="onView($event)" (deleteConfirmed)="onDelete($event)"
+                                    (iconClick)="rowClick($event)"></app-ad-table-ng>
+                                <div *ngIf="isLoader" id="ad-Table" class="loading">
+                                </div>
+
+                            </div>
+                        </ng-container>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div style="height: 30px;"></div>
+
+<!-- Modal -->
+
+<app-retention-release [retentionReleaseModal]="retentionReleaseModal" [retentionId]="retentionId"
+    (closeModal)="closeRetentionModal($event)"></app-retention-release>
+
+    

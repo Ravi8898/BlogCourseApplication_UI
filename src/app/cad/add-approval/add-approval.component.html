@@ -1,0 +1,69 @@
+<p class="page-heading">Approvers</p>
+<div>
+
+  <div class="acordion-item">
+    <div class="vertical-line" style="height: 100%;"></div>
+    <div *ngFor="let panel of panels; let i = index" class="accordion-header">
+      <div class="step-circle">{{ i + 1 }}</div>
+      <!-- <div *ngIf="i < panels.length - 1" class="line"></div> -->
+      <div (click)="togglePanel(panel)">
+        <a href="javascript:void(0)">
+          <div class="space-between align-items-center">
+            <label>{{ panel.title }}</label>
+
+            <div style="height: 35px; width: 35px;">
+              <img src="../../../assets/img/down-arrow-circle.png" alt="" *ngIf="!panel.isOpen" />
+              <img src="../../../assets/svg/up-arrow-circle.svg" alt="" *ngIf="panel.isOpen" />
+            </div>
+          </div>
+        </a>
+      </div>
+
+
+
+      <div *ngIf="panel.isOpen && panel.title == 'Department Approvers'" class="mb-4">
+        <hr>
+
+        <app-department-approvers></app-department-approvers>
+
+      </div>
+
+      <div *ngIf="panel.isOpen && panel.title == 'CJPC Approvers'">
+        <hr>
+
+        <app-cjpc-approvers></app-cjpc-approvers>
+      </div>
+
+      <div *ngIf="panel.isOpen && panel.title == 'Final Bill Approvers'">
+        <hr>
+
+        <app-final-bill-approvers></app-final-bill-approvers>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="form-group  mt-4" style="margin-left: 50px;">
+      <div class="row mt-3 ms-2">
+        <div class="d-flex gap-1">
+          <!-- <button type="submit" id="bt_approve" class="button-submit button-left">
+            <span>Next</span>
+            <img alt="" src="../../../assets/svg/right-arrow.svg" class="left-arrow" />
+          </button> -->
+          <!-- <button type="button" id="bt_reject" class="button-back button-left">
+            <span class="ps-5">Reset</span>
+            <img alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+          </button> -->
+          <button type="button" id="bt_reject" class="button-back button-left"
+          (click)="goBack()">
+          <span class="ps-5">Back</span>
+          <img alt="" src="../../../assets/svg/left-arrow.svg" class="left-arrow" />
+        </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

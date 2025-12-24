@@ -1,0 +1,81 @@
+<div class="space-between">
+  <p class="page-heading">Add Contract</p>
+  <a href="javascript:void(0)" (click)="goBack()">Back to listing</a>
+</div>
+<div>
+
+  <div class="acordion-item">
+    <div class="vertical-line" style="height: 100%;"></div>
+    <div *ngFor="let panel of panels; let i = index" class="accordion-header">
+      <div class="step-circle">{{ i + 1 }}</div>
+      <!-- <div *ngIf="i < panels.length - 1" class="line"></div> -->
+      <div (click)="togglePanel(panel)" [ngClass]="{'accordion-disable': getContractId() == ''}">
+        <a href="javascript:void(0)">
+          <div class="space-between align-items-center">
+            <label>{{ panel.title }}</label>
+
+            <div style="height: 35px; width: 35px;">
+              <img src="../../../assets/img/down-arrow-circle.png" alt="" *ngIf="!panel.isOpen" />
+              <img src="../../../assets/svg/up-arrow-circle.svg" alt="" *ngIf="panel.isOpen" />
+            </div>
+          </div>
+        </a>
+      </div>
+
+
+      <div *ngIf=" (panel.isOpen && panel.title == 'Contract Information')" class="mb-4">
+        <hr>
+
+        <app-contract-information></app-contract-information>
+      </div>
+      <div *ngIf="getContractId() != '' && (panel.isOpen && panel.title == 'Work Order Advance')">
+        <hr>
+
+        <app-work-order-advance></app-work-order-advance>
+
+      </div>
+
+      <div *ngIf="getContractId() != '' && (panel.isOpen && panel.title == 'Work Order Clause')">
+        <hr>
+
+        <app-work-order-clause></app-work-order-clause>
+      </div>
+
+      <div *ngIf="getContractId() != '' && (panel.isOpen && panel.title == 'Statutory Compliance')">
+        <hr>
+        <app-statutory-compliance></app-statutory-compliance>
+
+
+      </div>
+
+
+
+    </div>
+
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col-md-12">
+    <div class="form-group  mt-4" style="margin-left: 50px;">
+      <div class="row mt-3 ms-2">
+        <div class="d-flex gap-3">
+          <button type="submit" id="bt_approve" class="button-submit button-left" (click)="goTOApprovers()"
+            [disabled]="getContractId() == ''">
+            <span>Add Approvers</span>
+            <img alt="" src="../../../assets/svg/right-arrow.svg" class="left-arrow" />
+          </button>
+          <!-- <button type="submit" id="bt_approve" class="btn-primary button-left bg" [disabled]="getContractId() == ''">
+            <span>Completed</span>
+            <img alt="" src="../../../assets/svg/right-arraow-blue.svg" class="left-arrow" />
+          </button> -->
+
+          <button type="button" id="bt_reject" class="button-back button-left" [disabled]="getContractId() == ''"
+            (click)="goBack()">
+            <span class="ps-5">Back</span>
+            <img alt="" src="../../../assets/svg/left-arrow.svg" class="left-arrow" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

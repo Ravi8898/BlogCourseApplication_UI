@@ -1,0 +1,37 @@
+::ng-deep .workOrder-modal .custom-modal-content {
+  width: 400px;
+}
+
+::ng-deep .document-modal .custom-modal-content {
+  width: 600px;
+}
+
+.insit-img {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  right: 14px;
+  bottom: 6px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.project-label {
+  color: #0B74B0;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.space-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-icon{
+  width: 30px;
+  height: 30px;
+}

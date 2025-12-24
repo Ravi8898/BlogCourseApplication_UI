@@ -1,0 +1,83 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+
+<div class="row">
+
+    <div class="col-12">
+        <div class="justify-content-between space-between-center project-label mb-2">
+            <label>Document Type List</label>
+
+            <button type="button" class="button-submit d-flex m-0" (click)="AddDocumentType()">
+                <span class="insit-img"><img src="../../../assets/svg/add.svg"></span>
+                <span style="margin-top: 10px;">Create</span>
+            </button>
+
+        </div>
+
+
+
+        <app-simple-table [columns]="columns" [tableData]="documentTypeDetails" (handleEdit)="onEdit($event)"
+            [isloading]="isLoader" (handleDelete)="onDelete($event)"></app-simple-table>
+    </div>
+
+</div>
+
+<app-custom-modal *ngIf="documentModal" (onClickCross)="closeDocumentModal()" [title]="'DOCUMENT TYPE'">
+    <form [formGroup]="documentTypeForm">
+
+        <div class="row">
+            <div class="col-12">
+                <!-- <div class="form-group">
+                <label for="DocumentID">Document Type ID</label>
+                <label class="asterisk">*</label>
+                <input type="text" class="form-control" id="documentID" maxlength="18" placeholder="Enter Document ID"
+                    (keypress)="allowOnlyNumbers($event)">
+            </div> -->
+
+                <div class="form-group mt-2">
+                    <label for="DocumentName">Document Type Name</label>
+                    <label class="asterisk">*</label>
+                    <input type="text" class="form-control" formControlName="documentTypeName" id="documentName"
+                        maxlength="250" placeholder="Enter Document Type Name">
+                    <span id="documentTypeName_error" class="text-danger"
+                        *ngIf="(documentTypeForm.get('documentTypeName')?.touched || submitted) && documentTypeForm.get('documentTypeName')?.errors?.['required']">
+                        Document Type Name is required
+                    </span>
+                </div>
+
+                <!-- <div class="form-group mt-2">
+                <label for="DocumentName">Valid Extension</label>
+                <label class="asterisk">*</label>
+                <input type="text" class="form-control" id="documentName" maxlength="250"
+                    placeholder="Enter Valid Extension">
+            </div> -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex mt-4">
+                    <button *ngIf="!isLoader" type="button" [disabled]="!isUpdated && isEdit" id="bt_approve"
+                        class="button-submit button-left" (click)="saveData()">
+                        <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                        <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+                    </button>
+                    <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button type="button" id="bt_reject" class="button-back button-left"   (click)="isEdit ? closeDocumentModal() :resetForm()">
+                        <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                        <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                        <img style="margin-left: -31px" *ngIf="isEdit" alt="" src="../../../assets/svg/reject.svg" class="left-arrow" />
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-4">
+                    <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</app-custom-modal>

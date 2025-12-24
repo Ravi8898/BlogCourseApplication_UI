@@ -1,0 +1,34 @@
+::ng-deep .contract-modal .custom-modal-content {
+  width: 750px;
+}
+
+.right-corner-radius-0 {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+
+.bt-text-include {
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+}
+
+.bt-text-include:active {
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  background: #0B74B0;
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+.form-label {
+  font-weight: 600;
+  font-size: 14px;
+}

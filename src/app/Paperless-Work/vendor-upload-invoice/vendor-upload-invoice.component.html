@@ -1,0 +1,683 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+
+<div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="profile-card">
+                <form [formGroup]="invoiceForm">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">PO Type</label>
+                            <span class="asterisk"> *</span>
+                            <select class="form-select" formControlName="poType" (change)="onPOTypeChange($event)">
+                                <option value="">Choose PO Type</option>
+                                <option value="PO">PO</option>
+                                <option value="Non_PO">Non PO</option>
+                            </select>
+                            <div *ngIf="invoiceForm.controls['poType']?.invalid && invoiceForm.controls['poType'].touched"
+                                class="text-danger">
+                                <span *ngIf="invoiceForm.controls['poType']?.errors?.['required']">
+                                    PO Type is required.</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-lg-3 col-md-3 col-xs-3" *ngIf="poType == 'PO' || poType == ''">
+                            <label class="form-label m-0">Invoice Type</label>
+                            <span class="asterisk"> *</span>
+                            <select class="form-select" formControlName="invoiceType"
+                                (change)="onInvoiceTypeChange($event)">
+                                <option value="" selected>Choose Invoice Type</option>
+                                <option value="Material">Material</option>
+                                <option value="Service">Service</option>
+                                <!-- <option value="Freight-Inbound">Freight-Inbound</option>
+                                <option value="SLA">SLA</option>
+                                <option value="Reward">Reward</option>
+                                <option value="Contracts">Contracts</option> -->
+                            </select>
+                            <div *ngIf="invoiceForm.controls['invoiceType']?.invalid && invoiceForm.controls['invoiceType'].touched"
+                                class="text-danger">
+                                <span *ngIf="invoiceForm.controls['invoiceType']?.errors?.['required']">
+                                    Invoice Type is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-3" *ngIf="poType == 'Non_PO'">
+                            <label class="form-label m-0">Invoice Type</label>
+                            <span class="asterisk"> *</span>
+                            <select class="form-select" formControlName="invoiceType"
+                                (change)="onInvoiceTypeChange($event)">
+                                <option value="" selected>Choose Invoice Type</option>
+                                <option value="Advance">Advance</option>
+                                <option value="Retention">Retention</option>
+
+                            </select>
+                            <div *ngIf="invoiceForm.controls['invoiceType']?.invalid && invoiceForm.controls['invoiceType'].touched"
+                                class="text-danger">
+                                <span *ngIf="invoiceForm.controls['invoiceType']?.errors?.['required']">
+                                    Invoice Type is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">PO Number</label>
+                            <span class="asterisk" *ngIf="isRequired('poNumber')"> *</span>
+                            <div class="d-flex">
+                                <input type="text" placeholder="Enter PO Number"
+                                    class="form-control right-corner-radius-0" name="PONumber" maxlength="25"
+                                    formControlName="poNumber">
+                                <button type="button" class="bt-text-include" style="width: 200px;"
+                                    (click)="getPODetails()" [disabled]="disable">Get PO
+                                    Detail</button>
+                            </div>
+                            <div *ngIf="invoiceForm.controls['poNumber']?.invalid && invoiceForm.controls['poNumber'].touched"
+                                class="text-danger">
+                                <span *ngIf="invoiceForm.controls['poNumber']?.errors?.['required']">
+                                    PO Number is required.</span>
+                            </div>
+                            <span *ngIf="inValidPO" class="text-danger">
+                                This PO Number does not belong to this Vendor or hasn't been created yet.
+                                <br>For information, please contact the Checker.
+                            </span>
+                            <span *ngIf="this.errorMessage" class="text-danger">
+                                {{this.errorMessage}}
+                            </span>
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label m-0">Invoice Number</label>
+                            <span class="asterisk" *ngIf="isRequired('invoiceNumber')"> *</span>
+                            <input type="text" placeholder="Enter Invoice Number" class="form-control"
+                                (blur)="checkInvoiceNumberExist()" formControlName="invoiceNumber" name="invoiceNumber"
+                                maxlength="250">
+                            <div *ngIf="invoiceForm.controls['invoiceNumber'].invalid && invoiceForm.controls['invoiceNumber'].touched"
+                                class="text-danger">
+                                <span *ngIf="invoiceForm.controls['invoiceNumber'].errors?.['required']">Invoice
+                                    Number is required.</span>
+
+                            </div>
+                            <div class="text-danger" *ngIf="invoiceExistErrorMsg">
+                                {{invoiceExistErrorMsg}}
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label m-0">Invoice Date</label>
+                            <span class="asterisk" *ngIf="isRequired('invoiceDate')"> *</span>
+                            <input type="date" class="form-control" formControlName="invoiceDate">
+                            <div *ngIf="invoiceForm.controls['invoiceDate'].invalid && invoiceForm.controls['invoiceDate'].touched"
+                                class="text-danger">
+                                Invoice Date is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label m-0">Amount As Per Invoice</label> <span class="asterisk"> *</span>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="text" class="form-control" placeholder="Enter Amount"
+                                    formControlName="amountAsPerInvoice" appIndianCurrency>
+                            </div>
+                            <div *ngIf="invoiceForm.controls['amountAsPerInvoice']?.invalid && invoiceForm.controls['amountAsPerInvoice'].touched"
+                                class="text-danger">
+                                <span *ngIf="invoiceForm.controls['amountAsPerInvoice']?.errors?.['required']">Invoice
+                                    Amount is required.</span>
+                                <span *ngIf="invoiceForm.controls['amountAsPerInvoice']?.errors?.['pattern']">Only
+                                    numbers
+                                    are allowed.</span>
+                            </div>
+                            <div *ngIf="invoiceForm.errors?.['invalidAmount'] && isRequired('amountPerLineItems')"
+                                class="mt-1 text-danger">
+                                <b>Invoice Amount</b> should be same as <b>Amount As Per Line Items </b>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label m-0">Amount As Per Line Items</label>
+                            <span class="asterisk" *ngIf="isRequired('amountPerLineItems')"> *</span>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="text" class="form-control" placeholder="Enter Amount" readonly
+                                    formControlName="amountPerLineItems" appIndianCurrency>
+                            </div>
+                            <div *ngIf="invoiceForm.controls['amountPerLineItems'].invalid && invoiceForm.controls['amountPerLineItems'].touched"
+                                class="text-danger">
+                                <span *ngIf="invoiceForm.controls['amountPerLineItems'].errors?.['required']">Line Item
+                                    Amount is required.</span>
+                                <span *ngIf="invoiceForm.controls['amountPerLineItems'].errors?.['pattern']">Only
+                                    numbers
+                                    are allowed.</span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Company</label>
+                            <span class="asterisk" *ngIf="isRequired('company')"> *</span>
+                            <input type="text" placeholder="Enter Company" class="form-control"
+                                formControlName="company" name="company" maxlength="250">
+
+                            <!-- <select class="form-select" formControlName="company">
+                                <option value="" selected>Choose Company</option>
+
+                            </select> -->
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['company'].errors?.['required'] && invoiceForm.controls['company'].touched">Company
+                                is required.</span>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Plant Code</label>
+                            <span class="asterisk" *ngIf="isRequired('plantCode')"> *</span>
+                            <input type="text" placeholder="Enter Plant Code" class="form-control"
+                                formControlName="plantCode" name="plantCode" maxlength="250"
+                                (change)="onChangePlant($event)">
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['plantCode'].errors?.['required'] && invoiceForm.controls['plantCode'].touched">Plant
+                                Code is required.</span>
+
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+
+                        <!-- <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Department</label>
+                            <span class="asterisk"> *</span>
+                            <select class="form-select" formControlName="department">
+                                <option value="" disabled selected>Choose Department</option>
+                            </select>
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['department'].errors?.['required'] && invoiceForm.controls['department'].touched">Department
+                                is required.</span>
+                        </div> -->
+
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Supplier GST Number</label>
+                            <span class="asterisk" *ngIf="isRequired('supplierGST')"> *</span>
+                            <input type="text" placeholder="Enter Supplier GST Number" class="form-control"
+                                formControlName="supplierGST" name="supplierGST" maxlength="250">
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['supplierGST'].errors?.['required'] && invoiceForm.controls['supplierGST'].touched">Supplier
+                                GST is required.</span>
+
+                        </div>
+
+                        <!-- <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Receiver GST Number</label><span class="asterisk"> *</span>
+                            <input type="text" placeholder="Enter Receiver GST Number" class="form-control"
+                                formControlName="receiverGST" name="receiverGST" maxlength="250">
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['receiverGST'].errors?.['required'] && invoiceForm.controls['receiverGST'].touched">Receiver
+                                GST is required.</span>
+
+                        </div> -->
+
+                        <!-- <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Currency</label>
+                            <span class="asterisk" *ngIf="isRequired('currency')"> *</span>
+                            <input type="text" placeholder="Enter Currency" class="form-control"
+                                formControlName="currency" name="currency" maxlength="250">
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['currency'].errors?.['required'] && invoiceForm.controls['currency'].touched">Currency
+                                is required.</span>
+
+                        </div> -->
+
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Adani Contact Details</label>
+                            <!-- <span class="asterisk" *ngIf="isRequired('adaniContact')"> *</span> -->
+                            <input type="text" placeholder="Enter Adani Contact Details" class="form-control"
+                                formControlName="adaniContact" name="adanicontact">
+                            <!-- <span class="text-danger"
+                                *ngIf="invoiceForm.controls['adaniContact'].errors?.['required'] && invoiceForm.controls['adaniContact'].touched">Adani
+                                Contact is required.</span> -->
+
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Submission To</label>
+                            <span class="asterisk"> *</span>
+                            <ng-select placeholder="Select Submission To" formControlName="submissionTo"
+                                class="dropdown-list-autocomplete">
+                                <ng-option value="">Choose Submission To</ng-option>
+                                <ng-option *ngFor="let item of optionSubmittionToCategory" [value]="item">
+                                    {{item.empName}} ({{item.adId}})</ng-option>
+                            </ng-select>
+
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['submissionTo'].errors?.['required'] && invoiceForm.controls['submissionTo'].touched">Submission
+                                To is required.</span>
+                            <span *ngIf="this.errorMessage1" class="text-danger">
+                                {{this.errorMessage1}}
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+
+                        <!-- <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Bank Details</label>
+                            <span class="asterisk"> *</span>
+                            <select class="form-select" formControlName="bankDetails">
+                                <option value="">Choose Bank Details</option>
+                            </select>
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['bankDetails'].errors?.['required'] &&  invoiceForm.controls['bankDetails'].touched">Bank
+                                Details is required.</span>
+
+                        </div> -->
+
+                        <!-- <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label m-0">Payment Mode</label>
+                            <span class="asterisk"> *</span>
+                            <select class="form-select" formControlName="paymentMode">
+                                <option value="" disabled selected>Choose Payment Mode</option>
+                            </select>
+                            <span class="text-danger"
+                                *ngIf="invoiceForm.controls['paymentMode'].errors?.['required'] && invoiceForm.controls['paymentMode'].touched">Payment
+                                Mode is required.</span>
+
+                        </div> -->
+
+                    </div>
+
+                    <div class="row mt-2">
+
+                        <div class="col-lg-9 col-md-9 col-xs-9">
+                            <label class="form-label m-0">Remark</label>
+                            <textarea placeholder="Enter Remark" class="form-control p-2" formControlName="remark"
+                                name="remark" rows="4">
+
+                            </textarea>
+                        </div>
+                        <!-- <div class="row">
+                              <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label">Upload Invoice PDF</label><span class="asterisk"> *</span>
+                            <input type="file" placeholder="Upload Invoice PDF" class="form-control p-2"
+                                formControlName="uploadInvoicePDF" name="uploadInvoicePDF">
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label class="form-label">Upload Support Document PDF</label><span class="asterisk"> *</span>
+                            <input type="file" placeholder="Upload Support Document PDF" class="form-control p-2"
+                                formControlName="uploadSuppDocPDF" name="uploadSuppDocPDF">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-xs-6">
+                            
+                  
+                    <button type="button" id="bt_reject" class="btn mt-4" >
+                        <span>Download Merged</span>
+                    </button>
+                      <button type="button" id="bt_reject" class="btn mt-4 w-auto" >
+                        <span>Upload Digitally Signed Document</span>
+                    </button>
+                        </div>
+                  
+                        </div> -->
+                        <!-- <div class="row"> -->
+
+                        <!-- </div> -->
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12"
+            *ngIf="invoiceForm.get('poType')?.value == 'PO' && poItems.length > 0 && !viewVendorInvoice">
+            <div class="profile-card">
+                <div class="profile-car">
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                        <label for="" class="form-label m-0 mt-3">PO Items</label>
+                        <!-- <div class="fliter icon-border mt-2" style="display: inline; float: right;" title="Filter">
+                            <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal"
+                                data-bs-target="#filterModal" style="height: 29px; width: 29px; padding: 7px;">
+                        </div> -->
+
+                        <div class="po-item table-container" id="htmlData">
+                            <table class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th *ngIf="!viewVendorInvoice"><input class="custom-checkbox" type="checkbox"
+                                                (change)="toggleAllSelection($event)"
+                                                matTooltip="{{disableAllSelection() ? 'All items quantity is zero' : 'Select All'}}"
+                                                [disabled]="disableAllSelection()" [checked]="allSelected">
+                                        </th>
+                                        <th>PO Item No.</th>
+                                        <th>Item Description</th>
+                                        <th>Material No.</th>
+                                        <th>Plant Code</th>
+                                        <th>Unit Of Measure</th>
+                                        <th>Net Price</th>
+                                        <th>Price Per Unit</th>
+                                        <th>Quantity</th>
+                                        <th>Contract No.</th>
+                                        <th>Contract item No.</th>
+                                        <th>Package No.</th>
+                                        <!-- <th>Is Service Inv.</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of poItems">
+                                        <!-- matTooltip="{{item.quantity <=0 ? 'The Quantity is Zero' : ''}}"
+                                    [(ngModel)]="item.isSelected" [disabled]="item.quantity <=0" -->
+                                        <td *ngIf="!viewVendorInvoice"> <input type="checkbox" class="custom-checkbox"
+                                                [(ngModel)]="item.isSelected" (change)="toggleSelection(item,$event)"
+                                                [disabled]="item.itemCat == '0'"
+                                                matTooltip="{{item.itemCat == '0' ? 'GRN Item' : ''}}" /></td>
+                                        <td>{{ item.PO_ItemNo }}</td>
+                                        <td>{{ item?.Item_Desc }}</td>
+                                        <td>{{ item?.Material_No ?item?.Material_No:'-' }}</td>
+                                        <td>{{ item.Plant }}</td>
+                                        <td>{{item?.PO_UOM}}</td>
+                                        <td>{{ item?.Net_Price | indianCurrency }}</td>
+                                        <td>{{ item.pricePerUnit ? item.pricePerUnit :'-' }}</td>
+                                        <td>{{item.PO_Quantity}}</td>
+                                        <td>{{ item?.contractNo ? item?.contractNo :'-' }}</td>
+                                        <td>{{item?.Contract_Item ? item?.Contract_Item:'-'}}</td>
+                                        <td>{{item?.packageNo ? item?.packageNo :'-'}}</td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                        <div class="pagination-content">
+                            <div class="pagination">
+                                <button (click)="prevPage()" [disabled]="currentPage == 1">&lt;</button>
+                                <ng-container *ngFor="let page of visiblePages">
+                                    <button (click)="goToPage(page)" [class.active]="currentPage == page">{{ page
+                                        }}</button>
+                                </ng-container>
+                                <button (click)="nextPage()" [disabled]="currentPage == totalPages">&gt;</button>
+
+                                <label for="pageDropdown" class="pg-dp-label d-md-block d-sm-none display-none">Jump to
+                                </label>
+                                <select class="form-select d-md-block d-sm-none display-none" id="pageDropdown"
+                                    [ngModel]="currentPage" (change)="onPageChange($event)" style="width: 115px;">
+                                    <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                                </select>
+
+                            </div>
+
+                            <div class="total" style="margin-right: 15px;">Total: <span
+                                    style="font-size: 15px; font-weight: 700; margin-left: 15px;padding-right: 5px;">{{
+                                    totalItems }}</span></div>
+
+                        </div>
+                    </div>
+
+
+                    <div *ngIf="selectedItems.length > 0" class="col-12 mt-4 po-item table-container">
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th>Purchase Order Item No.</th>
+                                    <!-- <th>HSN/SAC Code</th> -->
+                                    <th>Quantity</th>
+                                    <th>Rate</th>
+                                    <th>Net Amount</th>
+                                    <!-- <th>Tax</th> -->
+                                    <th>Gross Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of selectedItems; let index = index">
+                                    <td>{{ item.PO_ItemNo }}</td>
+                                    <!-- <td><input type="text" class="form-control" [(ngModel)]="item.hsnCode"
+                                            placeholder="Enter HSN/SAC Code" /></td> -->
+                                    <td><input class="form-control" type="number" [(ngModel)]="item.updatedQuantity"
+                                            pattern="^\d*\.?\d*$" placeholder="Enter Quantity" min="0" [readonly]="true">
+                                        <span *ngIf="item.updatedQuantity > item.PO_Quantity"
+                                            class="text-danger">Exceeds
+                                            original
+                                            quantity</span>
+                                    </td>
+                                    <td>{{ item.rate ? item.rate :'-'}}</td>
+                                    <td>{{ item.Net_Price | indianCurrency}}</td>
+                                    <!-- <td><input type="text" class="form-control" [(ngModel)]="item.tax"
+                                            placeholder="Enter Tax" /></td> -->
+                                    <td>{{calculateGrossAmount(item,index) | indianCurrency}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+
+                                    <td></td>
+                                    <td style="text-align: end;"><b>Total</b></td>
+                                    <td>{{getTotalNetPrice() | indianCurrency}}</td>
+
+                                    <td>{{getTotalGrossAmount() | indianCurrency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row mt-4" *ngIf="!viewVendorInvoice">
+        <div class="col-12">
+            <div class="profile-card">
+                <h1 class="project-h1">INVOICE UPLOAD</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-xs-6">
+                        <h1 class="sideHeading">Upload</h1>
+                        <app-file-upload label="Invoice Upload" [isRequired]="true" [allowedFormats]="'.pdf'"
+                            [allowMultiple]="false" (filesSelected)="onFilesUploadedInvoice($event)">
+                        </app-file-upload>
+                        <button *ngIf="!isLoader && selectedFiles_invoice.length>0" type="button"
+                            [disabled]="InvoicefileErrorExists" class="button-submit w-100 m-0"
+                            (click)="uploadDocument('Invoice')">Upload</button>
+
+                        <button *ngIf="isLoader && selectedFiles_invoice.length > 0" id="bt_loader"
+                            class="button-submit w-100 m-0" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <div *ngIf="errorMessage != ''&& selectedFiles_invoice.length > 0" class="text-danger">
+                            {{errorMessage}}
+                        </div>
+                        <div *ngIf="InvoicefileErrorExists !='' && selectedFiles_invoice.length > 0"
+                            class="text-danger">
+                            {{InvoicefileErrorExists}}
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-6">
+                        <h1 class="sideHeading">Support Document</h1>
+
+                        <app-file-upload label="Document Upload" [isRequired]="false" [allowedFormats]="'.pdf'"
+                            [allowMultiple]="true" (filesSelected)="onFilesUploaded($event)">
+                        </app-file-upload>
+                        <button *ngIf="!isLoader && selectedFiles_document.length>0" type="button"
+                            [disabled]="fileErrorExists" class="button-submit w-100 m-0"
+                            (click)="uploadDocument('Supporting')">Upload</button>
+
+                        <button *ngIf="isLoader && selectedFiles_document.length > 0" id="bt_loader"
+                            class="button-submit w-100 m-0" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <div *ngIf="errorMessage != '' && selectedFiles_document.length > 0" class="text-danger">
+                            {{errorMessage}}
+                        </div>
+                        <div *ngIf="fileErrorExists !='' && selectedFiles_document.length > 0" class="text-danger">
+                            {{fileErrorExists}}
+
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <ng-container *ngIf="DocumentDetails.length>0">
+
+                    <h1 class="project-h1">Document Uploaded List</h1>
+                    <app-simple-table [tableData]="DocumentDetails" [isloading]="isLoader" [columns]="Documentcolumns"
+                        (handleClickHere)="onView($event)" (handleView)="onView($event)"
+                        (handleDelete)="onDelete($event)"></app-simple-table>
+
+
+                    <!-- <div class="row mt-2 mx-1">
+                        <button type="button" class="button-submit m-0 col-6">Download Merged</button>
+                        <button type="button" class="button-submit m-0 col-6" (click)="openUploadModal()">Upload
+                            Digitally Signed
+                            Document</button>
+                    </div>
+
+                <div *ngIf="isLoader" id="ad-Table" class="loading">
+                </div> -->
+                </ng-container>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex mt-4">
+                            <button *ngIf="!isLoader" type="button" id="bt_approve" [disabled]="invoiceForm.invalid"
+                                class="button-submit button-left m-0" (click)="finalSubmit()">
+                                <span class="ps-5">Submit</span>
+                                <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                                    class="left-arrow" />
+                            </button>
+                            <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button"
+                                disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </button>
+                            <button type="button" id="bt_reject" class="button-back button-left">
+                                <span class="ps-4">Reset</span>
+                                <img alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                            </button>
+
+                        </div>
+                        <div *ngIf="invoiceForm.invalid && submitted" class="text-danger">
+                            <span>Please Fill Bill Details</span>
+                        </div>
+                        <div *ngIf="docErrorMessage" class="text-danger">
+                            <span>{{docErrorMessage}}</span>
+                        </div>
+                        <div *ngIf="!this.isQuantityValid()">
+                            <span class="text-danger">Some items have exceeded the original quantity. Please correct
+                                them before submitting.</span>
+                        </div>
+                        <div *ngIf="errorMessageForSubmit != ''" class="text-danger">
+                            {{errorMessageForSubmit}}
+                        </div>
+                        <div *ngIf="submitted && selectedItems.length <=0" class="text-danger">
+                            Please select PO Items.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="acordion-item" *ngIf="viewVendorInvoice">
+        <div class="vertical-line" [style.height]="'100%'"></div>
+        <div *ngFor="let panel of panels; let i = index" class="feature-card accordion-header mt-4">
+            <div (click)="togglePanel(panel)">
+                <a href="javascript:void(0)">
+                    <div class="space-between align-items-center">
+                        <label>{{ panel.title }}</label>
+
+                        <div style="height: 35px; width: 35px;">
+                            <img src="../../../assets/img/down-arrow-circle.png" alt="" *ngIf="!panel.isOpen" />
+                            <img src="../../../assets/svg/up-arrow-circle.svg" alt="" *ngIf="panel.isOpen" />
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div *ngIf="panel.isOpen && panel.title == 'PO Items'" class="mb-4">
+                <hr>
+                <app-simple-table [tableData]="poItems" [columns]="poItemsTableColumns"></app-simple-table>
+            </div>
+
+            <div *ngIf="(panel.isOpen && panel.title == 'Documents' )" class="">
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex ">
+                            <span style="margin-right: 20px;">
+                                <label for="" class="form-label m-0">View Merged Document</label>
+                                <button type="button" id="bt_reject" class="button-view "
+                                    (click)="openInvoiceDocumentModal()">
+                                    <span>View Document</span>
+                                </button>
+                            </span>
+                            <!-- <span>
+                        <label for="" class="form-label m-0">Supported Document</label>
+                        <button type="button" id="bt_reject" class="button-view " (click)="rowAction()">
+                          <span>View Document</span>
+                        </button>
+                      </span> -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+</div>
+
+<app-custom-modal *ngIf="showUploadModal" class="upload-modal" title="Upload Document"
+    (onClickCross)="closeUploadModal()" (closeModal)="closeUploadModal()">
+    <app-file-upload label="Upload Document" [isRequired]="true" [allowedFormats]="'.pdf'" [allowMultiple]="false"
+        (filesSelected)="onUploadFileUploaded($event)">
+    </app-file-upload>
+    <button *ngIf="!isLoader && selectedSignFiles_document.length>0" type="button" class="button-submit w-100 m-0"
+        (click)="uploadDocument('')">Upload</button>
+
+    <button *ngIf="isLoader && selectedSignFiles_document.length > 0" id="bt_loader" class="button-submit w-100 m-0"
+        type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </button>
+    <div *ngIf="filterErrorMessage != ''" class="text-danger mt-2">
+        {{filterErrorMessage}}
+    </div>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="openDocumentListModal" [title]="'Supported Documents'"
+    (onClickCross)="openDocumentListModal =false" class="recoveries-modal">
+    <ng-container *ngIf="supportedDocuments.length > 0">
+        <ng-container *ngFor="let item of supportedDocuments">
+            <div class="row">
+                <div class="col-12 space-between-center m-1">
+                    <div class="col-11">
+                        <label><b>{{item?.filename}}</b></label>
+                    </div>
+                    <div class="col-1">
+                        <a href="javascript:void(0)" (click)="openDocument(item)">
+                            <img src="assets/svg/eye.svg" alt="Download" style="height: 30px;width: 30px;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+    </ng-container>
+
+
+</app-custom-modal>
+<app-custom-modal *ngIf="isDocumentModalOpen" (onClickCross)="closeDocumentModal()" (closeModal)="closeDocumentModal()"
+    [title]="'Document'" class="document-modal">
+    <div *ngIf="!isLoader">
+        <ngx-extended-pdf-viewer [base64Src]="base64String" [textLayer]="true"></ngx-extended-pdf-viewer>
+    </div>
+
+    <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </div>
+
+</app-custom-modal>

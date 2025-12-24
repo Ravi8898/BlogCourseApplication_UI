@@ -1,0 +1,12 @@
+<div class="custom-modal-overlay" (click)="close()"></div>
+<div class="custom-modal-content">
+    <div class="custom-modal-header">
+        <h5 *ngIf="title"class="custom-modal-title m-2">{{ title }}</h5>
+        <button type="button" class="close-button" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="custom-modal-body">
+        <ng-content></ng-content>
+    </div>
+</div>

@@ -1,0 +1,957 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+
+<div class="bt_view" id="bt_view" class="d-flex justify-content-end">
+    <button type="button" class="button-submit mb-1 d-flex" (click)="openViewStatus()"><span class="insit-img"><img
+                src="../../../assets/svg/eye.svg"></span><span style="margin-top: 10px;">
+            View Status</span></button>
+
+</div>
+
+<div id="page1" class="drawer_pdf">
+    <div class="row">
+        <div class="col-12">
+
+            <div class="row">
+
+                <div class="">
+                    <div class="bd-tab-content">
+                        <div class="bd-tab-content-inner space-between">
+                            <p class="page-heading">Contract Job Payment Certificate (CJPC)</p>
+
+                        </div>
+                        <div class="tab-content">
+                            <ng-container>
+                                <div class="feature-card">
+                                    <div class="project-card-text">
+                                        <div class="project-card">
+                                            <p><strong>Project Name & Location</strong></p>
+                                            <p>{{ projectData?.wbsccprojectname }}</p>
+
+
+                                            <p><strong>Contract / WO Ref.</strong></p>
+                                            <p> {{ projectData?.contractnumber }}</p>
+
+                                            <p><strong>Final Workdone / WO Value</strong></p>
+                                            <p> {{ (projectData?.amendmentvalue | indianCurrency) || '₹ -' }}</p>
+
+                                        </div>
+                                        <div class="project-card">
+                                            <p><strong>Project Code</strong></p>
+                                            <p> {{ projectData?.projectcode || '-' }}</p>
+
+                                            <p><strong>WO Date</strong></p>
+                                            <p> {{ projectData?.contractdate | date:'dd-MMM-yyyy' }}</p>
+
+                                            <p><strong>Original Completion Date</strong></p>
+                                            <p
+                                                [ngClass]="{ 'red-highlight':OriginalDate_clr == 'red-highlight','orange-highlight':OriginalDate_clr == 'orange-highlight','yellow-highlight': OriginalDate_clr == 'yellow-highlight' ,'blink-background' :  blink_OriginalDate }">
+                                                {{
+                                                projectData?.ogCompletionDate | date:'dd-MMM-yyyy'}}</p>
+                                        </div>
+                                        <div class="project-card">
+
+                                            <p><strong>Package</strong></p>
+                                            <p>{{ projectData?.contractpackage }}</p>
+
+                                            <p><strong>Date of Last Amendment</strong></p>
+                                            <p> {{ projectData?.LastAmndDate ? (projectData.LastAmndDate |
+                                                date:'dd-MMM-yyyy') : '-' }}</p>
+
+                                            <p><strong>Last Amended Completion Date </strong></p>
+                                            <p
+                                                [ngClass]="{'red-highlight':LastAmndDate_clr == 'red-highlight','orange-highlight':LastAmndDate_clr == 'orange-highlight','yellow-highlight': LastAmndDate_clr == 'yellow-highlight','blink-background' :  blink_LastAmndDate }">
+                                                {{
+                                                projectData?.lastAmndCompletionDate | date:'dd-MMM-yyyy' }}</p>
+
+                                        </div>
+                                        <div class="project-card">
+                                            <p><strong>Contractor's Name</strong></p>
+                                            <p>{{ projectData?.vendorname }}</p>
+
+                                            <p><strong>Original Completion Value</strong></p>
+                                            <p> {{ projectData?.contractvalue | indianCurrency}}</p>
+
+                                            <!-- <p><strong>Actual Completion Date</strong> </p>
+                                            <p
+                                                [ngClass]="{'red-highlight':ActualComDate_clr == 'red-highlight','orange-highlight':ActualComDate_clr == 'orange-highlight','yellow-highlight': ActualComDate_clr == 'yellow-highlight','blink-background' :  blink_ActualComDate }">
+                                                {{
+                                                projectData?.contractactualcompletiondate | date:'dd-MMM-yyyy' }} </p> -->
+
+                                        </div>
+                                        <div class="project-card">
+                                            <p><strong>Vendor Code</strong></p>
+                                            <p> {{ projectData?.vendorcode }}</p>
+
+                                            <p><strong>Last Amended Contract / WO Value</strong></p>
+                                            <p>{{ (projectData?.amendmentvalue | indianCurrency) || '₹ -' }}</p>
+
+                                        </div>
+                                    </div>
+
+                                    <hr *ngIf="this.cjpcType =='Invoice'" />
+                                    <div class="project" *ngIf="this.cjpcType =='Invoice'">
+                                        <h1 class="">ADVANCE AND RETENTION</h1>
+                                        <div class="project-card-text">
+                                            <div class="project-card">
+                                                <h2>Advance</h2>
+                                                <!-- <p><strong>Maximum Amount Paid / Hold</strong></p> -->
+                                                <p><strong>Advance Paid (DRP AMT.)</strong></p>
+                                                <p>{{ advanceDetails?.totalDprAmt | indianCurrency }}</p>
+
+                                                <p><strong>Recovered Amount</strong></p>
+                                                <p> {{ advanceDetails?.totalrecovered | indianCurrency }}</p>
+
+                                                <p><strong>Unadjusted Amount </strong></p>
+                                                <p> {{ (advanceDetails?.totalDprAmt - advanceDetails?.totalrecovered)|
+                                                    indianCurrency }}</p>
+
+                                            </div>
+                                            <div class="project-card">
+                                                <div style="height: 27px;"></div>
+                                                <p><strong>Advance Recovery % </strong></p>
+                                                <p> {{advanceDetails?.amtRecPer }}</p>
+
+                                                <p><strong>Calculated Amount</strong></p>
+                                                <p> {{ advanceDetails?.deductedAmount }}</p>
+
+                                            </div>
+                                            <div class="vl"></div>
+                                            <div class="project-card ">
+
+                                                <h2>PBG</h2>
+                                                <p><strong>PBG Values</strong></p>
+                                                <p>{{ pbgAmountDetails?.pbgamount | indianCurrency }}</p>
+
+                                                <p><strong>Retention Percentage (%)</strong></p>
+                                                <p> {{ pbgAmountDetails?.retentionPer}}</p>
+
+                                                <p><strong>Calculate Amount (Current Bill)</strong></p>
+                                                <p> {{ pbgAmountDetails?.retentionamount | indianCurrency}}</p>
+
+                                                <p><strong>Total Retention Amount</strong></p>
+                                                <p> {{ pbgAmountDetails?.totalretentionamount | indianCurrency}}</p>
+
+                                            </div>
+                                            <div class="project-card">
+                                                <h2>CPBG</h2>
+                                                <p><strong>CPBG Values</strong></p>
+                                                <p>{{ cpbgAmountDetails?.cpbgamount | indianCurrency}}</p>
+
+                                                <p><strong>Retention Percentage (%)</strong></p>
+                                                <p> {{ cpbgAmountDetails?.retentionPer}}</p>
+
+                                                <p><strong>Calculate Amount (Current Bill)</strong></p>
+                                                <p> {{ cpbgAmountDetails?.retentionamount | indianCurrency}}</p>
+
+                                                <p><strong>Total Retention Amount</strong></p>
+                                                <p> {{ cpbgAmountDetails?.totalretentionamount | indianCurrency}}</p>
+
+                                            </div>
+                                            <div class="vl"></div>
+
+                                            <div class="project-card">
+
+                                                <h2>ADHOC Against RA Bills </h2>
+
+                                                <p><strong>Maximum Amount paid / Hold</strong></p>
+                                                <p> {{ 'Rs. 0' }}</p>
+
+                                            </div>
+                                            <div class="project-card">
+                                                <div style="height: 27px;"></div>
+
+                                                <p><strong>Current Balance</strong></p>
+                                                <p>{{ 'Rs. 0' }}</p>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr *ngIf="this.cjpcType =='Invoice'" />
+                                    <div class="project" *ngIf="this.cjpcType =='Invoice'">
+                                        <h1 class="">CLAUSE AND COMPLIANCE DOCUMENTS</h1>
+                                        <div class="project-card-text">
+                                            <ng-container *ngFor="let clause of clauses">
+                                                <div class="project-card">
+                                                    <h2>{{clause.clausetypename || '-'}}</h2>
+                                                    <p><strong>Days</strong></p>
+                                                    <p>{{ clause.penaltycheckduration || 0 }} Days</p>
+
+                                                </div>
+                                                <div class="project-card">
+                                                    <div style="height: 27px;"></div>
+                                                    <p><strong>Max (%)</strong></p>
+                                                    <p> {{ clause.maxpercent || 0 }}%</p>
+
+                                                </div>
+                                            </ng-container>
+
+                                        </div>
+
+                                        <hr style="border-style: dashed;" />
+
+                                        <div class="project-card-text">
+                                            <ng-container *ngFor="let compliance of compliances">
+
+                                                <div class="project-card ">
+                                                    <h2>{{compliance.compliancecategoryname || '-'}}</h2>
+                                                    <p><strong>Identifier</strong></p>
+                                                    <p>{{ compliance.identifier || '-' }}</p>
+
+                                                </div>
+                                                <div class="project-card">
+                                                    <div style="height: 27px;"></div>
+                                                    <p><strong>Validity Start</strong></p>
+                                                    <p>{{ compliance.validitystartdate || '-' | date: 'dd-MMM-yyyy' }}
+                                                    </p>
+
+                                                </div>
+
+                                                <div class="project-card">
+                                                    <div style="height: 27px;"></div>
+                                                    <p><strong>Validity End</strong></p>
+                                                    <p
+                                                        [ngClass]="{'red-highlight':compliance?.validation_clr == 'red-highlight','orange-highlight':compliance?.validation_clr == 'orange-highlight','yellow-highlight': compliance?.validation_clr == 'yellow-highlight','blink-background':blink_ValidityEndDate }">
+                                                        {{
+                                                        compliance.validityenddate || '-' | date: 'dd-MMM-yyyy' }}</p>
+
+                                                </div>
+
+                                                <div class="project-card">
+                                                    <div style="height: 27px;"></div>
+                                                    <p><strong>Value</strong></p>
+                                                    <p>Rs. {{ compliance.value || 0 }}</p>
+
+                                                </div>
+
+                                                <div class="vl"></div>
+                                            </ng-container>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+
+                            </ng-container>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" *ngIf="this.cjpcType =='Hold Release'">
+        <div class="col-12 mt-4">
+            <div class="feature-card">
+                <h1 class="project-h1">Release Amount Details</h1>
+
+                <div class="project-card-text">
+                    <div class="project-card">
+                        <p><strong>Hold Release Amount</strong></p>
+                        <p> {{ ReleaseAmountDetails[0]?.relaeaseamount | indianCurrency }}</p>
+                    </div>
+                    <div class="project-card">
+                        <p><strong>Release Remark</strong></p>
+                        <p>{{ ReleaseAmountDetails[0]?.holdreleaseremarks }}</p>
+
+                    </div>
+                    <div class="project-card">
+                        <p><strong>Department</strong></p>
+                        <p>{{ ReleaseAmountDetails[0]?.departmentname || '-' }}</p>
+
+                    </div>
+                    <div class="project-card">
+                        <p><strong>Hold For</strong></p>
+                        <p>{{ ReleaseAmountDetails[0]?.holdtypename }}</p>
+                    </div>
+
+                    <div class="project-card">
+                        <p><strong>Hold Remark</strong></p>
+                        <p>{{ ReleaseAmountDetails[0]?.holdremark || '-' }}</p>
+                    </div>
+
+                    <div class="project-card">
+                        <p><strong>Hold Amount</strong></p>
+                        <p>{{ ReleaseAmountDetails[0]?.holdamount | indianCurrency}}</p>
+                    </div>
+
+                    <div class="project-card">
+                        <p><strong>Total Release Amount</strong></p>
+                        <p>{{ ReleaseAmountDetails[0]?.total_released_amount | indianCurrency}}</p>
+                    </div>
+
+                    <div class="project-card">
+                        <p><strong>Remaining Release Amount</strong></p>
+                        <p>{{ ReleaseAmountDetails[0]?.holdamount - ReleaseAmountDetails[0]?.total_released_amount |
+                            indianCurrency}}</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row" *ngIf="cjpcType != 'Retention Release'">
+        <div class="col-12 mt-4">
+            <div class="feature-card">
+                <h1 class="project-h1">BILL DETAILS</h1>
+                <!-- <app-simple-table [tableData]="billDetails" [columns]="columns"></app-simple-table> -->
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <ng-container *ngFor="let column of columns">
+                                <th>{{ column.header }}</th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of billDetails">
+                            <td *ngFor="let column of columns">
+                                {{ column?.date ? (item[column.field] | date: 'dd-MMM-yyyy') : item[column.field] }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="row" *ngIf="this.cjpcType !='Hold Release'">
+        <div class="col-12 mt-4">
+            <div class="feature-card">
+                <h1 class="project-h1">Holds and Releases</h1>
+                <app-cjpc-holds [contractId]="ContractId" [cjpcType]="cjpcType" [CJPCID]="CJPCID"
+                    [cjpcStatus]="cjpcStatus" [contractDetails]="projectData"
+                    (updatePaymentDetails)="getPaymentadmittedDetails()"></app-cjpc-holds>
+
+            </div>
+        </div>
+    </div> -->
+
+    <div class="row" *ngIf="paymentDetails.length > 0 ">
+        <div class="col-12 mt-4" *ngIf="this.cjpcType !='Hold Release' && this.cjpcType !='Retention Release'">
+            <div class="feature-card">
+                <h1 class="project-h1">PAYMENTS ADMITTED</h1>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <ng-container *ngFor="let column of Paymentcolumns">
+                                <th>{{ column.header }}</th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of paymentDetails">
+                            <td *ngFor="let column of Paymentcolumns">
+                                {{ column?.date ? (item[column.field] | date: 'dd-MMM-yyyy') : item[column.field] }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <h1 class="sideHeading mt-3">Subtotal : Rs. {{paymentDetails[0]?.grossAmt}}</h1> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="RecoveriesList.length > 0">
+        <div class="col-12 mt-4">
+            <div class="feature-card">
+                <h1 class="project-h1">Recoveries</h1>
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <ng-container *ngFor="let column of Recoverycolumns">
+                                <th>{{ column.header }}</th>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of RecoveriesList">
+                            <td *ngFor="let column of Recoverycolumns">
+                                {{ column?.date ? (item[column.field] | date: 'dd-MMM-yyyy') : item[column.field] }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="HoldDetails.length > 0">
+        <div class="col-12 mt-4">
+            <div class="feature-card ">
+                <div class="positionRelative pb-3">
+                    <h1 class="project-h1">HOLD'S</h1>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <ng-container *ngFor="let column of Holdcolumns">
+                                    <th>{{ column.header }}</th>
+                                </ng-container>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of HoldDetails">
+                                <td *ngFor="let column of Holdcolumns">
+                                    {{ column?.date ? (item[column.field] | date: 'dd-MMM-yyyy') :
+                                    item[column.field] }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="vertical-line"></div>
+                </div>
+                <div class="pt-3">
+
+                    <h1 class="project-h1">RELEASE</h1>
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <ng-container *ngFor="let column of Releasecolumns">
+                                    <th>{{ column.header }}</th>
+                                </ng-container>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of ReleaseDetails">
+                                <td *ngFor="let column of Releasecolumns">
+                                    {{ column?.date ? (item[column.field] | date: 'dd-MMM-yyyy') :
+                                    item[column.field] }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="cjpcType != 'Retention Release'">
+        <div class="col-12 mt-4">
+            <div class="feature-card">
+                <h1 class="project-h1">SUMMARY</h1>
+                <div class="row">
+                    <div class="col-6">
+                        <h2 class="project-h2">Payment Admitted</h2>
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Upto Previous Bill</th>
+                                    <th>This Bill</th>
+                                    <th>Cumulative Upto Bill</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Gross Amount</td>
+                                    <td>{{SummaryDetailsA[0]?.billamount | indianCurrency}}</td>
+                                    <td>{{paymentDetails[0]?.BillAmt | indianCurrency}}</td>
+                                    <td>{{SummaryDetailsA[0]?.billamount + paymentDetails[0]?.BillAmt | indianCurrency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Mobilization Advance</td>
+                                    <td>{{(SummaryDetailsA[0]?.advancerecoveryamount) *-1 | indianCurrency}}</td>
+                                    <td>{{(paymentDetails[0]?.advRecovery) *-1 | indianCurrency}}</td>
+                                    <td>{{(SummaryDetailsA[0]?.advancerecoveryamount + paymentDetails[0]?.advRecovery)
+                                        *-1 |
+                                        indianCurrency}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Hold Amount</td>
+                                    <td>{{(SummaryDetailsA[0]?.holdamount) *-1 | indianCurrency}}</td>
+                                    <td>{{(paymentDetails[0]?.holdAmt) *-1 | indianCurrency}}</td>
+                                    <td>{{(SummaryDetailsA[0]?.holdamount + paymentDetails[0]?.holdAmt) *-1 |
+                                        indianCurrency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Hold Release Amount</td>
+                                    <td>{{SummaryDetailsA[0]?.holdreleaseamount | indianCurrency}}</td>
+                                    <td>{{paymentDetails[0]?.holdRelAmt | indianCurrency}}</td>
+                                    <td>{{SummaryDetailsA[0]?.holdreleaseamount + paymentDetails[0]?.holdRelAmt |
+                                        indianCurrency}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Recoveries Amount</td>
+                                    <td>{{(SummaryDetailsA[0]?.recoveryamount) *-1 | indianCurrency}}</td>
+                                    <td>{{(paymentDetails[0]?.recoveryAmt) *-1 | indianCurrency}}</td>
+                                    <td>{{(SummaryDetailsA[0]?.recoveryamount + paymentDetails[0]?.recoveryAmt) |
+                                        indianCurrency}}</td>
+                                </tr>
+                                <tr>
+                                    <td>PBG Amount</td>
+                                    <td>{{(SummaryDetailsA[0]?.pbgamount) * -1 | indianCurrency}}</td>
+                                    <td>{{(paymentDetails[0]?.pbgRetentionAmount) * -1 | indianCurrency}}</td>
+                                    <td>{{(SummaryDetailsA[0]?.pbgamount + paymentDetails[0]?.pbgRetentionAmount) *-1 |
+                                        indianCurrency}}</td>
+                                </tr>
+                                <tr>
+                                    <td>CPBG Amount</td>
+                                    <td>{{(SummaryDetailsA[0]?.cpbgamount) * -1 | indianCurrency}}</td>
+                                    <td>{{(paymentDetails[0]?.cpbgRetentionAmount) * -1 | indianCurrency}}</td>
+                                    <td>{{(SummaryDetailsA[0]?.cpbgamount + paymentDetails[0]?.cpbgRetentionAmount) *-1
+                                        | indianCurrency}}</td>
+                                </tr>
+                                <tr>
+                                    <td>CGST</td>
+                                    <td>{{SummaryDetailsA[0]?.cgstrate | indianCurrency}}</td>
+                                    <td>{{paymentDetails[0]?.cgstRate | indianCurrency}}</td>
+                                    <td>{{SummaryDetailsA[0]?.cgstrate + paymentDetails[0]?.cgstRate | indianCurrency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>SGST</td>
+                                    <td>{{SummaryDetailsA[0]?.sgstrate | indianCurrency}}</td>
+                                    <td>{{paymentDetails[0]?.sgstRate | indianCurrency}}</td>
+                                    <td>{{SummaryDetailsA[0]?.sgstrate + paymentDetails[0]?.sgstRate | indianCurrency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>IGST</td>
+                                    <td>{{SummaryDetailsA[0]?.igstrate | indianCurrency}}</td>
+                                    <td>{{paymentDetails[0]?.igstRate | indianCurrency}}</td>
+                                    <td>{{SummaryDetailsA[0]?.igstrate + paymentDetails[0]?.igstRate | indianCurrency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TCS/TDS Amount</td>
+                                    <td>{{(SummaryDetailsA[0]?.tdsamount) *-1 | indianCurrency}}</td>
+                                    <td>{{(paymentDetails[0]?.TDSAmount) *-1 | indianCurrency}}</td>
+                                    <td>{{(SummaryDetailsA[0]?.tdsamount + paymentDetails[0]?.TDSAmount) *-1 |
+                                        indianCurrency}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Net Amount Payable</strong></td>
+                                    <td><strong>{{SummaryDetailsA[0]?.grossamount | indianCurrency}}</strong></td>
+                                    <td><strong>{{paymentDetails[0]?.grossAmt | indianCurrency}}</strong></td>
+                                    <td><strong>{{SummaryDetailsA[0]?.grossamount + paymentDetails[0]?.grossAmt |
+                                            indianCurrency}}</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-6">
+                        <h2 class="project-h2">Recoveries</h2>
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Upto Previous Bill</th>
+                                    <th>This Bill</th>
+                                    <th>Cumulative Upto Bill</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of recoveryTable">
+                                    <td>{{ item.recoverytypename | indianCurrency}}</td>
+                                    <td>{{ item.uptoPreviousBill | indianCurrency }}</td>
+                                    <td>{{ item.thisBill | indianCurrency }}</td>
+                                    <td>{{ item.cumulative | indianCurrency }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h2 class="project-h2">Holds</h2>
+                        <table class="styled-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Upto Previous Bill</th>
+                                    <th>This Bill</th>
+                                    <th>Cumulative Upto Bill</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of holdsTable">
+                                    <td>{{ item.holdtypename | indianCurrency}}</td>
+                                    <td>{{ item.uptoPreviousBill | indianCurrency }}</td>
+                                    <td>{{ item.thisBill | indianCurrency}}</td>
+                                    <td>{{ item.cumulative | indianCurrency}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" *ngIf="cjpcType == 'Retention Release'">
+        <div class="col-12 mt-4 d-flex align-items-stretch">
+            <div class="feature-card w-100">
+                <h1 class="project-h1">Retention Release Details ({{retentionType}})</h1>
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice Number</th>
+                                    <th>Invoice Date</th>
+                                    <th>Bill Amount</th>
+                                    <th>Retention %</th>
+                                    <th>Retention Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of retentionReleaseData">
+                                    <td>{{ item.invoicenumber }}</td>
+                                    <td>{{ item.invoicedate | date:'dd-MMM-yyyy' }}</td>
+                                    <td>{{ item.billamount | indianCurrency }}</td>
+                                    <td>{{ item.amountretentionper }}%</td>
+                                    <td>{{ item.retentionamount | indianCurrency }}</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" style="text-align: right;"><strong>Total Retention Amount</strong>
+                                    </td>
+                                    <td><strong>{{ totalRetentionAmount | indianCurrency }}</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4 mt-4 d-flex align-items-stretch" *ngIf="this.cjpcType =='Invoice'">
+            <div class="feature-card w-100">
+                <h1 class="project-h1">DEDUCATION OF TAXES</h1>
+                <p class="cardHeading1"><strong>TCS/TDS For SITC WORKS</strong></p>
+                <p class="cardContent">{{paymentDetails[0]?.TDSAmount | indianCurrency}}</p>
+                <p class="cardContent redText">Subtotal of admitted payments: {{paymentDetails[0]?.BillAmt |
+                    indianCurrency}}</p>
+            </div>
+        </div>
+        <div class="col-4 mt-4 d-flex align-items-stretch" *ngIf="cjpcType != 'Retention Release'">
+            <div class="feature-card w-100">
+                <h1 class="project-h1">NET CERTIFIED AMOUNT PAYABLE TO CONTRACTOR</h1>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="cardHeading1"><strong>Amount In Number</strong></p>
+                        <p class="cardContent">{{paymentDetails[0]?.grossAmt | indianCurrency}}</p>
+                    </div>
+                    <div>
+                        <p class="cardHeading1"><strong>Amount In Word</strong></p>
+                        <p class="cardContent">{{paymentDetails[0]?.numberToword}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4 mt-4 d-flex align-items-stretch" *ngIf="cjpcType == 'Retention Release'">
+            <div class="feature-card w-100">
+                <h1 class="project-h1">NET CERTIFIED AMOUNT PAYABLE TO CONTRACTOR</h1>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="cardHeading1"><strong>Amount In Number</strong></p>
+                        <p class="cardContent">{{totalRetentionAmount | indianCurrency}}</p>
+                    </div>
+                    <div>
+                        <p class="cardHeading1"><strong>Amount In Word</strong></p>
+                        <p class="cardContent"> {{totalRetentionAmountWithWords}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mt-4 d-flex align-items-stretch">
+            <div class="feature-card w-100">
+                <h1 class="project-h1">Approval History</h1>
+                <div class="row">
+                    <div class="col-3 pb-1" *ngFor="let item of statusDetails">
+                        <div class="statusCard">
+                            <p class="cardHeading1"><strong>{{ item.entityname }}</strong></p>
+                            <div class="d-flex justify-content-between">
+                                <p class=" cardContent mb-1">{{ item.username }}</p>
+                                <p class="cardContent mb-1">{{ item.validatedon | date:'dd-MMM-yyyy' }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class=" cardContent mb-1">Status</p>
+                                <p class="cardContent {{ item.validationstatus }} mb-1">{{ item.validationstatus }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="cjpcType != 'Retention Release'">
+    <div class="col-12 mt-4 d-flex align-items-stretch">
+        <div class="feature-card w-100">
+            <h1 class="project-h1">Documents</h1>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex ">
+                        <span style="margin-right: 20px;">
+                            <label for="" class="form-label m-0">Invoice PDF</label>
+                            <span class="asterisk"> *</span>
+                            <button type="button" id="bt_reject" class="button-view "
+                                (click)="openInvoiceDocumentModal()">
+                                <span>View Document</span>
+                            </button>
+                        </span>
+                        <span>
+                            <label for="" class="form-label m-0">Supported Document</label>
+                            <span class="asterisk"> *</span>
+                            <button type="button" id="bt_reject" class="button-view " (click)="rowAction()">
+                                <span>View Document</span>
+                            </button>
+                        </span>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex my-3">
+    <button [disabled]="isApproved || isDisable" (click)="checkedOrApproved()" type="submit" id="bt_approve"
+        class="button-submit button-left m-0">
+        <span class="">{{roleName == 'CAD Admin' ? 'Final Approval' : roleName == 'Project Manager' ?
+            'Approve':'Checked'}}</span>
+        <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+    </button>
+    <button type="button" id="bt_reject" class="button-back button-left" (click)="goBack()">
+        <span class="ps-3">Back</span>
+        <img alt="" src="../../../assets/svg/left-arrow.svg" class="left-arrow" />
+    </button>
+    <button *ngIf="!isChecklistSent && (isApproved && roleName == 'CAD Admin')" type="button" id="bt_reject"
+        class="button-back button-left" (click)="DownloadChecklist()">
+        <span class="ps-3">Download Checklist</span>
+    </button>
+
+    <button *ngIf="isChecklistSent" id="bt_loader" class="button-back" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Checklist sending...
+    </button>
+
+    <button *ngIf="isLoader" id="bt_loader" class="button-back button-left" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </button>
+
+    <button *ngIf="!isLoader" type="button" id="bt_reject" class="button-back button-left" (click)="downloadPDF()">
+        <span>Download CJPC</span>
+    </button>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="mt-2">
+            <div class="text-danger" *ngIf="error_message != ''">{{error_message}}</div>
+        </div>
+    </div>
+</div>
+
+<app-custom-modal *ngIf="remarkModal" [title]="'Remarks'" (onClickCross)="closeRemarkModal()"
+    (closeModal)="closeRemarkModal()" class="remark-modal">
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12">
+                <label for="" class="form-label m-0">Remarks</label>
+                <textarea rows="5" class="form-control" placeholder="Enter your remarks here"
+                    [(ngModel)]="remark"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer mt-2">
+        <button *ngIf="!isLoader" [disabled]="remark.trim() == ''" type="button" class="button-submit"
+            (click)="submitRemark()">Submit</button>
+
+        <button *ngIf="isLoader" id="bt_loader" class="button-back button-left" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </button>
+    </div>
+</app-custom-modal>
+
+<div style="height: 10px;"></div>
+<app-custom-modal *ngIf="showStatus" [title]="'CJPC STATUS'" (onClickCross)="closeStatusDialog()"
+    (closeModal)="closeStatusDialog()" class="remark-modal">
+    <!-- <div class="d-flex" *ngFor="let item of trackData">
+        <div class="col-md-1">
+            <div class="circle" [ngClass]="{
+                'pending': item.status == 'Pending',
+                'accept': item.status == 'Approved',
+                'sent-back': item.status == 'sent-back',
+                'rejected': item.status == 'reject',
+                'onhold': item.status == 'onhold'
+             }"></div>
+            <div class="pvr"></div>
+        </div>
+        <div class="col-md-9">
+            <p class="main-status">{{item['dept']}}</p>
+            <p class="m-0 btn-status sent" [ngClass]="{'sent' : item.status=='sent-back', 
+              'reject' : item.status=='reject', 'accept' : item.status=='accept' 
+              || item.status=='Approved', 'hold' : item.status=='onhold', 
+              'pending':item.status=='Pending', 'processing':item.status=='Pending'}">
+                {{item.status=='pending'?'Pending':item.status=='sent-back'?'Sent Back':
+                item.status=='reject'? 'Rejected': item.status=='accept'?'Accepted':
+                item.status=='onhold'?'On Hold' : item.status=='processing'?'Processing' :
+                item.status=='completed'?'Completed':
+                item.status}}</p>
+            <p class="mt-2"> {{item.desc}} </p>
+        </div>
+    </div> -->
+    <div class="position-relative">
+        <div *ngFor="let event of trackData" class="timeline-item d-flex">
+            <!-- Marker + Line -->
+            <div class="timeline-marker">
+                <div class="dot bg-primary"></div>
+                <div class="line"></div>
+            </div>
+
+            <!-- Card -->
+            <div class="flex-fill">
+                <div class="card-body">
+                    <!-- Date + Status -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <small class="text-muted">
+                            {{ event.date | date:'dd MMM yyyy, hh:mm a' }}
+                        </small>
+
+                        <span class="badge" [ngClass]="{
+              'bg-success': event.details.status === 'Approved' || event.details.validationstatus === 'Approved' || event.details.status === 'Accept',
+              'bg-danger': event.details.status === 'Pending' || event.details.validationstatus === 'Pending',
+              'bg-warning text-dark': event.details.status === 'Hold'
+            }">
+                            {{ event.details.status || event.details.validationstatus }}
+                        </span>
+                    </div>
+
+                    <!-- Title -->
+                    <h6 class="fw-bold text-primary mb-2">{{ event.type }}</h6>
+
+                    <!-- Main Details -->
+                    <div class="text-secondary small mb-3">
+                        <div *ngIf="event.type === 'Invoice'">
+                            <p class="mb-1"><strong>Created By:</strong> {{ event.details.createdby }}</p>
+                            <p class="mb-1"><strong>Invoice ID:</strong> {{ event.details.invoiceid }}</p>
+                        </div>
+
+                        <div
+                            *ngIf="event.type === 'Checker' || event.type === 'Project Manager' || event.type === 'CAD Admin'">
+                            <p class="mb-1"><strong>Department:</strong> {{ event.details.departmentname }}</p>
+                            <p class="mb-1"><strong>Validated By:</strong> {{ event.details.validatedby || '-' }}</p>
+                        </div>
+
+                        <div *ngIf="event.type === 'CJPC'">
+                            <p class="mb-1"><strong>Remark:</strong> {{ event.details.remark || 'No Remark' }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Nested Recovery / Hold -->
+                    <div *ngIf="event.type === 'CAD Admin' || event.type === 'Checker' ">
+                        <!-- Recovery -->
+                        <div *ngIf="event.details.recovery && event.details.recovery.length > 0" class="nested-section">
+                            <div class="nested-marker bg-success"></div>
+                            <div class="nested-content">
+                                <h6 class="text-success fw-bold">Recovery</h6>
+                                <div *ngFor="let r of event.details.recovery" class="nested-item">
+                                    <div><strong>Type:</strong> {{ r.recoverytypename }}</div>
+                                    <div><strong>Amount:</strong> {{ r.recoveryamount | number:'1.2-2' }}</div>
+                                    <div><strong>By:</strong> {{ r.recoverycreatedby }}</div>
+                                    <div><strong>Date:</strong> {{ r.recoverycreateddate | date:'dd MMM yyyy, hh:mm a'
+                                        }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hold -->
+                        <div *ngIf="event.details.hold && event.details.hold.length > 0" class="nested-section">
+                            <div class="nested-marker bg-warning"></div>
+                            <div class="nested-content">
+                                <h6 class="text-warning fw-bold">Hold</h6>
+                                <div *ngFor="let h of event.details.hold" class="nested-item">
+                                    <div><strong>Type:</strong> {{ h.holdtypename }}</div>
+                                    <div><strong>Amount:</strong> {{ h.holdamount | number:'1.2-2' }}</div>
+                                    <div><strong>By:</strong> {{ h.holdcreatedby }}</div>
+                                    <div><strong>Date:</strong> {{ h.holdcreateddate | date:'dd MMM yyyy, hh:mm a' }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</app-custom-modal>
+
+<app-custom-modal *ngIf="openDocumentListModal" [title]="'Supported Documents'"
+    (onClickCross)="openDocumentListModal = false" class="recoveries-modal">
+    <ng-container *ngIf="recoveryDocuments.length > 0">
+        <ng-container *ngFor="let item of recoveryDocuments">
+            <div class="row">
+                <div class="col-12 space-between-center m-1">
+                    <div class="col-11">
+                        <label><b>{{item?.documentname}}</b></label>
+                    </div>
+                    <div class="col-1">
+                        <a href="javascript:void(0)" (click)="onViewDocument(item?.location)">
+                            <img src="assets/svg/eye.svg" alt="Download" style="height: 30px;width: 30px;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+    </ng-container>
+    <div *ngIf="recoveryDocuments.length==0">
+        <div class="row noRecond">
+            <div class="col">
+                <h3>No Documents found</h3>
+            </div>
+        </div>
+    </div>
+
+</app-custom-modal>
+<app-custom-modal *ngIf="docViewModelOpen" (onClickCross)="docViewModelOpen = false" [title]="'View Document'"
+    class="doc-vew-modal">
+
+    <div class="row">
+        <div class="col-12" *ngIf="bash64String && !isLoader">
+            <ngx-extended-pdf-viewer *ngIf="!isLoader" [base64Src]="bash64String" height="100%" [textLayer]="true"
+                [showDownloadButton]="false" [showPrintButton]="false" [showPagingButtons]="false"
+                [showPresentationModeButton]="false" [showOpenFileButton]="false"
+                [showBorders]="true"></ngx-extended-pdf-viewer>
+
+        </div>
+        <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </div>
+        <div *ngIf="bash64String == '' && !isLoader">
+            <div class="row noRecond">
+                <div class="col">
+                    <h3>No Document found</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</app-custom-modal>

@@ -1,0 +1,117 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+
+<app-custom-modal *ngIf="retentionReleaseModal" [title]="'RETENTION / SITE CLEARANCE CERT.'"
+    class="retentionReleaseModal" (closeModal)="onCloseModal()" (onClickCross)="onCloseModal()">
+    <form [formGroup]="retentionReleaseForm">
+        <div class="row">
+            <ng-container *ngIf="retentionFor.trim() != 'Site clearance certificate'">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="woNumber">Work Order Number<span class="text-danger">*</span></label>
+                        <input type="text" id="woNumber" formControlName="woNumber" class="form-control"
+                            placeholder="Enter Work Order Number" readonly>
+
+                    </div>
+
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="vendorCode">Vendor Code<span class="text-danger">*</span></label>
+                        <input type="text" id="vendorCode" formControlName="vendorCode" class="form-control"
+                            placeholder="Enter Vendor Code" readonly>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-group">
+                        <label for="retentionAmount">Retention Amount<span class="text-danger">*</span></label>
+                        <input type="text" id="retentionAmount" formControlName="retentionAmount" class="form-control"
+                            placeholder="Enter Retention Amount" appIndianCurrency readonly>
+
+                    </div>
+                </div>
+                <ng-container *ngIf="isEnabled && loginType == 'vendor'">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="accountNo">Account Number<span class="text-danger">*</span></label>
+                            <ng-select class="dropdown-list-autocomplete" formControlName="accountNo"
+                                (change)="onBankChange($event)">
+                                <ng-option value="">Select Account Number</ng-option>
+                                <ng-option *ngFor="let account of bankDetails"
+                                    [value]="account.Bank_Account">{{account.Bank_Account}}</ng-option>
+                            </ng-select>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="bankName">Bank Name</label>
+                            <input type="text" id="bankName" formControlName="bankName" class="form-control"
+                                placeholder="Enter Bank Name">
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="ifsc">IFSC<span class="text-danger">*</span></label>
+                            <input type="text" id="ifsc" formControlName="ifsc" class="form-control"
+                                placeholder="Enter IFSC">
+                        </div>
+                    </div>
+                </ng-container>
+
+            </ng-container>
+            <div class="col-12 mt-2" *ngIf="isEnabled && loginType == 'vendor'">
+                <app-file-upload [label]="'Upload Document'" [isRequired]="true" [allowedFormats]="'.pdf'"
+                    [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)"></app-file-upload>
+            </div>
+            <div *ngIf="isEnabled" class="col-12 text-center mt-2">
+                <button *ngIf="!isLoader && roleName == 'CAD Admin'" type="submit" class="button-submit"
+                    [disabled]="retentionReleaseForm.invalid"
+                    (click)="onSubmitRetentionRelease('Requested')">Enable</button>
+                <button *ngIf="!isLoader && loginType == 'vendor'" type="submit" class="button-submit"
+                    [disabled]="retentionReleaseForm.invalid"
+                    (click)="onSubmitRetentionRelease('Released')">Submit</button>
+                <button *ngIf="isLoader" type="button" class="button-submit" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Processing...
+                </button>
+                <button type="button" class="button-back" (click)="onCloseModal()">Cancel</button>
+            </div>
+            <div *ngIf="!isEnabled" class="col-12 text-center mt-2">
+                <div>
+                    <button type="button" class="button-back m-0 w-100" (click)="openDocument()">View Document</button>
+                </div>
+                <div *ngIf="viewMode == 'Approval'" class="mt-2">
+                    <button *ngIf="!isLoader" type="button" class="button-submit"
+                        (click)="onSubmitRetentionRelease('Approved')">Approve</button>
+                    <button *ngIf="!isLoader" type="button" class="button-back"
+                        (click)="onSubmitRetentionRelease('Rejected')">Reject</button>
+                </div>
+
+            </div>
+            <div class="col-12" *ngIf="errorMessage">
+                <div class="text-danger">
+                    {{ errorMessage }}
+                </div>
+            </div>
+            <!-- <div class="col-12" *ngIf="popupMessage">
+                <div class="text-success">
+                    {{ popupMessage }}
+                </div>
+            </div> -->
+        </div>
+    </form>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="isDocumentModalOpen" (onClickCross)="closeDocumentModal()" (closeModal)="closeDocumentModal()"
+    [title]="'Document'" class="document-modal">
+    <div *ngIf="!isLoader">
+        <ngx-extended-pdf-viewer [base64Src]="base64String" [textLayer]="true"></ngx-extended-pdf-viewer>
+    </div>
+
+    <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </div>
+
+</app-custom-modal>

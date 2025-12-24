@@ -1,0 +1,50 @@
+<ng-container *ngIf="clauses.length > 0">
+  <div *ngFor="let clause of clauses">
+    <h1 class="sideHeading">{{clause.clausetypename}}</h1>
+    <div class="row">
+      <div class="col-3">
+        <label class="form-label m-0">Days</label>
+        <input type="text" class="form-control lh-lg" id="perWeek" [value]="clause.penaltycheckduration" readonly>
+
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Max (%)</label>
+        <input type="text" class="form-control lh-lg" id="max" [value]="clause.maxpercent" readonly>
+
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="compliances.length>0">
+  <div *ngFor="let compliance of compliances">
+    <h1 class="sideHeading mt-3">{{compliance.compliancecategoryname}}</h1>
+    <div class="row">
+      <div class="col-3">
+        <label class="form-label m-0">Identifier</label>
+        <input type="text" class="form-control lh-lg" id="PolicyId" [value]="compliance.identifier" readonly>
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Validity Start</label>
+        <input type="text" class="form-control lh-lg" id="PolicyValidityStart"
+          [value]="compliance.validitystartdate | date: 'dd-MMM-yyyy'" readonly>
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Validity End</label>
+        <input type="text" class="form-control lh-lg" id="PolicyValidityEnd"
+          [value]="compliance.validityenddate   | date: 'dd-MMM-yyyy'" readonly
+          [ngStyle]="{'border-color': compliance?.validation_clr}">
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Value</label>
+        <div class="input-group">
+          <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+          <input type="vale" class="form-control lh-lg" id="PolicyValue" [value]="compliance.value" appIndianCurrency
+            readonly>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<div style="height: 20px;"></div>

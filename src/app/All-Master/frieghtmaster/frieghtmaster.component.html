@@ -1,0 +1,45 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div *ngIf="isLoader" class="loader-overlay">
+  <div class="loader"></div>
+</div>
+
+<div class="add-button">
+  <button type="button" id="bt_upload" class="button-submit button-right" (click)="goToAddBill()">
+    <img src="assets/svg/add.svg" class="right-arrow">
+    <span>Add bill</span>
+  </button>
+</div>
+
+<div class="feature-card mt-4">
+  <app-master-ad-table
+    *ngIf="!isLoader"
+    [tableTitle]="'Frieght Rate Listing'"
+    [isTableTile]="true"
+    [isTableFilter]="true"
+    [tableData]="listingData"
+    [originalData]="originalData"
+    [excelExportData]="exportData"
+    [isSearchShow]="true"
+    (historyItemID)="openHistoryModal($event)"
+    [showAction]="true"
+    (searchParamObj)="applyFreightFilter($event)"
+    [searchObject]="frieghtSearchObject"
+    (goToEditing)="getfrightById($event)"
+    (deleteConfirmed)="onDeleteFreightRate($event)"
+    [showHistory]="false"
+    [loginType]="'AllFrieghtMaster'"
+    [filterAppliedState]="isFilterApplied"
+    (filterAppliedStateChange)="isFilterApplied = $event"
+    (pageChange)="onPageChange($event)"
+    [totalItemsInput]="totalItems"
+    [currentPage]="currentPage"
+  >
+</app-master-ad-table>
+</div>
+
+<app-custom-modal title="Tracking History" *ngIf="showHistoryModal" (onClickCross)="closeshowHistoryModal()">
+  <app-all-tracking-timeline [frateId]="frateId">
+
+  </app-all-tracking-timeline>
+</app-custom-modal>

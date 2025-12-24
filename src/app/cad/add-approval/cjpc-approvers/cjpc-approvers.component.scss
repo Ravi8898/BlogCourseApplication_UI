@@ -1,0 +1,89 @@
+::ng-deep .clause-modal .custom-modal-content {
+    width: 350px;
+}
+
+::ng-deep .document-modal .custom-modal-content {
+    width: 350px;
+}
+
+label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.insit-img {
+    width: 50px;
+    height: 48px;
+    position: relative;
+    right: 14px;
+    bottom: 6px;
+}
+
+.insit-img-right {
+    width: 62px;
+    height: 62px;
+    position: relative;
+    left: 94px;
+    bottom: 38px;
+}
+
+.project-label {
+    color: #0B74B0;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.space-between-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+//History Modal
+.timeline-container {
+  max-width: 700px;
+//   margin: 30px auto;
+//   padding: 20px;
+//   font-family: 'Segoe UI', sans-serif;
+//   background: #f9f9f9;
+//   border-radius: 8px;
+}
+
+
+.timeline {
+  position: relative;
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 3px solid #3498db;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.timeline-marker {
+  width: 14px;
+  height: 14px;
+  background-color: #3498db;
+  border-radius: 50%;
+  position: absolute;
+  left: -28px;
+  top: 5px;
+}
+
+.timeline-content {
+  background: #fff;
+  padding: 15px 20px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.timeline-date {
+  color: #888;
+  font-size: 0.9em;
+  margin-bottom: 6px;
+}
+
+
+//end history modal

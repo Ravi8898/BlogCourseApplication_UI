@@ -1,0 +1,73 @@
+<div class="header">
+    <div class="text-logo">
+        <a href="javascript:void(0)"> <!-- routerLink="/dashboard" -->
+            <img src="../../../../assets/svg/Adani-logo-1.svg" alt="" />
+        </a>
+    </div>
+
+    <div class="group-logo ps-md-5">
+        <!-- <img src="../../../../assets/img/adani-vendor-logo.png" alt="" [style.padding-left]="showElement ? '150px' : null " /> -->
+        <!-- <img src="../../../../assets/svg/vspeed-logo.svg" alt="" /> -->
+        <!-- <img src="../../../../assets/svg/vspeed-logo.svg" alt="" [style.padding-left]="showElement ? '150px' : null " /> -->
+    </div>
+
+    <div class="avatar-profile">
+        <div *ngIf="showElement">
+
+            <!-- <div style="margin-right: 15px;">
+                <img src="../../../assets/svg/calender-vector.svg" alt="" style="width: 18px;
+                margin-right: 2px;" />
+                <label class="calender-label">{{todaye | date:'dd-MM-yyyy'}}</label>
+            </div> -->
+
+
+        </div>
+
+        <div *ngIf="showElement" class="display-none d-xs-none">
+            <a href="javascript:void(0);" class="bell-icon">
+                <img src="../../../assets/svg/bell-vector.svg" alt="" style="width: 28px;
+                margin-right: 16px;" />
+            </a>
+        </div>
+
+        <div *ngIf="showElement" class="avatar dropdown">
+
+            <a class="" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="d-flex align-items-center">
+                    <img src="../../../assets/svg/Avatar.svg" alt="" style="margin-right: 8px;height: 28px;
+                    width: 28px;" />
+                    <img src="../../../assets/svg/down-vector.svg" alt="" style="width: 15px;" />
+                </div>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);">
+                    <div class="profile-dropdown-img"> <img src="../../../../assets/svg/Avatar.svg" alt="" /> </div>Hi
+                    {{username}}!
+                </a>
+                <div *ngIf="roleName">
+                    <label class="profile-dropdown-label">Role: {{roleName}}</label>
+                </div>
+                <div *ngIf="userdata['ACCOUNTNUMBER']">
+                    <label class="profile-dropdown-label">Code: {{userdata['ACCOUNTNUMBER']}}</label>
+                </div>
+                <div>
+                    <hr class="dropdown-divider">
+                </div>
+                <a *ngIf="logintype=='vendor'" class="dropdown-item d-flex align-items-center"
+                    href="javascript:void(0);" routerLink="./profile">
+                    <div class="profile-dropdown-img"> <img src="../../../../assets/svg/User--profile.svg" alt="" />
+                    </div>View Profile
+                </a>
+                <a class="dropdown-item d-flex align-items-center" href="javascript:void(0);"
+                    (click)="handleLogout($event)">
+                    <div class="profile-dropdown-img"> <img src="../../../../assets/svg/Logout.svg" alt="" /> </div>
+                    Logout
+                </a>
+            </div>
+        </div>
+
+        <div class="acc-logo">
+            <!-- <img src="../../../../assets/svg/ACC-Logo.svg" alt="" /> -->
+        </div>
+    </div>
+</div>

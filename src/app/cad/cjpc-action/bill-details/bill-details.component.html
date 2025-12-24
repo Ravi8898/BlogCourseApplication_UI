@@ -1,0 +1,49 @@
+<form [formGroup]="billForm">
+    <div class="row mb-2">
+      <div class="col-3">
+        <label class="form-label m-0">Bill Type</label>
+        <input type="text" class="form-control lh-lg" formControlName="billType">
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Bill Number</label>
+        <input type="text" class="form-control lh-lg" formControlName="billNumber">
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Invoice Period</label>
+        <input type="text" class="form-control lh-lg" formControlName="invoicePeriod">
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Contractor's Bill Ref.</label>
+        <input type="text" class="form-control lh-lg" formControlName="contractorBillRef">
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Dated</label>
+        <input type="text" class="form-control lh-lg" formControlName="dated">
+      </div>
+      <!-- <div class="col-3">
+        <label class="form-label m-0">Invoice Period (Duplicate)</label>
+        <input type="text" class="form-control" formControlName="invoicePeriodDuplicate">
+      </div> -->
+      <div class="col-3">
+        <label class="form-label m-0">Invoice Amount</label>
+        <div class="input-group">
+          <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+          <input type="text" class="form-control lh-lg" formControlName="invoiceAmount" appIndianCurrency readonly>
+        </div>
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Complete Bill Rect. Date</label>
+        <input type="text" class="form-control lh-lg" formControlName="completeBillRectDate">
+      </div>
+      <div class="col-3">
+        <label class="form-label m-0">Payment Due Date</label>
+        <input type="text" class="form-control lh-lg" formControlName="paymentDueDate">
+      </div>
+      <div class="col-3" *ngIf="billType == 'DPR'">
+        <!-- <label class="form-label m-0">SES / DPR No.</label> -->
+        <label class="form-label m-0">DPR No.</label>
+        <input type="text" class="form-control lh-lg" formControlName="sesDprNo">
+      </div>
+    </div>
+  </form>
+  

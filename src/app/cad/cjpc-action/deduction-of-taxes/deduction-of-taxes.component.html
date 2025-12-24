@@ -1,0 +1,44 @@
+<div class="row">
+    <!-- <div class="col-3">
+        <label for="" class="form-label m-0">Exemption</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter Exemtion"
+                class="form-control right-corner-radius-0 lh-lg" name="Exemption" maxlength="250">
+        </div>
+    </div> -->
+    <div class="col-3">
+        <label for="" class="form-label m-0">TCS %</label>
+        <div class="d-flex">
+            <input type="text" placeholder="Enter TCS Percentage" class="form-control right-corner-radius-0 lh-lg"
+                name="TCSPer" maxlength="6" appOnlyDecimal disabled>
+        </div>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">TDS %</label>
+
+        <div class="d-flex">
+            <input type="text" placeholder="Enter TDS Percentage" class="form-control right-corner-radius-0 lh-lg"
+                name="TDSPer" maxlength="250" [(ngModel)]="tdsPer" [value]="paymentDetails?.TDS" appOnlyDecimal>
+        </div>
+    </div>
+    <div class="col-2">
+        <button *ngIf="!isLoader" class="button-submit mt-4" type="button" (click)="calculate()">Calculate &
+            Submit</button>
+
+        <button *ngIf="isLoader" id="bt_loader" class="button-submit mt-4" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </button>
+    </div>
+    <div class="col-3">
+        <label for="" class="form-label m-0">TCS / TDS Values</label>
+        <div class="input-group">
+            <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+            <input type="text" placeholder="Enter TCS / TDS Values" class="form-control right-corner-radius-0 lh-lg"
+                name="TCSTDSValues" maxlength="250" [value]="paymentDetails?.TDSAmount" appIndianCurrency readonly>
+        </div>
+
+    </div>
+
+</div>
+<h1 class="sideHeading mt-3">Subtotal of admitted payments: {{paymentDetails?.BillAmt | indianCurrency}}</h1>

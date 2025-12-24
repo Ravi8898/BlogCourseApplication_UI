@@ -1,0 +1,187 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<div class="row">
+
+    <div class="col-12">
+        <div class="justify-content-between space-between-center project-label mb-2">
+            <label>Invoice Type List</label>
+
+            <button type="button" class="button-submit d-flex m-0" (click)="openInvoiceTypeModal()">
+                <span class="insit-img"><img src="../../../assets/svg/add.svg"></span>
+                <span style="margin-top: 10px;">Create</span>
+            </button>
+
+        </div>
+
+
+
+        <app-simple-table [columns]="columns" [tableData]="invoiceTypeDetails" [isloading]="isLoader"
+            (handleEdit)="onEdit($event)" (handleView)="onView($event)"
+            (handleDelete)="onDelete($event)"></app-simple-table>
+    </div>
+
+</div>
+
+<app-custom-modal *ngIf="invoiceTypeModal" (onClickCross)="closeInvoiceTypeModal()" [title]="'INVOICE TYPE'"
+    class="inoice-modal">
+    <form [formGroup]="invoiceForm">
+        <div class="row">
+            <div class="col-12">
+                <!-- <div class="form-group">
+                    <label for="invoiceID">Invoice ID <span class="asterisk">*</span></label>
+                    <input type="text" formControlName="billInvoiceTypeId" class="form-control" id="billInvoiceTypeId" maxlength="18" placeholder="Enter Invoice ID" (keypress)="allowOnlyNumbers($event)" readonly>
+                    <div *ngIf="invoiceForm.get('billInvoiceTypeId')?.touched && invoiceForm.get('billInvoiceTypeId')?.invalid" class="text-danger">
+                        <small *ngIf="invoiceForm.get('billInvoiceTypeId')?.errors?.['required']">Invoice ID is required.</small>
+                        <small *ngIf="invoiceForm.get('billInvoiceTypeId')?.errors?.['maxlength']">Maximum length is 18 characters.</small>
+                    </div>
+                </div> -->
+
+                <div class="form-group mt-2">
+                    <label for="invoiceTypeName">Invoice Type Name <span class="asterisk">*</span></label>
+                    <input type="text" formControlName="invoiceTypeName" class="form-control" id="invoiceTypeName"
+                        maxlength="60" placeholder="Enter Invoice Type Name">
+                    <div *ngIf="invoiceForm.get('invoiceTypeName')?.touched && invoiceForm.get('invoiceTypeName')?.invalid"
+                        class="text-danger">
+                        <small *ngIf="invoiceForm.get('invoiceTypeName')?.errors?.['required']">Invoice Type Name is
+                            required.</small>
+                        <small *ngIf="invoiceForm.get('invoiceTypeName')?.errors?.['maxlength']">Maximum length is 250
+                            characters.</small>
+                    </div>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label for="stdPaymentDay">Pay In Days <span class="asterisk">*</span></label>
+                    <input type="text" formControlName="stdPaymentDay" class="form-control" id="stdPaymentDay"
+                        maxlength="3" placeholder="Enter Pay In Days" appOnlyNumbers>
+                    <div *ngIf="invoiceForm.get('stdPaymentDay')?.touched && invoiceForm.get('stdPaymentDay')?.invalid"
+                        class="text-danger">
+                        <small *ngIf="invoiceForm.get('stdPaymentDay')?.errors?.['required']">Pay In Days is
+                            required.</small>
+                        <small *ngIf="invoiceForm.get('stdPaymentDay')?.errors?.['maxlength']">Maximum length is 3
+                            characters.</small>
+                    </div>
+                </div>
+                <!--     
+                <div class="form-group mt-2">
+                    <label>Remark <span class="asterisk">*</span></label>
+                    <textarea type="text"  formControlName="remark" class="form-control" id="remark" maxlength="2000"
+                     rows="8" placeholder="Enter Remark" (input)="updateCharacterCount()"></textarea>
+                    <div *ngIf="invoiceForm.get('remark')?.touched && invoiceForm.get('remark')?.invalid" class="text-danger">
+                        <small *ngIf="invoiceForm.get('remark')?.errors?.['required']">Remark is required.</small>
+                        <small *ngIf="invoiceForm.get('remark')?.errors?.['maxlength']">Maximum length is 2000 characters.</small>
+                    </div>
+                    <small>{{ charCount }} / 2000</small>
+                </div> -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex mt-4 " style="margin-left: -16px;">
+                    <button *ngIf="!isLoader" type="button" [disabled]="!isUpdated && isEdit" id="bt_approve"
+                        class="button-submit button-left" (click)="saveData()">
+                        <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                        <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+                    </button>
+                    <button *ngIf="isLoader" id="bt_loader" class="button-submit m-3 pt-2" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button type="button" id="bt_reject" class="button-back button-left"   (click)="isEdit ? closeInvoiceTypeModal() :resetForm()">
+                        <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                        <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                        <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg" class="left-arrow" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="mt-4">
+                <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+        </div>
+    </div>
+
+</app-custom-modal>
+
+<app-custom-modal title="DOCUMENTS" (onClickCross)="closedocumentsModal()" *ngIf="documentsModal"
+    class="document-modal">
+    <form [formGroup]="documentsForm">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-group">
+                    <label for="documentType">Document Type</label>
+                    <label class="asterisk">*</label>
+                    <ng-select formControlName="documentType" class="dropdown-list-autocomplete"
+                        placeholder="Select Document Type">
+                        <ng-option value="">Select Document Type</ng-option>
+                        <ng-option *ngFor="let document of optionDocumentType"
+                            [value]="document.documentTypeId">{{document.documentTypeName}}</ng-option>
+                    </ng-select>
+                    <span id="documentType_error" class="text-danger"
+                        *ngIf="(documentsForm.get('documentType')?.touched || submitted) && documentsForm.get('documentType')?.errors?.['required']">
+                        Document Type is required
+                    </span>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label for="remark">Remark</label>
+                    <label class="asterisk">*</label>
+                    <textarea type="text" formControlName="remarkDoc" [(ngModel)]="document_remarks"
+                        class="form-control" id="remark" maxlength="2000" rows="6" placeholder="Enter Remark"
+                        (input)="updateCharCount_Document()"></textarea>
+                    <small>{{charCount_document}} / 2000</small>
+                    <span id="remarkDoc_error" class="text-danger"
+                        *ngIf="(documentsForm.get('remarkDoc')?.touched || submitted) && documentsForm.get('remarkDoc')?.errors?.['required']">
+                        Remark is required
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-4">
+                    <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex mt-4">
+                    <button *ngIf="!isLoaderDoc" type="button" id="bt_approve_doc"
+                    class="button-submit button-left" (click)="saveDocument()">
+                    <span class="ps-5"> Submit</span>
+                    <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+                </button>
+                    <button *ngIf="isLoaderDoc" id="bt_loader_doc" class="button-submit m-0 pt-2" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+
+                    <button type="button" id="bt_reject_doc" class="button-back button-left"   (click)="resetFormDoc()">
+                        <span class="ps-5">Reset</span>
+                        <img alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <hr />
+
+    <label class="project-label" style="font-weight: 600;">DOCUMENT'S LIST</label>
+    <app-simple-table [columns]="document_columns" [tableData]="documentDetails" (handleEdit)="onEditDoc($event)"
+        (deleteDocument)="deleteDoc($event)"></app-simple-table>
+</app-custom-modal>
+
+<div class="popup-backdrop" *ngIf="deletePopup">
+    <div class="popup">
+        <h3>Confirm Delete</h3>
+        <p>Are you sure you want to delete this item?</p>
+        <div class="popup-actions">
+            <button class="button-back" (click)="closeDelectPopup()">Cancel</button>
+            <button class="button-submit" (click)="confirmDelete()">Delete</button>
+        </div>
+    </div>
+</div>

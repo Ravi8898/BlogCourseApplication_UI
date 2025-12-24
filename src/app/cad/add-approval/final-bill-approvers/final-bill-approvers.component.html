@@ -1,0 +1,179 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<div class="row">
+
+  <div class="col-12">
+    <div class="justify-content-between space-between-center project-label mb-2">
+      <label>Final Bill Approvers List</label>
+
+      <button type="button" class="button-submit d-flex m-0" (click)="openApproversModal()">
+        <span class="insit-img"><img src="../../../assets/svg/add.svg"></span>
+        <span style="margin-top: 10px;">ADD</span>
+      </button>
+    </div>
+
+    <app-simple-table [columns]="columns" [tableData]="FinalBillApproversList" (handleEdit)="onEdit($event)"
+      [isloading]="isLoader" (handleDelete)="onDelete($event)" (handleClickHere)="rowClick($event)"></app-simple-table>
+  </div>
+
+</div>
+<app-custom-modal *ngIf="isAddApproversModelOpen" (onClickCross)="closeApproversModal()"
+  [title]="'Final Bill Approvers'">
+  <form [formGroup]="approversForm">
+    <div class="row">
+      <div class="col-12">
+
+        <div class="form-group">
+          <label for="userId">User</label>
+          <label class="asterisk">*</label>
+          <!-- <ng-select formControlName="userId" class="dropdown-list-autocomplete" placeholder="Select User">
+            <ng-option value="">Select User</ng-option>
+            <ng-option *ngFor="let item of users" [value]="item.userId">
+              {{item.userName}}</ng-option>
+          </ng-select> -->
+
+          <ng-select formControlName="userId" [items]="users" bindLabel="userName" bindValue="userId"
+            class="dropdown-list-autocomplete" placeholder="Select User">
+
+            <ng-template ng-option-tmp let-item="item">
+              <span> {{ item.userName }} {{'('+ item.adid
+                +')'}}</span>
+              <br>
+              <span> {{ item.emailid }}</span>
+            </ng-template>
+          </ng-select>
+
+          <span id="userId_error" class="text-danger"
+            *ngIf="(approversForm.get('userId')?.touched ) && approversForm.get('userId')?.errors?.['required']">
+            User is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="displayName">Display Name</label>
+          <label class="asterisk">*</label>
+          <input type="text" maxlength="250" placeholder="Enter Display Name" class=" form-control lh-lg"
+            formControlName="displayName">
+          <span id="displayId_error" class="text-danger"
+            *ngIf="(approversForm.get('displayName')?.touched) && approversForm.get('displayName')?.errors?.['required']">
+            Display Name is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="roleId">Role</label>
+          <label class="asterisk">*</label>
+          <ng-select formControlName="roleId" class="dropdown-list-autocomplete" placeholder="Select Role">
+            <ng-option value="">Select Role</ng-option>
+            <ng-option *ngFor="let item of roles" [value]="item.roleId">
+              {{item.roleName}}</ng-option>
+          </ng-select>
+          <span id="roleId_error" class="text-danger"
+            *ngIf="(approversForm.get('roleId')?.touched) && approversForm.get('roleId')?.errors?.['required']">
+            Role is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="validationLevelId">Validation Level</label>
+          <label class="asterisk">*</label>
+          <ng-select formControlName="validationLevelId" class="dropdown-list-autocomplete"
+            placeholder="Select Validation Level">
+            <ng-option value="">Select Validation Level</ng-option>
+            <ng-option *ngFor="let item of validationLevelList" [value]="item.id">
+              {{item.name}}</ng-option>
+          </ng-select>
+          <span id="userId_error" class="text-danger"
+            *ngIf="(approversForm.get('validationLevelId')?.touched) && approversForm.get('validationLevelId')?.errors?.['required']">
+            Validation Level is required
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="validationFor">Validation For</label>
+          <label class="asterisk">*</label>
+          <ng-select formControlName="validationFor" class="dropdown-list-autocomplete"
+            placeholder="Select Validation For">
+            <ng-option value="">Select Validation For</ng-option>
+            <ng-option *ngFor="let item of validationForList" [value]="item.validationforid">
+              {{item.validationlebel}}</ng-option>
+          </ng-select>
+          <span id="validationFor_error" class="text-danger"
+            *ngIf="(approversForm.get('validationFor')?.touched) && approversForm.get('validationFor')?.errors?.['required']">
+            Validation For is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="validationAfter">Validation After</label>
+          <label class="asterisk">*</label>
+          <ng-select id="validationAfter" class="dropdown-list-autocomplete" formControlName="validationAfter"
+            [items]="validationAfterList" bindLabel="username" bindValue="username"
+            placeholder="Select Validation After">
+          </ng-select>
+          <span id="userId_error" class="text-danger"
+            *ngIf="(approversForm.get('validationAfter')?.touched) && approversForm.get('validationAfter')?.errors?.['required']">
+            Validation After is required
+          </span>
+        </div>
+
+        <div class="form-group" *ngIf="isEdit">
+          <label for="displayName">Remark</label>
+
+          <input type="text" maxlength="250" placeholder="Enter Remark" class=" form-control lh-lg"
+            formControlName="remark">
+
+        </div>
+
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex mt-4">
+          <button *ngIf="!isLoader" type="submit" [disabled]="!isUpdated && isEdit" id="bt_approve"
+            class="button-submit button-left" (click)="saveData()">
+            <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+            <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+          </button>
+          <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+          <button type="button" id="bt_reject" class="button-back button-left"
+            (click)="isEdit ? closeApproversModal() :resetForm()">
+            <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+            <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+            <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+              class="left-arrow" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="mt-4">
+          <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="historyModal" (closeModal)="closeHistoryModal()" (onClickCross)="closeHistoryModal()" [title]="'CJPC Approvers History'"
+  class="history-modal">
+  <div class="row">
+    <div class="col-12">
+      <div class="timeline-container">
+        <div class="timeline">
+          <div class="timeline-item" *ngFor="let record of history">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <p class="timeline-date">{{ record.createddate | date: 'medium' }}</p>
+              {{ record.username }}
+              <p><strong>Created By:</strong> {{ record.createdby }}</p>
+              <p *ngIf="record.remark"><strong>Remark:</strong> {{ record.remark }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</app-custom-modal>

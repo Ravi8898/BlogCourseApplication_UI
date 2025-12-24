@@ -1,0 +1,409 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<div class="row">
+    <div class="col-12">
+        <div *ngIf="cjpcType !== 'Release'" class="justify-content-between space-between-center project-label mb-2">
+            <label>Listing Of Holds</label>
+            <span [matTooltip]="cjpcStatus == 'Complete' ? 'Can not add hold after CJPC is completed.' : ''">
+                <button [disabled]="cjpcStatus === 'Complete'" type="button" class="button-submit d-flex m-0"
+                    (click)="openRecoveryModal()">
+                    <span class="insit-img"><img src="../../../assets/svg/add.svg"></span>
+                    <span style="margin-top: 10px;">ADD</span>
+                </button>
+            </span>
+        </div>
+
+        <app-simple-table [columns]="holdcolumns" [tableData]="HoldList" (handleEdit)="onEditHold($event)"
+            [cjpcStatus]="cjpcStatus" (handleDelete)="onDelete($event)"
+            (handleClickHere)="releaseAmt($event)"></app-simple-table>
+    </div>
+
+    <h1 class="sideHeading mt-3">Subtotal : {{totalHoldAmount | indianCurrency}}</h1>
+</div>
+<div class="row" *ngIf="ReleaseList && ReleaseList.length > 0">
+    <hr>
+    <div class="col-12">
+        <div class="justify-content-between space-between-center project-label mb-2">
+            <label>Listing Of Release</label>
+        </div>
+
+        <app-simple-table [columns]="releasecolumns" [tableData]="ReleaseList"
+            (handleClickHere)="rowAction($event)"></app-simple-table>
+    </div>
+
+    <h1 class="sideHeading mt-3">Subtotal : {{totalReleaseAmount | indianCurrency}}</h1>
+</div>
+
+<!-- <div class="row">
+    <div class="col-12">
+        <hr/>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Upto Previous Bill</th>
+                    <th>This Bill</th>
+                    <th>Cumulative Upto Bill</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of holdsTable">
+                    <td>{{ item.holdtypename | indianCurrency}}</td>
+                    <td>{{ item.uptoPreviousBill | indianCurrency }}</td>
+                    <td>{{ item.thisBill | indianCurrency}}</td>
+                    <td>{{ item.cumulative | indianCurrency}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div> -->
+
+<app-custom-modal *ngIf="isAddRecoveryModelOpen" (onClickCross)="closeRecoveryModal()"
+    [title]="isEdit ?'EDIT HOLDS' :'ADD HOLDS'" class="recoveries-modal">
+    <form [formGroup]="recoveryForm">
+        <div class="row">
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="cjpcId">CJPC Id</label>
+                            <input type="text" maxlength="250" placeholder="Auto Populated" class=" form-control lh-lg"
+                                formControlName="cjpcId" [readOnly]="true">
+                        </div>
+                    </div>
+                    <!-- <div class="col-6">
+                        <div class="form-group">
+                            <label for="invoiceId">Invoice Id</label>
+                            <input type="text" maxlength="250" placeholder="Auto Populated" class=" form-control lh-lg"
+                                formControlName="invoiceId" [readOnly]="true">
+                        </div>
+                    </div> -->
+                    <div class="col-6">
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <label for="department">Department</label>
+                                    <label class="asterisk">*</label>
+                                </div>
+                                <a style="cursor: pointer;" (click)="openDepartmentModal()">
+                                    <img src="../../../../assets/svg/add.svg" alt="" class="form-icon">
+                                </a>
+                            </div>
+                            <ng-select formControlName="department" class="dropdown-list-autocomplete"
+                                placeholder="Select Department" (change)="onDepartmentChange($event)">
+                                <ng-option value="">Select Department</ng-option>
+                                <ng-option *ngFor="let department of optionsDepatment"
+                                    [value]="department.departmentId">
+                                    {{ department.departmentName }}
+                                </ng-option>
+                            </ng-select>
+                            <span id="department_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('department')?.touched || submitted) && recoveryForm.get('department')?.errors?.['required']">
+                                Department is required
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <label for="recoveryfor">Hold For</label>
+                                    <label class="asterisk">*</label>
+                                </div>
+                                <a style="cursor: pointer;" (click)="openHoldForModal()">
+                                    <img src="../../../../assets/svg/add.svg" alt="" class="form-icon">
+                                </a>
+                            </div>
+                            <ng-select class="dropdown-list-autocomplete" formControlName="recoveryfor"
+                                [items]="recoveryForList" bindLabel="holdtypename" bindValue="holdtypeid"
+                                placeholder="Select Hold For" (change)="onRecoveryChange($event)">
+                            </ng-select>
+
+                            <span id="recoveryfor_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('recoveryfor')?.touched || submitted) && recoveryForm.get('recoveryfor')?.errors?.['required']">
+                                Hold For is required
+                            </span>
+                        </div>
+                    </div>
+                    <!-- <div class="col-6">
+                        <div class="form-group">
+                            <label for="maxvalue">Max Value</label>
+                            <label class="asterisk">*</label>
+                            <input type="text" maxlength="250" placeholder="Auto Populated" class=" form-control lh-lg"
+                                formControlName="maxvalue">
+                            <span id="maxvalue_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('maxvalue')?.touched || submitted) && recoveryForm.get('maxvalue')?.errors?.['required']">
+                                Max Value is required
+                            </span>
+                        </div>
+                    </div> -->
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="recAmt">Hold Amount</label>
+                            <label class="asterisk">*</label>
+                            <input type="text" maxlength="18" placeholder="Enter Hold Amount"
+                                class=" form-control lh-lg" formControlName="recAmt" appOnlyDecimal
+                                (ngModelChange)="onAmountChange($event)">
+                            <span id="recAmt_error" class="text-danger"
+                                *ngIf="(recoveryForm.get('recAmt')?.touched || submitted) && recoveryForm.get('recAmt')?.errors?.['required']">
+                                Hold Amount is required
+                            </span>
+                            <span id="recAmt_error" class="text-danger" *ngIf="contractAmountExceedsRecovery">
+                                Hold Amount cannot be greater than Invoice Amount.
+                            </span>
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="remark">Remarks</label>
+                            <input type="text" maxlength="250" placeholder="Enter Remark" class=" form-control lh-lg"
+                                formControlName="remark">
+                        </div>
+                    </div>
+                    <div class="col-12 mt-4" *ngIf="documentsList && documentsList.length > 0">
+                        <label for="remark">ADD REQUIRED DOCUMENTS FOR HOLD RELEASE</label>
+                        <!-- <div class="d-flex justify-content-between">
+                            <div class="form-group d-flex align-items-center mt-2 m-1">
+                                <input type="checkbox" class="custom-checkbox">
+                                <label style="margin-left: 10px;" class="ml-2 mr-4 mb-0">Document Type 01</label>
+                            </div>
+                            <div class="form-group d-flex align-items-center mt-2 m-1">
+                                <input type="checkbox" class="custom-checkbox">
+                                <label style="margin-left: 10px;" class="ml-2 mr-4 mb-0">Document Type 01</label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <div class="form-group d-flex align-items-center mt-2 m-1">
+                                <input type="checkbox" class="custom-checkbox">
+                                <label style="margin-left: 10px;" class="ml-2 mr-4 mb-0">Document Type 01</label>
+                            </div>
+                            <div class="form-group d-flex align-items-center mt-2 m-1">
+                                <input type="checkbox" class="custom-checkbox">
+                                <label style="margin-left: 10px;" class="ml-2 mr-4 mb-0">Document Type 01</label>
+                            </div>
+                        </div> -->
+                        <div class="d-flex flex-wrap" formArrayName="documentList">
+                            <div *ngFor="let doc of documentsList; let i = index"
+                                class="d-flex align-items-center mt-2 m-1">
+                                <input type="checkbox" [formControlName]="i" class="custom-checkbox"
+                                    [value]="doc.doctypeid">
+                                <label style="margin-left: 10px;" class="ml-2 mr-4 mb-0">{{ doc.doctypename }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex mt-4">
+                    <button *ngIf="!isLoader" type="submit" id="bt_approve" class="button-submit button-left"
+                        (click)="saveData()">
+                        <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                        <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                            class="left-arrow" />
+                    </button>
+                    <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button type="button" id="bt_reject" class="button-back button-left"
+                        (click)="isEdit ? closeRecoveryModal() :resetForm()">
+                        <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                        <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                        <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+                            class="left-arrow" />
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-4">
+                    <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+                </div>
+            </div>
+        </div>
+    </form>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="ReleaseModelOpen" (onClickCross)="closeReleaseModal()" [title]="' Hold Release'"
+    class="recoveries-modal">
+    <form [formGroup]="releaseForm">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="row pb-2">
+                    <!-- <div class="form-group col-6">
+
+                        <label for="" class="form-label m-0">Hold Release</label>
+                        <span class="asterisk"> *</span>
+                        <ng-select class="dropdown-list-autocomplete" formControlName="holdRelease"
+                            placeholder="Select">
+                            <ng-option value="">Select</ng-option>
+                        </ng-select>
+                        <span id="holdRelease_error" class="text-danger"
+                            *ngIf="(releaseForm.get('holdRelease')?.touched ||submitted) && releaseForm.get('holdRelease')?.errors?.['required']">
+                            Hold Release is required
+                        </span>
+                    </div> -->
+                    <!-- <div class="form-group col-6">
+                    </div> -->
+
+                    <div class="form-group col-6">
+
+                        <label for="" class="form-label m-0">Document Type</label>
+                        <span class="asterisk"> *</span>
+                        <ng-select class="dropdown-list-autocomplete" formControlName="docType" placeholder="Select">
+                            <ng-option value="">Select</ng-option>
+                            <ng-option *ngFor="let item of holdDocumentList"
+                                [value]="item.documentid">{{item.documentname}}</ng-option>
+                        </ng-select>
+                        <span id="docType_error" class="text-danger"
+                            *ngIf="(releaseForm.get('docType')?.touched ||submitted) && releaseForm.get('docType')?.errors?.['required']">
+                            Document Type is required
+                        </span>
+                    </div>
+                </div>
+
+                <app-file-upload label="Document Upload" [isRequired]="true" [allowedFormats]="'.pdf,.doc,.docx,.zip'"
+                    [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)">
+                </app-file-upload>
+                <button *ngIf="!isLoader && selectedFiles_document.length>0" type="button"
+                    class="button-submit w-100 m-0" (click)="uploadDocument()">Upload</button>
+
+                <button *ngIf="isLoader" id="bt_loader" class="button-submit w-100 m-0" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+                <div *ngIf="errorMessage != ''" class="text-danger">
+                    {{errorMessage}}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row mt-4" *ngIf="holdDocumentList.length > 0">
+            <div class="col-12">
+                <app-simple-table [columns]="documentColumns" [tableData]="holdDocumentList"></app-simple-table>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="form-group col-6">
+                    <label for="" class="form-label m-0">Release Amount </label>
+                    <span class="asterisk"> *</span>
+                    <input type="text" formControlName="releaseAmount" maxlength="25" placeholder="Enter Release Amount"
+                        (input)="onReleaseAmountChange($event)" class="form-control lh-lg">
+                    <span id="docType_error" class="text-danger" *ngIf="">
+                        Release Amount is required
+                    </span>
+                    <div class="text-danger"
+                        *ngIf="releaseForm.get('releaseAmount')?.errors?.['exceedRemaningAmount'] && (releaseForm.get('releaseAmount')?.dirty)"
+                        class="text-danger">
+                        Release amount cannot be greater than remaining amount.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex mt-4">
+                    <button *ngIf="!isLoader" type="button" id="bt_approve" class="button-submit button-left m-0"
+                        (click)="onSubmit()">
+                        <span class="ps-5">Submit</span>
+                        <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                            class="left-arrow" />
+                    </button>
+                    <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button type="button" id="bt_reject" class="button-back button-left" (click)="reset()">
+                        <span class="ps-5">Reset</span>
+                        <img alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-2">
+                    <div class="text-danger" *ngIf="errorMessage_afterSubmit != ''">{{errorMessage_afterSubmit}}</div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <div *ngIf="isLoader" id="ad-Table" class="loading">
+    </div>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="openDocumentListModal" [title]="'List Document'" (onClickCross)="openDocumentListModal =false"
+    class="recoveries-modal">
+    <ng-container *ngFor="let item of holdDocuments">
+        <ng-container *ngIf="item?.name !=''">
+            <div class="row">
+                <div class="col-12 space-between-center">
+                    <div class="col-6">
+                        <label>{{item?.name}}</label>
+                    </div>
+                    <div class="6">
+                        <a href="javascript:void(0)" (click)="onViewDocument(item?.location)">
+                            <img src="assets/svg/eye.svg" alt="Download" style="height: 30px;width: 30px;">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+
+</app-custom-modal>
+
+<app-custom-modal *ngIf="docViewModelOpen" (onClickCross)="docViewModelOpen = false" [title]="'View Document'"
+    class="doc-vew-modal">
+
+    <div class="row">
+        <div class="col-12">
+            <ngx-extended-pdf-viewer [base64Src]="bash64String" height="100%" [showDownloadButton]="false"
+                [showPrintButton]="false" [showPagingButtons]="false" [showPresentationModeButton]="false"
+                [showOpenFileButton]="false" [showBorders]="true"></ngx-extended-pdf-viewer>
+        </div>
+    </div>
+
+</app-custom-modal>
+
+<app-custom-modal *ngIf="remarkModal" [title]="'Remarks'" (onClickCross)="closeRemarkModal()"
+    (closeModal)="closeRemarkModal()" class="remark-modal">
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12">
+                <label for="" class="form-label m-0">Remarks</label>
+                <label class="asterisk">*</label>
+                <textarea rows="5" class="form-control" placeholder="Enter your remarks here"
+                    [(ngModel)]="remark"></textarea>
+            </div>
+            <div class="mt-4">
+                <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer mt-2">
+        <button [disabled]="remark == '' || isLoader" type="button" class="btn btn-primary"
+            (click)="submitRemark()">Submit</button>
+    </div>
+</app-custom-modal>
+
+<app-center-modal *ngIf="departmentModal" (closeModal)="closeDepartmentModal()">
+    <app-department></app-department>
+</app-center-modal>
+
+<app-center-modal *ngIf="holdForModal" (closeModal)="closeHoldForModal()">
+    <app-hold-type></app-hold-type>
+</app-center-modal>

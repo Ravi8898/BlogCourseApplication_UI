@@ -1,0 +1,99 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="">
+                <div class="bd-tab-content">
+                    <div class="bd-tab-content-inner">
+                        <p class="page-heading">Welcome to vSPEED</p>
+
+                        <!-- <div class="tabs" *ngIf="roleNameArray && roleNameArray.length>0"> -->
+                        <div class="tabs" *ngIf="roleNameArray && roleNameArray.length>1">
+                            <div class="tab" [class.active]="activeTab == 'SiteController'" (click)="activateTab('SiteController')"> Site Controller </div>
+                            <div class="tab" [class.active]="activeTab == 'RawMaterialIncharge'" (click)="activateTab('RawMaterialIncharge')"> Raw Material Incharge </div>
+                        </div>
+
+                        <div>
+                            <button type="button" class="button-submit" *ngIf="loginType =='vendor' && userdata.ACCOUNTNUMBER=='0910028104'" (click)="downloadRewardItemData();">Download PO Item Excel</button>
+                            <button type="button" class="button-submit" *ngIf="loginType =='vendor'|| roleName=='BusinessUser'" data-bs-toggle="modal" data-bs-target="#chooseModal">Upload Invoice</button><!-- (click)="navigateToPurchase()" -->
+                            <!-- <button type="button" class="button-submit" *ngIf="roleNameArray && roleNameArray.length>0 && roleName =='RawMaterialIncharge'" (click)="routeToPage()">Update GRN</button> -->
+                            <button type="button" class="button-submit" *ngIf="roleName.includes('RawMaterialIncharge')" (click)="routeToPage()">Update GRN</button>
+                            <!-- <button type="button" class="button-submit" *ngIf="(roleNameArray && roleNameArray.length>0 && roleName !='RawMaterialIncharge')" style="visibility: hidden;">Update GRN1</button> -->
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <ng-container>
+                            <div class="feature-card">
+                                <app-ad-table *ngIf="!isLoader" [tableData]="purchaseList" [isTableTile]="true"
+                                    [isTableFilter]="true" [loginType]="loginType" [isSearchShow]="true"
+                                    (searchParamObj)="applyPurchaseSearch($event)" [searchObject]="purchaseSearchObject"
+                                    [modalElementId]="modalName" (activateTab)="activateTab($event)"
+                                    (deleteConfirmed)="onDeleteConfirmedPurchase($event)" (retryService)="retrySes($event)"
+                                    [searchModal]="searchModal" [showHistory]="showHistory">
+                                </app-ad-table>
+
+                                <!-- <div *ngIf="isLoader" id="ad-Table" class="loading"></div> -->
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Choose Modal -->
+<div class="modal right fade" id="chooseModal" tabindex="-1" role="dialog" aria-labelledby="chooseModal" aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document" style="width: 400px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2">CHOOSE</h6>
+            </div>
+
+            <div class="modal-body">
+                <div class="options">
+                    <p class="" data-bs-toggle="modal" (click)="navigateToPurchase()">Invoice</p>
+                </div>
+                <!-- <div class="options">
+                    <p class="coming" data-bs-toggle="modal" data-bs-target="#comingModal">Coming Soon</p>
+                    <p class="" data-bs-toggle="modal" data-bs-target="#comingModal">Credit note with Reference</p>
+                </div> -->
+                <div class="options">
+                    <p class="coming">Coming Soon</p>
+                    <p class="">Credit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon</p>
+                    <p class="">Credit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon</p>
+                    <p class="">Debit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon</p>
+                    <p class="">Debit note without Reference</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ComingSoon Modal -->
+<div class="modal right fade" id="comingModal" tabindex="-1" role="dialog" aria-labelledby="comingModal" aria-hidden="true">
+    <div class="modal-dialog modal-coming" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body p-0 pt-4">
+                <p class="m-0">This feature will be</p>
+                <h5>Coming Soon</h5>
+                <button type="button" class="button-submit" data-bs-toggle="modal" data-bs-target="#comingModal">Ok</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- <div style="height: 280px;"></div> -->

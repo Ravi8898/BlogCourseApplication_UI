@@ -1,0 +1,63 @@
+<div class="row">
+    <div class="col-12">
+
+        <div class="row">
+
+            <div class="">
+                <div class="bd-tab-content">
+                    <div class="bd-tab-content-inner space-between">
+                        <p class="page-heading pt-2 mb-0">Work Order No.: {{workOrderNumber}}</p>
+                        <a href="javascript:void(0)" (click)="goBack()">Back to listing </a>
+                    </div>
+                    <div class="d-flex mb-2">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-center">
+                                <!-- Tabs Section -->
+                                <div class="tabs">
+                                    <div class="tab fw-bold" [class.active]="activeTab === 'tab1'">
+                                        <div (click)="activateTab('tab1')">
+                                            Invoice CJPC</div>
+                                    </div>
+                                    <div class="tab fw-bold" [class.active]="activeTab === 'tab2'">
+                                        <div (click)="activateTab('tab2')">
+                                            Hold Release CJPC
+                                        </div>
+                                    </div>
+                                    <div class="tab fw-bold" [class.active]="activeTab === 'tab3'">
+                                        <div (click)="activateTab('tab3')">
+                                            Retention Release CJPC
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div *ngIf="activeTab == 'tab1'">
+                            <app-ad-table-ng [title]="'CJPC List'" pageName="cjpc-list" [columns]="columns"
+                                [tableData]="data">
+                            </app-ad-table-ng>
+                        </div>
+
+                        <div *ngIf="activeTab == 'tab2'">
+                            <app-ad-table-ng [title]="'Hold Release CJPC List'" pageName="cjpc-list"
+                                [columns]="columns_release" [tableData]="data">
+                            </app-ad-table-ng>
+                        </div>
+
+                        <div *ngIf="activeTab == 'tab3'">
+                            <app-ad-table-ng [title]="'Retention Release CJPC List'" pageName="cjpc-list"
+                                [columns]="columns_retention" [tableData]="data">
+                            </app-ad-table-ng>
+                        </div>
+
+                        <div style="height: 60px;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

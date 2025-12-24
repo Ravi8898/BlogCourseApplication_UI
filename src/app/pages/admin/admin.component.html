@@ -1,0 +1,358 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple">
+    <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div class="bd-container">
+    <!-- <div class="position-header">
+        <app-header [showElement]="true"></app-header>
+    </div>
+
+    <div class="tab-menu d-flex align-items-center">
+        <a href="javascript:void(0);">
+            <label class="menu-label active">Vendor Management</label>
+        </a>
+    </div> -->
+
+    <div class=""> <!-- m-4 -->
+        <div class="" style="text-align: -webkit-center">
+            <!-- <p class="page-heading">Welcome to Vendor Invoice Hub</p> -->
+            <p class="page-heading">Welcome to vSPEED</p>
+            <div class="tabs w-40">
+                <div class="tab" [class.active]="activeTab === 'on'"  (click)="changeTab('on')">On Boarding</div>
+                <div class="tab" [class.active]="activeTab === 'off'" (click)="changeTab('off')">Off Boarding</div>
+            </div>
+
+            <div class="bt-section" style="position: absolute;right: 26px;width: 330px;margin-top: -52px;" *ngIf="activeTab == 'on'">
+                <button type="button" id="bt_upload" class="button-submit button-right" data-bs-toggle="modal" data-bs-target="#UploadModal"> <!-- data-bs-toggle="modal" data-bs-target="#vendorStatusModal" -->
+                    <!-- <img src="assets/svg/upload.svg" class="right-arrow"> -->
+                    <img src="assets/svg/upload-admin.svg" class="right-arrow">
+                    <span class="">Upload Vendor</span>
+                </button>
+            </div>
+        </div>
+        <div class="feature-card mt-4">
+
+            <div *ngIf="activeTab=='on'">
+                <div class="search-box">
+                    <label for="">Search Vendor Detail</label>
+                    <div class="d-flex">
+                        <input type="text" class="form-control" value="0918049938" placeholder="Search vendor details" [(ngModel)]="searchText" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)">
+                        <button class="button-submit ms-2" [disabled]="!searchText.length" (click)="searchVendor()">Search</button>
+                    </div>
+                </div>
+    
+                <div class="col-lg-12 col-md-12 col-xs-12 px-2" *ngIf="vendorDetails.length>0">
+                    <table class="table table-striped1 data-grid m-0 mt-3">
+                        <thead class="data-grid-thead">
+                            <tr>
+                                <th scope="col">Vendor Name</th>
+                                <th scope="col">Vendor Email ID</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">Company Code</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of vendorDetails">
+                                <td>{{item['name']}}</td>
+                                <td>{{item['email']}}</td>
+                                <!-- <td>{{item['mobile']}}</td> -->
+                                <!-- <td>{{item['company']}}</td> -->
+                                <td>{{item['telephone']}}</td>
+                                <td>{{item['company']=='IN10'?'ACC':'Ambuja'}}</td>
+                                <td>
+                                    <label class="toggle">
+                                        <input class="toggle-input" type="checkbox" (change)="activateVendor($event)"/>
+                                        <!-- <span class="toggle-label" data-off="OFF" data-on="ON"></span> -->
+                                        <span class="toggle-label" data-off="Enable" data-on="Disable"></span>
+                                        <!-- <span class="toggle-label" data-on="Enable" data-off="Disable"></span> -->
+                                        <span class="toggle-handle"></span>
+                                     </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p *ngIf="vendorExist" class="vendorExist">{{vendorExist}}</p>
+            </div>
+
+            <div *ngIf="activeTab=='off'">
+                <!-- <app-ad-table *ngIf="!isLoader" [tableData]="vendorsList" [isTableTile]="true"
+                    [isTableFilter]="true" [loginType]="loginType" [isSearchShow]="true"
+                    (searchParamObj)="applyPurchaseSearch($event)" [searchObject]="purchaseSearchObject"
+                    (editId)="" [modalElementId]="modalName" (activateTab)=""
+                    (deleteConfirmed)="disableVendor($event)"
+                    [searchModal]="searchModal">
+                </app-ad-table> -->
+                <div class="col-lg-12 col-md-12 col-xs-12 px-2"> <!-- *ngIf="vendorsList.length>0" -->
+                    <!-- <table class="table table-striped1 data-grid m-0 mt-3">
+                        <thead class="data-grid-thead">
+                            <tr>
+                                <th scope="col">Vendor Number</th>
+                                <th scope="col">Vendor Name</th>
+                                <th scope="col">Vendor Email ID</th>
+                                <th scope="col">Mobile Number</th>
+                                <th scope="col">Company Code</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of vendorsList">
+                                <td>{{item['vendorNumber']}}</td>
+                                <td>{{item['name']}}</td>
+                                <td>{{item['email']}}</td>
+                                <td>{{item['telephone']}}</td>
+                                <td>{{item['company']=='IN10'?'ACC':'Ambuja'}}</td>
+                                <td>
+                                    <label class="toggle">
+                                        <input class="toggle-input" type="checkbox" [checked]="true" (change)="deactivateVendor($event, item)">
+                                        <span class="toggle-label" data-off="Enable" data-on="Disable"></span>
+                                        <span class="toggle-handle"></span>
+                                     </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                
+                    <div class="row mt-0">
+                        <div class="col-sm-5">
+                            <h2 class="text-start ps-1 page-sub-header m-t-revert">On Boarding List</h2>
+                        </div>
+                        <div class="col-sm-7" style="padding-right: 13px;">
+
+                            <div class="user-action">
+                                
+                                <div class="dropdown excel icon-border" style="width: 29px;" title="Expor Excel">
+                                    <img src=" ../../../assets/img/icons/excel.png" *ngIf="tableData.length>0" class="" alt="" style="width: 27px !important;" (click)="exportToExcel()">
+                                    <img src=" ../../../assets/img/icons/excel.png" *ngIf="tableData.length==0" class="" alt="" style="width: 27px !important; cursor: no-drop !important;">
+                                </div>
+
+                                <input placeholder="Search in off boarding..." type="text" (keyup)="searchList($event)" class="input-text-ty1 icon-border d-inline-block search-icon" id="searchinput">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div><!-- *ngIf="vendorsList.length>0" -->
+                        <div class="table-responsive">
+                            <!-- <table  class="table table-striped data-grid mt-0" id="datatable">
+                                <thead class="data-grid-thead">
+                                    <tr>
+                                        <th *ngFor="let column of columns" [hidden]="!column.visible">
+                                            {{ column.name }}
+                                            <a *ngIf="column?.visibleButton == 'in'"
+                                                (click)="toggleColumnVisibility(column.name)">
+                                                <img style="height: 30px;width: 30px;cursor: pointer;" alt=""
+                                                    src="../../../../assets/svg/col-in.svg" />
+                                            </a>
+                                            <a *ngIf="column?.visibleButton == 'out'"
+                                                (click)="toggleColumnVisibility(column.name)">
+                                                <img style="height: 30px;width: 30px;cursor: pointer;" alt=""
+                                                    src="../../../../assets/svg/col-out.svg" />
+                                            </a>
+                                        </th>
+                                        <th *ngIf="false">
+                                            Action
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="data-grid-tbody" id="table">
+                                    <tr *ngFor="let data of pagedData">
+                                        <td *ngFor="let column of columns" [hidden]="!column.visible">
+                                            {{ data[column.key] }}
+                                        </td>
+                                        <td *ngIf="false">
+                                            <div class="bt-action-section">
+
+                                                <a href="javascript:void(0);" class="bt-action" data-bs-toggle="modal"
+                                                    [attr.data-bs-target]="" (click)="getEditId(data)">
+                                                    <img src="../../../assets/svg/Edit.svg"
+                                                        alt="" /></a>
+                                                <a href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="goToDelete(data)"><img
+                                                        src="../../../assets/svg/Delete.svg"
+                                                        alt="" /></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table> -->
+                            <table class="table table-striped data-grid m-0" id="datatable">
+                                <thead class="data-grid-thead">
+                                    <tr>
+                                        <th scope="col">Vendor Number</th>
+                                        <th scope="col">Vendor Name</th>
+                                        <th scope="col">Vendor Email ID</th>
+                                        <th scope="col">Mobile Number</th>
+                                        <th scope="col">Company Code</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of pagedData">
+                                        <td>{{item['vendorNumber']}}</td>
+                                        <td>{{item['name']}}</td>
+                                        <td>{{item['email']}}</td>
+                                        <td>{{item['telephone']}}</td>
+                                        <!-- <td>{{item['companyCode']=='IN10'?'ACC':'Ambuja'}}</td> -->
+                                        <td>{{item['company']}}</td>
+                                        <td>
+                                            <label class="toggle">
+                                                <input class="toggle-input" type="checkbox" [checked]="true" (change)="deactivateVendor($event, item)">
+                                                <span class="toggle-label" data-off="Enable" data-on="Disable"></span>
+                                                <span class="toggle-handle"></span>
+                                             </label>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="pagedData.length==0" class="text-center " style="height: 40px;">
+                                        <td colspan="6">No Vendor Found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="pagination-content mb-4">
+                            <div class="pagination">
+                                <button class="btn" (click)="prevPage()" [disabled]="currentPage === 1">&lt;</button>
+                               
+                                <ng-container *ngFor="let page of visiblePages">
+                                    <button (click)="goToPage(page)" [class.active]="currentPage === page">{{ page }}</button>
+                                </ng-container>
+                                <button (click)="nextPage()" [disabled]="currentPage === totalPages">&gt;</button>
+                                
+                                <label for="pageDropdown" class="pg-dp-label">Jump to </label>
+                                <select class="form-select" id="pageDropdown" (change)="onPageChange($event)" style="width: 115px;">
+                                    <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                                </select>
+                            </div>
+
+                            <div class="total pe-4">Total: <span>{{ totalItems }}</span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="position-footer">
+        <app-footer></app-footer>
+    </div> -->
+</div>
+
+<div class="modal right fade" #UploadModal id="UploadModal" tabindex="-1" role="dialog"
+    aria-labelledby="UploadModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2">Upload Vendor</h6>
+            </div>
+
+            <div class="modal-body">
+
+                <div ng2FileDrop [ngClass]="{'nv-file-over': hasBaseDropZoneOver}" (fileOver)="fileOverBase($event)"
+                    [uploader]="uploader" (onFileDrop)="onFileSelected($event)" (click)="fileInput.click()"
+                    class="well my-drop-zone mt-2" class="container upload-block">
+                    <div class="d-flex justify-content-center">
+                        <img src="../../../../assets/img/icons/upload.png" style="height: 80px;width: 80px;">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <i class="bi bi-arrow-up-circle"></i>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <p>Drag & drop files or <span>Browse</span></p>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <h6>Supported formats: Excel files only having extension of .Xls or .Xlsx.</h6>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="file" #fileInput ng2FileSelect [uploader]="uploader"
+                            (onFileSelected)="onFileSelected($event)" class="d-none" accept=".xls,.xlsx," />
+                        <!-- multiple -->
+                    </div>
+                </div>
+
+                <!-- <ng-container *ngIf="uploader?.queue?.length >= 0"> -->
+                <ng-container *ngIf="uploader">
+                    <div class="row m-0 upload-item" *ngFor="let item of uploader.queue">
+                        <div class="col-9 file-label">{{ item?.file?.name }}</div>
+                        <div class="col-2" (click)="item.remove(); cancelData()"><img class="delete_img" src="../../../../assets/svg/Delete.svg" alt="">
+                        </div>
+                        <!-- <button type="button" class="button-ty1 mt-3 button-submit" style="float:right"
+                            (click)="uploader.uploadAll()"> -->
+                        <button *ngIf="!isLoader" type="button" class="button-ty1 mt-3 button-submit"
+                            style="float:right; margin:0px" (click)="uploadFile()">
+                            <i class="fas fa-upload pr-2" title="Upload all files"></i> Upload File
+                        </button>
+
+                        <button *ngIf="isLoader" class="button-ty1 mt-3 button-submit" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+
+                        <span class="error-message" id="error-message">{{errorMsg}}</span>
+                        <span *ngIf="ExceptionErrorMsg.length>0" class="error-message">
+                            <ng-container *ngFor="let error of ExceptionErrorMsg; let i = index">
+                                <ng-container *ngIf="i < 5">
+                                    {{ error }}
+                                </ng-container>
+                                <ng-container *ngIf="i === 4 && ExceptionErrorMsg.length > 5">
+                                    etc...
+                                </ng-container>
+                            </ng-container>
+                        </span>
+
+                    </div>
+                </ng-container>
+
+                <div class="bt-section mt-4">
+                    <button type="button" class="button-back cancel" id="cancel"
+                        (click)="cancelData()" data-bs-dismiss="modal">Cancel</button><!-- data-bs-dismiss="modal" -->
+                    <button class="button-submit" (click)="downLoadTemplate()">Download Template</button>
+                </div>
+
+            </div>
+
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+<!-- Upload Vendor Status -->
+<button id="vendorStatusModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#vendorStatusModal">Open Barcode Modal</button>
+<div class="modal fade" id="vendorStatusModal" data-bs-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-track" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel2">Upload Vendor Status</h5>
+            </div>
+
+            <div class="modal-body">
+                <!-- <p class="barcode_number">barcodeValue</p> -->
+                <div style="max-height: 200px; overflow-x: auto;">
+                    <table class="border w-100 table table-striped data-grid m-0">
+                        <thead class="data-grid-thead" style="position: sticky; top: 0px;">
+                            <th>Vendor Number</th>
+                            <th>Message</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of vendorUploadStatus">
+                                <td>{{item['vendorNumber']}}</td>
+                                <td>{{item['message']}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="my-3 text-center">
+                    <button type="submit" class="button-submit" data-bs-toggle="modal" data-bs-target="#vendorStatusModal">Ok</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,76 @@
+<app-toast-message [successToast]="succesResponse" [errorToast]="errorResponse" [toastMsg]="toastMessage"></app-toast-message>
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+
+            <div class="bd-tab-content">
+                <div class="bd-tab-content-inner mb-3">
+                    <p class="page-heading">Welcome to Vendor Invoice Portal</p>
+                </div>
+                <app-ad-table-ng [title]="'PO Invoice'" [columns]="invioceList_columns" [tableData]="invoiceList"
+                    (goToInvoiceAction)="goToInvoicePage($event)">
+                </app-ad-table-ng>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<app-custom-modal *ngIf="isAddHistoryModelOpen" (onClickCross)="closeHistoryModal()" [title]="'Tracking'"
+    class="history-modal">
+    <app-tracking-timeline [invoiceId]="InvoiceID"></app-tracking-timeline>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="isAddDocumentModelOpen" (onClickCross)="closeDocumentModal()"
+    (closeModal)="closeDocumentModal()" [title]="'Document'" class="history-modal">
+    <div *ngIf="!isLoader">
+        <ngx-extended-pdf-viewer [base64Src]="base64String" [textLayer]="true"></ngx-extended-pdf-viewer>
+    </div>
+
+    <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </div>
+
+</app-custom-modal>
+
+<!-- Choose Modal -->
+<div class="modal right fade" id="chooseModal" tabindex="-1" role="dialog" aria-labelledby="chooseModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document" style="width: 400px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2">CHOOSE</h6>
+            </div>
+
+            <div class="modal-body">
+                <div class="options">
+                    <p class="" data-bs-toggle="modal" (click)="navigateToPurchase()">Invoice</p>
+                </div>
+                <!-- <div class="options">
+                    <p class="coming" data-bs-toggle="modal" data-bs-target="#comingModal">Coming Soon</p>
+                    <p class="" data-bs-toggle="modal" data-bs-target="#comingModal">Credit note with Reference</p>
+                </div> -->
+                <div class="options">
+                    <p class="coming">Coming Soon...</p>
+                    <p class="">Credit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon...</p>
+                    <p class="">Credit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon...</p>
+                    <p class="">Debit note with Reference</p>
+                </div>
+                <div class="options">
+                    <p class="coming">Coming Soon...</p>
+                    <p class="">Debit note without Reference</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

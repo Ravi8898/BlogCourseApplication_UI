@@ -1,0 +1,81 @@
+.header {
+  height: 52px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.1019607843);
+  padding: 0px 35px;
+  background-color: #FFF;
+}
+@media (max-width: 767px) {
+  .header {
+    height: 40px;
+    padding: 5px 10px;
+    flex-wrap: nowrap;
+  }
+  .header .text-logo,
+  .header .group-logo,
+  .header .acc-logo {
+    height: 30px;
+    margin: 0 5px;
+  }
+  .avatar-profile {
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0;
+  }
+}
+.header .text-logo {
+  height: 29px;
+  margin-top: 3px;
+}
+@media (max-width: 768px) {
+  .text-logo-img {
+    width: 2em !important;
+  }
+}
+.group-logo {
+  img {
+    padding-left: 0;
+    @media (min-width: 768px) {
+      .shifted & {
+        padding-left: 150px;
+      }
+    }
+  }
+}
+.header .group-logo {
+  height: 48px;
+}
+.header .acc-logo {
+  height: 30px;
+  margin-top: 3px;
+}
+.avatar-profile {
+  display: flex;
+  align-items: center;
+}
+.avatar {
+  margin-right: 16px;
+  cursor: pointer;
+}
+.bell-icon {
+  font-size: 20px;
+}
+.dropdown-menu {
+  font-family: 'adani';
+  border-radius: 0;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: inset 0px 0px 1px 0px;
+}
+.calender-label {
+  font-size: 13px;
+  font-weight: 700;
+}
+.profile-dropdown-img {
+  height: 20px;
+  width: 20px;
+  margin-right: 15px;
+}

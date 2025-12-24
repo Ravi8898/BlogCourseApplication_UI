@@ -1,0 +1,300 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<div class="row">
+
+
+  <!-- <div class="form-group col-md-12 mt-4"> -->
+  <div class="col-12">
+    <div class="d-flex justify-content-between space-between-center project-label mb-2">
+      <label>Work Order Advance List</label>
+
+      <button *ngIf="roleName !== 'Project Manager' && roleName !== 'Checker'" type="button"
+        class="button-submit m-0 d-flex" (click)="addworkAdvance()"><span class="insit-img"><img
+            src="../../../assets/svg/add.svg"></span><span style="margin-top: 10px;">
+          Add</span></button>
+
+    </div>
+
+  </div>
+  <!-- </div> -->
+
+  <div class="row m-0 mt-2">
+    <div class="col-12 p-0">
+      <app-simple-table [tableData]="advanceDetails" [isloading]="isLoader" [columns]="advanceColumns"
+        (handleEdit)="onEdit($event)" (handleDelete)="onDelete($event)"
+        (handleView)="openDocumentModal($event)"></app-simple-table>
+    </div>
+  </div>
+
+
+</div>
+
+<app-custom-modal *ngIf="WorkAdvanceModal" (onClickCross)="closeWorkAdvanceModal()" class="workAdvance-modal"
+  [title]="'Work Order Advance'">
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="WorkAdvanceForm">
+        <div class="form-group">
+
+          <div class="form-group">
+
+            <label for="" class="form-label m-0">Bank Guarantee Type</label>
+            <span class="asterisk"> *</span>
+            <!-- <ng-select class="dropdown-list-autocomplete" placeholder="Select Bank Guarantee">
+            <ng-option value="">Select Bank Guarantee</ng-option>
+          </ng-select> -->
+            <ng-select class="dropdown-list-autocomplete" formControlName="BankGurantee" [items]="BankGuaranteeList"
+              bindLabel="bankName" bindValue="bankName" placeholder="Select Bank Guarantee"
+              (change)="controlDate($event)">
+            </ng-select>
+            <span id="BankGurantee_error" class="text-danger"
+              *ngIf="(WorkAdvanceForm.get('BankGurantee')?.touched ||submitted) && WorkAdvanceForm.get('BankGurantee')?.errors?.['required']">
+              Bank Gurantee is required
+            </span>
+
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <label for="" class="form-label m-0">Advance Type</label>
+              <!-- <span class="asterisk"> *</span> -->
+            </div>
+            <!-- <a style="cursor: pointer;" (click)="openAdvanceTypeModal()">
+              <img src="../../../../assets/svg/add.svg" alt="" class="form-icon">
+            </a> -->
+          </div>
+
+          <ng-select class="dropdown-list-autocomplete" formControlName="AdvanceType" [items]="AdvanceTypesList"
+            bindLabel="advanceTypeName" bindValue="advanceTypeId" placeholder="Select Advance Type">
+          </ng-select>
+          <span id="AdvanceType_error" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('AdvanceType')?.touched ||submitted) && WorkAdvanceForm.get('AdvanceType')?.errors?.['required']">
+            Advance Type is required
+          </span>
+        </div>
+
+        <div class="form-group">
+
+          <label for="" class="form-label m-0">Recovery Percentage %</label>
+          <!-- <span class="asterisk"> *</span> -->
+          <input type="text" maxlength="6" placeholder="Enter Max Percentage" class="form-control lh-lg"
+            formControlName='maxPercentage'>
+          <span id="maxPercentage_error" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('maxPercentage')?.touched ||submitted) && WorkAdvanceForm.get('maxPercentage')?.errors?.['required']">
+            Max Percentage is required
+          </span>
+          <span id="maxPercentage_error" class="text-danger"
+            *ngIf="WorkAdvanceForm.get('maxPercentage')?.errors?.['pattern']">
+            Invalid format! Please enter a number with exactly 2 digits before and 2-3 digits after the decimal.
+          </span>
+        </div>
+
+        <div class="form-group">
+
+          <label for="" class="form-label m-0">Value</label>
+          <!-- <span class="asterisk"> *</span> -->
+          <input type="text" maxlength="16" placeholder="Enter Max Value" class="form-control lh-lg"
+            formControlName="maxValue" appOnlyNumbers>
+          <span id="maxValue" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('maxValue')?.touched ||submitted) && WorkAdvanceForm.get('maxValue')?.errors?.['required']">
+            Max Value is required
+          </span>
+          <span id="maxValue" class="text-danger" *ngIf="WorkAdvanceForm.get('maxValue')?.errors?.['pattern']">
+            Invalid format! Please enter a number with exactly 12 digits before and 2-3 digits after the decimal.
+          </span>
+        </div>
+
+        <div class="form-group">
+
+          <label for="" class="form-label m-0">BG Reference Number</label>
+          <span class="asterisk"> *</span>
+          <input type="text" maxlength="25" placeholder="Enter BG Reference Number" class="form-control lh-lg"
+            formControlName="BGNumber" appUppercase>
+          <span id="BGNumber" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('BGNumber')?.touched ||submitted) && WorkAdvanceForm.get('BGNumber')?.errors?.['required']">
+            BG Reference Number is required
+          </span>
+        </div>
+
+        <!-- <div class="form-group">
+
+          <label for="" class="form-label m-0">BG Validation Date</label>
+          <span class="asterisk"> *</span>
+          <input type="date" class="form-control lh-lg" formControlName="BGDate">
+          <span id="BGDate" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('BGDate')?.touched ||submitted) && WorkAdvanceForm.get('BGDate')?.errors?.['required']">
+            BG Validation Date is required
+          </span>
+        </div> -->
+
+        <div class="form-group">
+
+          <label for="" class="form-label m-0">Issue Date</label>
+          <span class="asterisk"> *</span>
+          <input type="date" class="form-control lh-lg" formControlName="IssueDate" (change)="updateMinExpiryDate()"
+            (input)="restrictDateInput($event)" max="9999-12-31">
+          <span id="IssueDate" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('IssueDate')?.touched ||submitted) && WorkAdvanceForm.get('IssueDate')?.errors?.['required']">
+            Issue Date is required
+          </span>
+          <span id="IssueDate" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('IssueDate')?.touched ||submitted) && WorkAdvanceForm.get('IssueDate')?.errors?.['pattern']">
+            Enter Valid Issue Date
+          </span>
+        </div>
+
+        <div class="form-group">
+
+          <label for="" class="form-label m-0">Expiry Date</label>
+          <span class="asterisk"> *</span>
+          <input type="date" class="form-control lh-lg" formControlName="ExpiryDate" [min]="minExpiryDate"
+            (input)="restrictDateInput($event)" max="9999-12-31">
+          <span id="ExpiryDate" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('ExpiryDate')?.touched ||submitted) && WorkAdvanceForm.get('ExpiryDate')?.errors?.['required']">
+            Expiry Date is required
+          </span>
+          <span class="text-danger" *ngIf="WorkAdvanceForm.get('ExpiryDate')?.errors?.['expiryBeforeIssue']">
+            Expiry Date cannot be before Issue Date
+          </span>
+          <span id="ExpiryDate" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('ExpiryDate')?.touched ||submitted) && WorkAdvanceForm.get('ExpiryDate')?.errors?.['pattern']">
+            Enter Valid Expiry Date
+          </span>
+        </div>
+
+        <div class="form-group">
+
+          <label for="" class="form-label m-0">Claim Date</label>
+          <span class="asterisk"> *</span>
+          <input type="date" class="form-control lh-lg" formControlName="ClaimDate" (input)="restrictDateInput($event)"
+            max="9999-12-31">
+          <span id="ClaimDate" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('ClaimDate')?.touched ||submitted) && WorkAdvanceForm.get('ClaimDate')?.errors?.['required']">
+            Claim Date is required
+          </span>
+          <span id="ClaimDate" class="text-danger"
+            *ngIf="(WorkAdvanceForm.get('ClaimDate')?.touched ||submitted) && WorkAdvanceForm.get('ClaimDate')?.errors?.['pattern']">
+            Enter Valid Claim Date
+          </span>
+        </div>
+
+
+        <div class="row">
+          <div class="col-12">
+            <div class="d-flex mt-4">
+              <button *ngIf="!isLoaderDoc" type="button" [disabled]="!isUpdated && isEdit" id="bt_approve"
+                class="button-submit button-left" (click)="saveData()">
+                <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+              </button>
+              <button *ngIf="isLoaderDoc" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
+              <button type="button" id="bt_reject" class="button-back button-left"
+                (click)="isEdit ? closeWorkAdvanceModal() :resetFormDoc()">
+                <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+                  class="left-arrow" />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="mt-4">
+              <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="documentViewModal" (onClickCross)="closeDocumentModal()" (closeModal)="closeDocumentModal()"
+  title="DOCUMENTS" class="document-modal">
+  <form [formGroup]="documentForm">
+    <div class="row">
+      <div class="col-12">
+
+        <div class="row pb-2">
+          <div class="form-group col-6">
+
+            <label for="" class="form-label m-0">Document Type</label>
+            <span class="asterisk"> *</span>
+            <ng-select class="dropdown-list-autocomplete" formControlName="documentType"
+              placeholder="Select Document Type" (change)="onDocumentTypeChange($event)">
+              <ng-option value="">Select Document Type</ng-option>
+              <ng-option *ngFor="let document of optionDocumentType"
+                [value]="document.documentTypeId">{{document.documentTypeName}}</ng-option>
+            </ng-select>
+            <span id="documentType_error" class="text-danger"
+              *ngIf="(documentForm.get('documentType')?.touched ||submitted) && documentForm.get('documentType')?.errors?.['required']">
+              Document Type is required
+            </span>
+          </div>
+
+          <div class="form-group col-6">
+
+            <label for="" class="form-label m-0">Version</label>
+            <span class="asterisk"> *</span>
+            <input type="text" [ngModel]="var_version" formControlName="docVersion" maxlength="18"
+              placeholder="Enter Version" class="form-control lh-lg">
+            <span id="docVersion_error" class="text-danger"
+              *ngIf="(documentForm.get('docVersion')?.touched ||submitted) && documentForm.get('docVersion')?.errors?.['required']">
+              Version is required
+            </span>
+            <span id="docVersion_error" class="text-danger" *ngIf="documentForm.get('docVersion')?.errors?.['pattern']">
+              Invalid format! Please enter a number with exactly 1 digits before and 1 digits after the decimal.
+            </span>
+          </div>
+        </div>
+
+        <app-file-upload label="Document Upload" [isRequired]="true" [allowedFormats]="'.pdf,.doc,.docx'"
+          [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)">
+        </app-file-upload>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="d-flex mt-4">
+          <button *ngIf="!isLoaderDoc && roleName != 'Checker'" type="button" id="bt_approve"
+            class="button-submit button-left m-0" (click)="uploadDocument()">
+            <span class="ps-5"> {{isEdit ? 'Update':'Submit'}}</span>
+            <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+          </button>
+          <button *ngIf="isLoaderDoc" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+          </button>
+          <button type="button" id="bt_reject" class="button-back button-left" (click)="resetFormDocument()">
+            <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+            <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+            <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+              class="left-arrow" />
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="mt-4">
+          <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <app-simple-table [columns]="documentColumns" [tableData]="documentDetails" (handleEdit)="onEditDoc($event)"
+          (downloadDocument)="DownloadDoc($event)"></app-simple-table>
+      </div>
+    </div>
+  </form>
+</app-custom-modal>
+
+<app-center-modal *ngIf="advanceTypeModal" (closeModal)="closeAdvanceTypeModal()">
+  <app-advance-type></app-advance-type>
+</app-center-modal>

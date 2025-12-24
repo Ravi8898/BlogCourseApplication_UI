@@ -1,0 +1,70 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div class="bg-color">
+    <div class="">
+        <h4 class="page-heading">Help</h4>       
+    </div>
+
+    <!-- <div class="profile-card"> -->
+        <!-- <p class="mb-2" style="font-weight: 600; font-size: 18px;">List Of Document</p> -->
+        <div class="row">
+            <!-- <div class="col-md-6 col-xs-6 col-lg-6">
+                <div class="card">
+                    <p class="title mb-2">Name of Document</p>
+                    <p class="content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text </p>
+                    <div class="mt-1 d-flex">
+                        <button type="button" class="button-submit button-action me-3 ms-0"><span>View</span><img src="../../../assets/svg/help_view.svg"></button>
+                        <button type="button" class="button-back button-action reject"><span>Download</span><img src="../../../assets/svg/help_download.svg"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 col-lg-6">
+                <div class="card">
+                    <p class="title mb-2">Name of Document</p>  
+                    <p class="content">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text </p>
+                    <div class="mt-1 d-flex">
+                        <button type="button" class="button-submit button-action me-3 ms-0"><span>View</span><img src="../../../assets/svg/help_view.svg"></button>
+                        <button type="button" class="button-back button-action reject"><span style="white-space: nowrap;">Play Video</span><img src="../../../assets/svg/help_play.svg"></button>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="col-md-6 col-xs-6 col-lg-6 mt-2" *ngFor="let item of manualList">
+                <div class="card">
+                    <p class="title mb-2">{{item['title']}}</p>
+                    <p class="content">{{item['content']}}</p>
+                    <div class="mt-1 d-flex">
+                        <!-- <button type="button" class="button-submit button-action me-3 ms-0" *ngIf="item['type']=='file'" (click)="viewDocument(item)"><span>View</span><img src="../../../assets/svg/help_view.svg"></button> -->
+                        <!-- <button type="button" class="button-submit button-action ms-0" *ngIf="item['type']=='video'" (click)="playVideo(item); playVideoStatus=true"><span style="white-space: nowrap;">Play Video</span><img src="../../../assets/svg/help_play.svg"></button> -->
+                        <!-- <button type="button" class="button-back button-action reject" (click)="downloadDocument(item)"><span>Download</span><img src="../../../assets/svg/help_download.svg"></button> -->
+                        <button type="button" class="button-submit button-action ms-0" *ngIf="item['type']=='file'" (click)="viewOrDownloadDocument(item, 'view')"><span>View</span><img src="../../../assets/svg/help_view.svg"></button>
+                        <button type="button" class="button-back button-action reject" *ngIf="item['type']=='file'" (click)="viewOrDownloadDocument(item, 'download')"><span>Download</span><img src="../../../assets/svg/help_download.svg"></button>
+                        <button type="button" class="button-submit button-action ms-0" *ngIf="item['type']=='video'" (click)="playOrDownloadVideo(item, 'play'); playVideoStatus=true"><span style="white-space: nowrap;">Play Video</span><img src="../../../assets/svg/help_play.svg"></button>
+                        <button type="button" class="button-back button-action reject" *ngIf="item['type']=='video'" (click)="playOrDownloadVideo(item, 'download')"><span>Download</span><img src="../../../assets/svg/help_download.svg"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <!-- </div> -->
+</div>
+
+<button id="approvalModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#approvalModal">Open</button>
+<div class="modal right fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="approvalModal" aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2">DOCUMENT</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" data-bs-toggle="modal" data-bs-target="">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body" style="height: calc(100vh - 100px);">
+                <div>
+                    <ngx-extended-pdf-viewer [base64Src]="pdfSrc"></ngx-extended-pdf-viewer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

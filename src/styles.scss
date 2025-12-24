@@ -1,0 +1,759 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$Vendor_Portal-primary: mat.define-palette(mat.$indigo-palette);
+$Vendor_Portal-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$Vendor_Portal-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$Vendor_Portal-theme: mat.define-light-theme((color: (primary: $Vendor_Portal-primary,
+        accent: $Vendor_Portal-accent,
+        warn: $Vendor_Portal-warn,
+      )));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($Vendor_Portal-theme);
+
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #F9F9F9 !important;
+}
+
+
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: 'adani';
+  src: url('/assets/fonts/adani_bold-webfont.woff2') format('woff2'),
+    url('/assets/fonts/adani_bold-webfont.woff') format('woff');
+  font-family: 'adani';
+  src: url('/assets/fonts/adani_extralight-webfont.woff2') format('woff2'),
+    url('/assets/fonts/adani_extralight-webfont.woff') format('woff');
+  font-family: 'adani';
+  src: url('/assets/fonts/adani_light-webfont.woff2') format('woff2'),
+    url('/assets/fonts/adani_light-webfont.woff') format('woff');
+  font-family: 'adani';
+  src: url('/assets/fonts/adani_medium-webfont.woff2') format('woff2'),
+    url('/assets/fonts/adani_medium-webfont.woff') format('woff');
+  font-family: 'adani';
+  src: url('/assets/fonts/adani_regular-webfont.woff2') format('woff2'),
+    url('/assets/fonts/adani_regular-webfont.woff') format('woff');
+  // font-family: 'adani';
+  // src: url('/assets/fonts/adani_semibold-webfont.woff2') format('woff2'),
+  //   url('/assets/fonts/adani_semibold-webfont.woff') format('woff');
+
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "./assets/scss/custom.scss";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'adani';
+}
+
+body h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div,
+input,
+select option,
+ul li,
+ul li a,
+span {
+  font-family: 'adani' !important;
+}
+
+li,
+p {
+  font-family: 'adani';
+}
+
+body label {
+  font-family: 'adani';
+}
+
+body .bd-container {
+  // height: 100%;
+  height: 100vh !important;
+  background: #F9F9F9;
+
+}
+
+img {
+  height: 100%;
+  width: 100%;
+}
+
+.delete_img {
+  margin-top: 10px !important;
+  height: 65%;
+  width: 65%;
+}
+
+.error-message {
+  color: red;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.fixed-footer {
+
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+.modal-backdrop.show {
+  opacity: 0.1 !important;
+}
+
+.modal-header {
+  padding: 10px 16px !important;
+}
+
+input,
+select,
+option,
+textarea {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.page-header {
+  font-size: 22px;
+  font-weight: 600;
+
+}
+
+
+.section-header {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.label-header {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 0;
+  color: #555555;
+}
+
+.input-text {
+  border: 1px solid #CED4DA;
+  height: 37px;
+  border-radius: 6px;
+  width: 100%;
+  padding: 9px;
+}
+
+.input-text:focus-visible {
+  border: 0.5px solid #000;
+
+}
+
+.input-text-group,.form-group {
+
+  .w-260 {
+    width: 260px;
+  }
+
+  label {
+    z-index: 1000;
+    font-family: Adani;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0em;
+    text-align: left;
+    color: #000;
+    /* position: relative; */
+    /* top: 10px; */
+    /* left: 11px; */
+    background: transparent;
+
+  }
+}
+
+.dropdown-list {
+  border: 1px solid #CED4DA;
+  height: 37px;
+  border-radius: 6px;
+  width: 100%;
+  padding: 9px;
+}
+
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropdown-list select {
+  border: none;
+  width: 100%;
+  outline: none;
+}
+
+.dropdown-list-autocomplete {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.text-textarea {
+  width: 100%;
+  border: 1px solid #CED4DA;
+  border-radius: 6px;
+  padding: 9px;
+}
+
+.button-submit {
+  background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+  border: 1px solid;
+  border-radius: 30px;
+  height: 42px;
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 600;
+  width: 156px;
+  margin: 0 20px;
+}
+
+.button-submit:hover {
+  background: #0B74B0;
+}
+
+.button-back {
+  border: 1px solid;
+  border-radius: 30px;
+  height: 39px;
+  color: #BD3861 !important;
+  font-size: 12px;
+  font-weight: 600;
+  // width: 183px;
+  margin: 0 20px;
+  width: 156px;
+  background: #FFF;
+}
+
+.button-back:hover {
+  background: #BD3861;
+  color: #FFF !important;
+}
+
+.button-browser {
+  padding: 6px 6px !important;
+  font-size: 12px !important;
+  font-weight: 600;
+  background: #fcfdfd !important;
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+  border: solid 1px #d5d5d5 !important;
+}
+
+.bt-section {
+  display: flex;
+  justify-content: flex-end;
+  // position: absolute;
+  // right: 26px;
+  // width: 330px;
+}
+
+.field-line {
+  border-style: solid;
+  border-color: #b5b5b5;
+  border-width: 1px 0 0 0;
+  width: 39px;
+  height: 0px;
+  transform-origin: 0 0;
+  transform: rotate(90deg) scale(1, 1);
+  margin-left: 15px;
+
+}
+
+.label-mandatory-field,
+.asterisk {
+  color: #ff0000 !important;
+  padding-left: 3px;
+}
+
+
+.text-danger {
+  font-family: 'adani';
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.button-right {
+  display: flex;
+  // justify-content: space-between;
+  align-items: center;
+  margin-left: 20px;
+
+  span {
+    margin-left: 0px;
+  }
+
+  .right-arrow {
+    width: 60px;
+    height: 61px;
+    // padding-left: 5px;
+    margin-left: -23px;
+  }
+}
+
+
+.button-left {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    margin-right: 40px;
+  }
+
+  .left-arrow {
+    width: 60px;
+    height: 61px;
+    padding-left: 5px;
+    margin-left: -22px;
+  }
+}
+
+button[disabled] {
+  opacity: 0.5;
+  cursor: no-drop !important;
+}
+
+.page-heading {
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.fixed-bootom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.button-reject {
+  display: flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 30px;
+  height: 40px !important;
+  color: #FFF !important;
+  font-size: 12px;
+  font-weight: 600;
+  width: 160px !important;
+  margin: 0px 2px;
+  background: #BD3861;
+
+  span {
+    margin-left: 40px;
+    margin-right: 13px;
+  }
+}
+
+.icon-right {
+  width: 60px;
+  height: 61px;
+  margin-right: -30px;
+}
+
+
+.button-back-black {
+  display: flex;
+  align-items: center;
+  border: 1px solid;
+  border-radius: 30px;
+  height: 40px !important;
+  color: black !important;
+  font-size: 12px;
+  font-weight: 600;
+  width: 160px !important;
+  margin: 0px 2px;
+  background: #FFF;
+
+  span {
+    margin-left: 40px;
+    margin-right: 13px;
+  }
+}
+
+.icon-right {
+  width: 60px;
+  height: 61px;
+  margin-right: -30px;
+  margin-left: -10px
+}
+
+
+.close {
+  border: none;
+  color: #000000;
+  background: none;
+  font-size: 24px;
+  margin: 0px;
+  padding: 0px;
+  font-weight: 600;
+}
+
+/* Modal */
+.modal.right .modal-dialog {
+  position: fixed;
+  margin: auto;
+  // width: 320px !important;
+  height: 100%;
+  -webkit-transform: translate3d(0%, 0, 0);
+  -ms-transform: translate3d(0%, 0, 0);
+  -o-transform: translate3d(0%, 0, 0);
+  transform: translate3d(0%, 0, 0);
+}
+
+.modal-track {
+  width: 640px !important;
+
+  .modal-content {
+    background-color: #F9F9F9;
+  }
+}
+
+.modal.left .modal-content,
+.modal.right .modal-content {
+  height: 100%;
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+.modal.left .modal-body,
+.modal.right .modal-body {
+  padding: 15px 15px 80px;
+}
+
+/*Right*/
+.modal.right.fade .modal-dialog {
+  right: 0;
+  -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+  transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+
+/* Pagination */
+.pagination-content {
+  // border: solid 0.5px #CED4DA;
+  background-color: #EFEFEF;
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0;
+  flex: 0.9;
+}
+
+.pagination button {
+  // background-color: #007bff;
+  color: #464646;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  // background-color: #0056b3;
+  background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+  padding: 9px;
+  border-radius: 9px;
+  padding: 1px 9px;
+  border-radius: 9px;
+  color: #fff;
+}
+
+.pagination button[disabled] {
+  background-color: transparent;
+  cursor: not-allowed;
+}
+
+button {
+  font-family: 'adani';
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.pg-dp-label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 15px;
+  margin-left: 20px;
+}
+
+/* .form-select {
+  width: 100px !important;
+} */
+
+.total {
+  margin-right: 15px;
+}
+
+.total span {
+  font-size: 15px;
+  font-weight: 700;
+  margin-left: 15px;
+}
+
+.mismatch-error {
+  font-size: 12px !important;
+  color: red;
+}
+
+.form-group input:read-only,
+input:read-only {
+  background: #e9ecef;
+  // cursor: no-drop;
+}
+
+
+//delete popup
+.popup-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+
+.popup {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+}
+
+// End of CSS delete popup
+
+.right-corner-radius-0 {
+  border-bottom-right-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+
+//Begin Checkbox
+.custom-checkbox:disabled {
+  opacity: 0.5;
+  /* Make the checkbox less visible */
+  cursor: not-allowed;
+}
+
+
+
+.custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 1px solid #0B74B0;
+  border-radius: 7px;
+  outline: none;
+  cursor: pointer;
+  vertical-align: middle;
+  background-color: #fff;
+}
+
+.custom-checkbox:checked::after {
+  content: "\2713";
+  /* Unicode checkmark character */
+  color: #0B74B0;
+  /* Color of the checkmark */
+  font-size: 14px;
+  /* Size of the checkmark */
+  line-height: 24px;
+  /* Align checkmark vertically */
+  text-align: center;
+  /* Align checkmark horizontally */
+  position: relative;
+  /* Position relative to checkbox */
+  top: -1px;
+  /* Adjust vertical alignment */
+  left: 4px;
+  /* Adjust horizontal alignment */
+}
+
+.custom-checkbox:indeterminate {
+  background-color: #fff;
+  /* Background color */
+  border: 1px solid #0B74B0;
+  /* Border color */
+}
+
+.custom-checkbox:indeterminate::after {
+  content: "\2014";
+  /* Unicode for a dash (indeterminate mark) */
+  color: #0B74B0;
+  /* Color of the indeterminate mark */
+  font-size: 14px;
+  /* Size of the indeterminate mark */
+  line-height: 24px;
+  /* Align the mark vertically */
+  text-align: center;
+  /* Align the mark horizontally */
+  position: relative;
+  /* Position relative to checkbox */
+  top: -1px;
+  /* Adjust vertical alignment */
+  left: 4px;
+  /* Adjust horizontal alignment */
+}
+
+// End checkbox
+
+.blink-border {
+  border: 2px solid red;
+  animation: blinkBorder 1s infinite;
+}
+
+@keyframes blinkBorder {
+  0% {
+    border-color: red;
+  }
+
+  50% {
+    border-color: transparent;
+  }
+
+  100% {
+    border-color: red;
+  }
+}
+
+.red-highlight {
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+
+  background-color: red;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orange-highlight {
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+
+  background-color: #ff9800;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.yellow-highlight {
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+
+  background-color: #e9cf05;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.blink-background {
+  animation: blinkBg 1s infinite;
+}
+
+@keyframes blinkBg {
+  0% {
+    background-color: red;
+    color: #fff;
+
+  }
+
+  50% {
+    background-color: transparent;
+    color: #000;
+  }
+
+  100% {
+    background-color: red;
+    color: #fff;
+  }
+}

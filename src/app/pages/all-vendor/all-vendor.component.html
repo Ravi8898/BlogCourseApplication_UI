@@ -1,0 +1,230 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+
+            <div class="">
+                <div class="bd-tab-content">
+                    <div class="bd-tab-content-inner">
+                        <p class="page-heading">Welcome to vSPEED</p>
+                    </div>
+                    <div class="tab-content">
+
+                        <div class="feature-card">
+
+                            <div>
+                                <div>
+                                    <div class="row mt-2">
+                                        <div class="col-sm">
+                                            <h2 *ngIf="isTableTile" class="page-sub-header m-t-revert">{{tableTitle}}</h2>
+                                            <div class="invoice_status">
+                                                <p *ngIf="invoiceStatus['pending']">Pending Invoice : <span>{{invoiceStatus['pending']}}</span> </p>
+                                                <p *ngIf="invoiceStatus['irn']">Pending IRN : <span>{{invoiceStatus['irn']}}</span> </p>
+                                                <p *ngIf="invoiceStatus['fi']">Pending FI : <span>{{invoiceStatus['fi']}}</span> </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-sm-7" style="padding-right: 30px;" *ngIf="pagedData.length>0">
+                                            <div class="user-action">
+
+                                                <input placeholder="Search..." (input)="applySearch($event)" type="text" class=" input-text-ty1 icon-border d-inline-block search-icon"
+                                                    id="searchinput" [(ngModel)]="searchText" *ngIf="isSearchShow">
+
+                                                <div class="fliter icon-border" *ngIf="isTableFilter">
+                                                    <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal" data-bs-target="#filterModal">
+                                                </div>
+
+                                                <!-- <div class="user-setting icon-border" *ngIf="isTableFilter">
+                                                    <img src="../../../assets/img/icons/user-setting.png" class="" data-bs-toggle="modal" data-bs-target="#settingModal">
+                                                </div> -->
+
+                                                <div class="dropdown excel icon-border" *ngIf="isTableFilter">
+                                                    <img src=" ../../../assets/img/icons/excel.png" class="" alt="">
+                                                    <div class="dropdown-content">
+                                                        <a href="javascript:void(0);" (click)="exportToExcel()">Excel</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- No Data Available -->
+                                        <div class="col-sm-7" style="padding-right: 30px;" *ngIf="pagedData.length==0">
+                                            <div class="user-action no-data">
+                                                <input placeholder="Search here..." (input)="applySearch($event)" type="text" [(ngModel)]="searchText"
+                                                    class=" input-text-ty1 icon-border d-inline-block search-icon" id="searchinput" *ngIf="isSearchShow">
+
+                                                <div class="fliter icon-border" *ngIf="isTableFilter">
+                                                    <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal" data-bs-target="#filterModal">
+                                                </div>
+
+                                                <div class="dropdown excel icon-border" *ngIf="isTableFilter">
+                                                    <img src=" ../../../assets/img/icons/excel.png" class="" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive" id="htmlData">
+                                        <table class="table table-striped data-grid mt-0" id="datatable">
+                                            <thead class="data-grid-thead">
+                                                <tr>
+
+                                                    <!-- <th>SrNo.</th> -->
+                                                    <ng-container *ngFor="let column of displayedColumns; let i = index">
+                                                        <th *ngIf="column != 'ID' && column != 'History'" style="white-space: nowrap;">{{ column }}</th>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="showAction == true">
+                                                        <th style="width:150px">Action</th>
+                                                        <th *ngIf="showHistory!=false">History</th>
+                                                    </ng-container>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody class="data-grid-tbody" id="table" *ngIf="pagedData && pagedData.length > 0">
+
+                                                <tr *ngFor="let item of pagedData;let sr = index">
+
+                                                    <!-- <td>{{serialNumberStart+sr}}</td> -->
+                                                    <ng-container *ngFor="let column of displayedColumns; let i = index">
+                                                        <td *ngIf="column !== 'ID' && column != 'History'" [ngClass]="{
+                                                        'number' :columnDataTypes[i] === 'number',
+                                                        'string': columnDataTypes[i] === 'string',
+                                                        'datetime':columnDataTypes[i] === 'datetime',
+                                                        'status': column === 'Status'}">
+
+                                                            <ng-container *ngIf="column.includes('Date')">
+                                                                <p class="m-0 text-truncate">{{item[column] | date:'dd-MMM-yyyy'}}</p>
+                                                            </ng-container>
+
+                                                            <ng-container *ngIf="column == 'SAP Doc'">
+                                                                <p *ngIf="item['SAP Doc'] && item['SAP Doc']!='failed'" class="m-0 text-truncate">{{item['SAP Doc']}}</p>
+                                                                <!-- <button id="{{item['Invoice No.']}}_retry" *ngIf="item['SAP Doc']=='failed'" class="button-submit m-0" style="width: 70px; height: 30px; font-size: 12px;" (click)="resendFiRequest(item)">Retry</button> -->
+                                                            </ng-container>
+
+                                                            <ng-container *ngIf="column == 'Attachment' || column == 'Invoice'">
+                                                                <a href="javscript:void()" class="bt-action-section bt-action" *ngIf="item['SAP Doc'] && item['SAP Doc']!='failed'" (click)="viewAttachment(item)">
+                                                                    <img src="../../../assets/svg/download-data.svg" alt="" />
+                                                                </a>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="column == 'Checklist'">
+                                                                <a href="javscript:void()" class="bt-action-section bt-action" (click)="viewChecklist(item)" *ngIf="item['Checklist']">
+                                                                    <img src="../../../assets/svg/download-data.svg" alt="" />
+                                                                </a>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="column == 'Upload Invoice'">
+                                                                <div class="d-flex">
+                                                                    <a href="javascript:void(0);" id="{{item['Invoice No.']}}_upload" class="bt-action-section bt-action _upload" *ngIf="item['doaction']" (click)="uploadPDF()" style="visibility: hidden;">
+                                                                        <img src="../../../assets/svg/upload-invoice-data.svg" alt="" />
+                                                                    </a>
+                                                                    <input id="upload_pdf" type="file" (change)="uploadPDFFile($event)" class="{{item['Invoice No.']}}" style="display: none;">
+                                                                    <button type="button" class="btn button-submit-upload-invoice all-submit _submit" id="{{item['Invoice No.']}}_submit" (click)="getInvoice(item)" style="visibility: hidden;">Submit</button>
+                                                                </div>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="column == 'Status'">
+                                                               <p class="m-0 btn-status sent" [ngClass]="{'sent' : item[column]=='sent-back', 'reject' : item[column]=='reject', 'accept' : item[column]=='accept' || item[column]=='Approved', 'hold' : item[column]=='onhold', 'pending':item[column]=='pending', 'processing':item[column]=='processing'}">{{item[column]=='pending'?'Pending':item[column]=='sent-back'?'Sent Back': item[column]=='reject'? 'Rejected': item[column]=='accept'?'Accepted': item[column]=='onhold'?'On Hold' : item[column]=='processing'?'Processing' : item[column]}}</p>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="!((column=='Attachment') || (column=='SAP Doc') || (column=='Invoice') || (column=='Upload Invoice') || (column =='Status') || (column.includes('Date')) || (column.includes('Checklist')))">
+                                                                <p class="m-0 text-truncate" style="max-width: 150px;" data-toggle="tooltip" title="{{item[column] && item[column].length>20?item[column]:''}}">{{item[column]}}</p>
+                                                            </ng-container>
+                                                        </td>
+                                                    </ng-container>
+
+                                                    <td *ngIf="showAction == true">
+                                                        <div class="bt-action-section">
+                                                            <button class="button-submit m-0" style="width: 110px; height: 30px; font-size: 12px;" (click)="getInvoice(item)" [disabled]="!item['doaction']"><span>Submit</span></button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="pagination-content mb-4" *ngIf="pagedData && pagedData.length > 0">
+                                        <div class="pagination">
+                                            <button class="btn" (click)="prevPage()" [disabled]="currentPage === 1">&lt;</button>
+                                            <!-- <ng-container *ngFor="let page of pages"> -->
+                                            <ng-container *ngFor="let page of visiblePages">
+                                                <button (click)="goToPage(page)" [class.active]="currentPage === page">{{ page }}</button>
+                                            </ng-container>
+                                            <button (click)="nextPage()" [disabled]="currentPage === totalPages">&gt;</button>
+
+                                            <!-- Dropdown Pagination -->
+                                            <label for="pageDropdown" class="pg-dp-label">Jump to </label>
+                                            <select class="form-select" id="pageDropdown" [(ngModel)]="currentPage" (change)="onPageChange($event)">
+                                                <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="total">Total: <span>{{ totalItems }}</span></div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="pagedData.length==0">
+                                    <div class="row noRecond">
+                                        <div class="col">
+                                            <h3>No records found</h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal right fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">Filter</h4>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="dynamicSearchForm" style="text-align:justify">
+                    <div *ngFor="let controlName of searchObject">
+
+                        <div class="input-text-group">
+                            <label>{{ controlName.forLabel }}</label>
+                            <input *ngIf="controlName.forContrl == 'fromCreatedDate'"  formControlName="fromCreatedDate" [id]="controlName.forContrl" class="input-text" type="date" [max]="maxDate" (change)="selectedStartDate($event)" onkeydown="return false"/>
+
+                            <input *ngIf="controlName.forContrl == 'toCreatedDate'"  formControlName="toCreatedDate" [id]="controlName.forContrl" class="input-text" type="date" [min]="endMinDate" [max]="maxDate" onkeydown="return false"/>
+
+                            <select *ngIf="controlName.forContrl == 'itemMaterialDes'" formControlName="itemMaterialDes" [id]="controlName.forContrl" class="dropdown-list">
+                                <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                <option [value]=item *ngFor="let item of materialFilter">{{item}}</option>
+                            </select>
+
+                            <select *ngIf="controlName.forContrl == 'plantCode'" formControlName="plantCode" [id]="controlName.forContrl" class="dropdown-list">
+                                <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                <!-- <option [value]=item *ngFor="let item of plantFilter">{{item}}</option> -->
+                                <option [value]=item.key *ngFor="let item of plantFilter | keyvalue">{{item.value}}</option>
+                            </select>
+
+                            <select *ngIf="controlName.forContrl == 'childVendorCode'" formControlName="childVendorCode" [id]="controlName.forContrl" class="dropdown-list">
+                                <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                <option [value]=item.key *ngFor="let item of vendorFilter | keyvalue">{{item.value}}</option>
+                            </select>
+
+                            <select *ngIf="controlName.forContrl == 'status'" formControlName="status" [id]="controlName.forContrl" class="dropdown-list">
+                                <option value="choose" [selected]="true" disabled="true">Choose</option>
+                                <option [value]=item *ngFor="let item of statusFilter">{{item}}</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="bt-section mt-5">
+                        <button class="button-back" data-bs-dismiss="modal" (click)="resetFilter()">Reset</button>
+                        <button class="button-submit" data-bs-dismiss="modal" (click)="applyFilter()">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

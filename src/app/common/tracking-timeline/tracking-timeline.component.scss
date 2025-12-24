@@ -1,0 +1,104 @@
+.timeline {
+    position: relative;
+    padding-left: 30px;
+    margin: 20px 0;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+}
+
+.timeline-date {
+    width: 120px;
+    text-align: right;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.date {
+    font-size: 14px;
+}
+
+.time {
+    font-size: 12px;
+    color: gray;
+}
+
+.status-title {
+    color: #0B74B0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.status-details,
+.reference {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.timeline-status {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+    position: relative;
+}
+
+/* Status Icon */
+.status-icon {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid gray;
+    background-color: white;
+    position: relative;
+    z-index: 1;
+    margin-top: 4px;
+}
+
+/* Dashed Line */
+.timeline-status::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 25px;
+    width: 2px;
+    height: calc(100% - 30px);
+    background: repeating-linear-gradient(to bottom, gray, gray 5px, transparent 5px, transparent 10px);
+}
+
+/* Hide Dashed Line for the Last Status */
+.timeline-item:last-child .timeline-status::after {
+    display: none;
+}
+
+.status-info {
+    margin-left: 10px;
+}
+
+/* Different Status Colors */
+.pending.status-icon {
+    background-color: white;
+    border: 2px solid gray;
+}
+
+.reject.status-icon {
+    background-color: red;
+    border-color: red;
+}
+
+.approve.status-icon {
+    background-color: blue;
+    border-color: blue;
+}
+
+.in-progress.status-icon {
+    background-color: orange;
+    border-color: orange;
+}
+
+.completed.status-icon {
+    background-color: #00AD1C;
+    border-color: #00AD1C;
+}

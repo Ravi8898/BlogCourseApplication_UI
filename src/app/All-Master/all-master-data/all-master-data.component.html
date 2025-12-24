@@ -1,0 +1,210 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+
+<div *ngIf="showFiForm" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.3);">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editingFiRow ? 'Edit FI Data' : 'Add FI Data' }}</h5>
+        <button type="button" class="btn-close" (click)="onFiFormCancel()"></button>
+      </div>
+      <form (ngSubmit)="onFiFormSubmit()">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Plant Code</label>
+            <input class="form-control" [(ngModel)]="fiFormData.PlantCode" name="PlantCode" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Location</label>
+            <input class="form-control" [(ngModel)]="fiFormData.Location" name="Location" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">GSTIN</label>
+            <input class="form-control" [(ngModel)]="fiFormData.GSTIN" name="GSTIN" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Amount</label>
+            <input class="form-control" type="number" [(ngModel)]="fiFormData.Amount" name="Amount" required />
+          </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" (click)="onFiFormCancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary">{{ editingFiRow ? 'Update' : 'Add' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="center-wrapper">
+  <div class="tabs">
+    <div class="tab" [class.active]="activeTab === 'on'" (click)="changeTab('on')">Bill to Mapping</div>
+    <div class="tab" [class.active]="activeTab === 'off'" (click)="changeTab('off')">Vendor Update</div>
+    <div class="tab" [class.active]="activeTab === 'fi'" (click)="changeTab('fi')">FI Data</div>
+  </div>
+  <div class="bt-section">
+    <ng-container *ngIf="activeTab === 'on'">
+      <button type="button" id="bt_upload" class="button-submit button-right" (click)="goToAddBill('bill')">
+        <img src="assets/svg/add.svg" class="right-arrow">
+        <span>Add bill</span>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="activeTab === 'fi'">
+      <button type="button" id="bt_upload_fi" class="button-submit button-right" (click)="goToAddBill('fi')">
+        <img src="assets/svg/add.svg" class="right-arrow">
+        <span>Add bill</span>
+      </button>
+    </ng-container>
+  </div>
+</div>
+<div *ngIf="activeTab === 'on'">
+  <div class="feature-card mt-4">
+    <app-master-ad-table
+      *ngIf="!isLoader"
+      [tableTitle]="'Bill to mapping Listing'"
+      [originalData]="originalData"
+      [tableData]="employeeList"
+      [isTableTile]="true"
+      [isTableFilter]="true"
+      [loginType]="loginType"
+      [isSearchShow]="true"
+      (searchParamObj)="applyEmployeeSearch($event)"
+      [searchObject]="employeeSearchObject"
+      [modalElementId]="modalName"
+      [showHistory]="false"
+      [showAction]="true"
+      (deleteConfirmed)="onDeleteConfirmedEmployee($event)"
+      [totalItemsInput]="billToMappingTotalItems"
+      [currentPage]="billToMappingCurrentPage"
+      (pageChange)="onBillToMappingPageChange($event)"
+    >
+    </app-master-ad-table>
+  </div>
+</div>
+<div *ngIf="activeTab === 'off'">
+  <div class="feature-card mt-4">
+    <app-master-ad-table
+      *ngIf="!isLoader"
+      [tableTitle]="'Vendor Update'"
+      [originalData]="originalData"
+      [tableData]="vendorList"
+      [isTableTile]="true"
+      [isTableFilter]="true"
+      [loginType]="loginType"
+      [isSearchShow]="true"
+      (searchParamObj)="applyVendorSearch($event)"
+      [searchObject]="vendorSearchObject"
+      [modalElementId]="modalName"
+      [showHistory]="false"
+      [showAction]="true"
+      (goToEditing)="openUpdateModal($event)"
+      (deleteConfirmed)="onDeleteConfirmedEmployee($event)"
+      [totalItemsInput]="vendorTotalItems"
+      [currentPage]="vendorCurrentPage"
+      (pageChange)="onVendorPageChange($event)"
+    >
+    </app-master-ad-table>
+  </div>
+</div>
+<div *ngIf="activeTab === 'fi'">
+  <div class="feature-card mt-4">
+    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 8px; gap: 10px;">
+      <button type="button" class="button-submit upload" (click)="onUploadClick()">
+        <img src="assets/svg/upload.svg" class="img-upload" alt="Upload" /> Upload
+      </button>
+      <input type="file" #fileInput accept=".xlsx, .xls" style="display: none;" (change)="onFileSelected($event)" />
+    </div>
+    <app-master-ad-table
+      *ngIf="!isLoader"
+      [tableTitle]="'FI Data'"
+      [tableData]="fiDataList"
+      [isTableTile]="true"
+      [originalData]="originalData"
+      [isTableFilter]="true"
+      [loginType]="'vendor'"
+      [isSearchShow]="true"
+      (searchParamObj)="applyFiSearch($event)"
+      [searchObject]="fiSearchObject"
+      [modalElementId]="modalName"
+      [showHistory]="false"
+      [showAction]="true"
+      [fiFields]="fiFields"
+      (editItem)="goToEditFiData($event)"
+      (deleteConfirmed)="onDeleteFiRow($event)"
+      [totalItemsInput]="fiTotalItems"
+      [currentPage]="fiCurrentPage"
+      (pageChange)="onFiPageChange($event)"
+    >
+    </app-master-ad-table>
+  </div>
+</div>
+<footer></footer>
+<app-custom-modal [title]="'Edit Vendor Update'" *ngIf="isUpdateModal" (onClickCross)="closeAddEditModal()">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit(formRef)" #formRef="ngForm">
+          <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
+            <label class="form-label m-0">AAA Customer Code</label>
+            <span class="asterisk">*</span>
+            <input type="text" [(ngModel)]="formData.AAACustomerCode" name="aaa_customer_code" required class="form-control">
+          </div>
+          <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
+            <label class="form-label m-0">ALL Customer Code</label>
+            <span class="asterisk">*</span>
+            <input type="text" [(ngModel)]="formData.CustomerCode" name="all_customer_code" required class="form-control">
+          </div>
+          <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
+            <label class="form-label m-0">Change Mechanism</label>
+            <span class="asterisk">*</span>
+            <select class="form-select" [(ngModel)]="formData.Mechanism" name="change_Mechanism" required>
+              <option value="" disabled selected hidden>Select</option>
+              <option value="RCM">RCM</option>
+              <option value="FCM">FCM</option>
+            </select>
+          </div>
+          <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
+            <label class="form-label m-0">GST No</label>
+            <span class="asterisk">*</span>
+            <input type="text" [(ngModel)]="formData.GSTNo" name="gst_no" required class="form-control">
+          </div>
+          <div class="col-lg-5 col-md-3 col-xs-2  w-100 mt-3 input-text-group">
+            <label class="form-label m-0">Email Id</label>
+            <span class="asterisk">*</span>
+            <input type="email" [(ngModel)]="formData.Email" name="email" required email #email="ngModel"
+              class="form-control" />
+            <div *ngIf="(email.touched || formRef.submitted) && email.invalid" class="text-danger">
+              <div *ngIf="email.errors?.['required']">Email is required</div>
+              <div *ngIf="email.errors?.['email']">Enter a valid email address</div>
+            </div>
+          </div>
+          <div class="col-lg-5 col-md-3 col-xs-2  w-100 mt-3 input-text-group">
+            <label class="form-label m-0">Mobile Number</label>
+            <span class="asterisk">*</span>
+            <input type="tel" [(ngModel)]="formData.Mobilenumber" name="mobileno" class="form-control" maxlength="10"
+              pattern="^[6-9][0-9]{9}$" required (keydown)="allowOnlyNumbers($event)" #mobileno="ngModel">
+            <div *ngIf="(mobileno.touched || formRef.submitted) && mobileno.invalid" class="text-danger">
+              <div *ngIf="mobileno.errors?.['required']">Mobile number is required</div>
+              <div *ngIf="mobileno.errors?.['pattern']">Enter a valid 10-digit Indian mobile number</div>
+            </div>
+          </div>
+          <div class="buttons">
+            <div class="submitBtn mt-5">
+              <button type="submit" [disabled]="formRef.invalid" class="button-submit">
+                Update
+              </button>
+              <img class="aligns" src="./assets/svg/right-arrow.svg" alt="" />
+            </div>
+            <div class="resetbtn mt-5">
+              <button type="button" class="button-back ms-4 me-0" (click)="resetForm(formRef)">
+                Reset
+              </button>
+              <img class="aligns" src="./assets/svg/reset.png" alt="" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</app-custom-modal>
+<div *ngIf="isLoader" class="loader-overlay">
+  <div class="loader"></div>
+</div>

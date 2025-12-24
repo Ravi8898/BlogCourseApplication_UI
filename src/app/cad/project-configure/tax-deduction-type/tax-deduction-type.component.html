@@ -1,0 +1,80 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<div class="row">
+
+    <div class="col-12">
+        <div class="justify-content-between space-between-center project-label mb-2">
+            <label>Tax Deduction Listing</label>
+
+            <button type="button" class="button-submit d-flex m-0" (click)="openHoldTypeModal()">
+                <span class="insit-img"><img src="../../../assets/svg/add.svg"></span>
+                <span style="margin-top: 10px;">Create</span>
+            </button>
+
+        </div>
+
+        <app-simple-table [columns]="columns" [tableData]="taxDeductionTypeDetails" (handleDelete)="onDelete($event)" [isloading]="isLoader"
+            (handleEdit)="onEdit($event)" ></app-simple-table>
+    </div>
+
+</div>
+
+<app-custom-modal *ngIf="isTaxDeductionTypeModalOpen" (onClickCross)="closeTaxDeductionModal()" class="currency-modal"
+    [title]="'TAX DEDUCTION TYPE'">
+    <div class="row">
+        <form [formGroup]="taxDeductionTypeForm" (ngSubmit)="onSubmit()">
+            <!-- <div class="form-group">
+                <label>ID <span class="asterisk">*</span></label>
+                <input type="text" class="form-control" formControlName="taxDeductionTypeId" placeholder="Enter ID">
+                <div *ngIf="f['taxDeductionTypeId'].touched && f['taxDeductionTypeId'].invalid" class="text-danger">
+                  <small *ngIf="f['taxDeductionTypeId'].errors?.['required']">ID is required.</small>
+                  <small *ngIf="f['taxDeductionTypeId'].errors?.['maxlength']">Maximum length is 250 characters.</small>
+                </div>
+              </div> -->
+            <div class="form-group">
+              <label>Tax Deduction Type Name <span class="asterisk">*</span></label>
+              <input type="text" class="form-control" formControlName="taxDeductTypeName" placeholder="Enter Tax Deduction Type Name">
+              <div *ngIf="f['taxDeductTypeName'].touched && f['taxDeductTypeName'].invalid" class="text-danger">
+                <small *ngIf="f['taxDeductTypeName'].errors?.['required']">Tax Deduction Type Name is required.</small>
+                <small *ngIf="f['taxDeductTypeName'].errors?.['maxlength']">Maximum length is 250 characters.</small>
+              </div>
+            </div>
+            <div class="form-group">
+                <label>Tax Rate</label>
+                <input type="text" class="form-control" formControlName="taxRate" maxlength="6" placeholder="Enter Tax Rate" appOnlyDecimal>
+               
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex mt-4">
+                        <button *ngIf="!isLoader" type="button" [disabled]="!isUpdated && isEdit" id="bt_approve"
+                          class="button-submit button-left" (click)="onSubmit()">
+                          <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                          <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+                        </button>
+                        <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Loading...
+                        </button>
+                        <button type="button" id="bt_reject" class="button-back button-left"
+                          (click)="isEdit ? closeTaxDeductionModal() :resetForm()">
+                          <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                          <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                          <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg" class="left-arrow" />
+                        </button>
+                      </div>
+                </div>
+            </div>
+          </form>
+          
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="mt-4">
+                <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+        </div>
+    </div>
+  
+</app-custom-modal>
+
+

@@ -1,0 +1,28 @@
+<ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple">
+    <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
+<div class="bd-container">
+    <div class="position-header">
+        <app-header [showElement]="true"></app-header>
+    </div>
+
+    <div style="height: calc(100% - 100px);">
+        <div class="tab-menu d-flex align-items-center">
+            <a href="javascript:void(0);">
+                <label class="menu-label" [class.active]="active == 'vendor' || active == 'admin'" (click)="setActive('vendor')">Vendor Management</label>
+            </a>
+            <a href="javascript:void(0);">
+                <label class="menu-label" [class.active]="active =='employee'" (click)="setActive('employee')">Employee Management</label>
+            </a>
+        </div>
+    
+        <div class="m-4">
+           <router-outlet></router-outlet>
+        </div>
+    </div>
+
+    <div class="position-footer">
+        <app-footer></app-footer>
+    </div>
+</div>

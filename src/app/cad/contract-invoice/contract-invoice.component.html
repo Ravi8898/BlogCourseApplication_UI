@@ -1,0 +1,681 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="profile-card">
+
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-xs-3">
+                    <label for="" class="form-label m-0">Invoice Type</label>
+                    <span class="asterisk"> *</span>
+                    <select class="form-select" aria-label="Default select example" (change)="invoiceTypeSelect($event)"
+                        [disabled]="isPODetail">
+                        <option value="choose" disabled="true">Choose</option>
+                        <option value="Material">Material</option>
+                        <option value="Service">Service</option>
+                        <option value="Freight-Inbound">Freight-Inbound</option>
+                        <option value="SLA">SLA</option>
+                        <option value="Reward">Reward</option>
+                        <option value="Contracts" [selected]="true">Contracts</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-3 col-xs-3">
+                    <label for="" class="form-label m-0">Invoice Category</label>
+                    <span class="asterisk"> *</span>
+                    <select class="form-select" aria-label="Default select example" [(ngModel)]="invoicetypeId"
+                        (change)="invoiceCategorySelect($event)" [disabled]="isPODetail">
+                        <option value="">Select Invoice Category</option>
+                        <!-- <option value="DPR">DPR</option>
+                        <option value="RA Bills">RA Bills</option>
+                        <option value="Final Bills">Final Bills</option> -->
+                        <option *ngFor="let item of optionInvoiceCategory" [value]="item.billInvoiceTypeId">
+                            {{item.invoiceTypeName}}</option>
+                    </select>
+                    <span *ngIf="submitted && invoicetypeId == ''" class="text-danger">Invoice Category required.</span>
+                </div>
+                <div class="col-lg-3 col-md-3 col-xs-3">
+                    <label for="" class="form-label m-0">PO Number</label>
+                    <label class="asterisk">*</label>
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter PO" class="form-control right-corner-radius-0 "
+                            name="PONumber" maxlength="25" [(ngModel)]="poNumber" [disabled]="isPODetail">
+                        <button type="submit" (click)="clickEvent()" class="bt-text-include" style="width: 200px;"
+                            [disabled]="isPODetail">Get
+                            PO Detail</button>
+
+                    </div>
+
+                    <span *ngIf="submitted && poNumber == ''" class="text-danger">PO Number required.</span>
+                    <span *ngIf="inValidPO" class="text-danger">This PO Number is does not belongs to this
+                        Vendor. Or This PO hasn't even been created yet.
+                        <br>
+                        For information about this, please contact the Contract Admin
+                    </span>
+                    <span *ngIf="isAbgIsExist" class="text-danger">{{errorMessageForSubmit}}</span>
+                    <span *ngIf="errorMessage" class="text-danger">{{errorMessage}}</span>
+                    
+
+
+
+
+                </div>
+                <div  class="col-md-1 mt-3" style="margin-left: -0px;">
+                    <img *ngIf="status" alt="" style="height:45px" src="../../../assets/svg/reset.svg" class="left-arrow"
+                        matTooltip="Reset" (click)="resetForm()" />
+                </div>
+                <div class="col-lg-2 col-md-2 col-xs-2">
+                      <a href="javascript:void(0)" (click)="goBack()" style="float: right;">Back to listing</a>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+</div>
+<div [ngClass]="status ? 'd-block' : 'd-none'">
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="profile-card">
+                <form [formGroup]="cjpcForm">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Project name & location</label>
+
+                            <div class="d-flex">
+                                <input type="text" placeholder="Project name & locationVDC" class="form-control  "
+                                    formControlName="ProjectName" name="WONumber" maxlength="250">
+                            </div>
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Project Code</label>
+
+                            <input type="text" placeholder="Project Code" class="form-control "
+                                formControlName="projectCode" maxlength="250">
+
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Package</label>
+
+                            <input type="text" placeholder="Package" class="form-control " formControlName="package"
+                                maxlength="250">
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Contractor’s Name</label>
+
+                            <input type="text" placeholder="Contractor’s Name" class="form-control "
+                                formControlName="ContractorName" maxlength="250">
+
+                        </div>
+
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Vendor Code</label>
+
+                            <input type="text" placeholder="Vendor Code" class="form-control "
+                                formControlName="vendorCode" maxlength="250">
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Contract / WO ref.</label>
+
+                            <input type="text" placeholder="Contract / WO ref." class="form-control "
+                                formControlName="ContractWO" maxlength="250">
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">WO
+                                Date</label>
+
+                            <input type="text" placeholder="WO Date" class="form-control " formControlName="WODate"
+                                maxlength="250" [readonly]="true">
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Date of last amdt.</label>
+
+                            <input type="text" placeholder="Date of last amdt." class="form-control "
+                                formControlName="DateLastAmt" maxlength="250">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Original completion Value</label>
+
+                            <input type="text" placeholder="Original completion Value" class="form-control "
+                                formControlName="completionValue" maxlength="18">
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Last Amended contact / WO Value</label>
+
+                            <input type="text" class="form-control " placeholder="Last Amended contact / WO Value"
+                                formControlName="amendedContact">
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Final workdone / wO value</label>
+
+                            <input type="text" placeholder="Final workdone / wO value" class="form-control "
+                                formControlName="finalWork" maxlength="18">
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Original Completion Date</label>
+
+                            <input type="text" placeholder="Auto Populated" class="form-control "
+                                formControlName="OriginalDate" maxlength="250">
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Last Amended Completion Date</label>
+                            <input type="text" class="form-control " formControlName="LastAmndDate">
+
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-xs-3">
+                            <label for="" class="form-label m-0">Actual Completion Date</label>
+
+                            <input type="text" class="form-control " formControlName="ActualComDate" maxlength="250">
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="billForm" *ngIf="!isExpired">
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="profile-card">
+                    <h1 class="project-h1">BILL DETAILS</h1>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Bill Type </label> <span class="asterisk"> *</span>
+                            <select class="form-select" formControlName="billType"
+                                (change)="invoiceCategorySelect($event)" [disabled]="isPODetail">
+                                <option value="">Select Bill Type</option>
+                                <option *ngFor="let item of optionInvoiceCategory" [value]="item.billInvoiceTypeId">
+                                    {{item.invoiceTypeName}}</option>
+                            </select>
+                            <div *ngIf="billForm.controls['billType'].invalid && billForm.controls['billType'].touched"
+                                class="text-danger">
+                                Bill Type is required.
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Bill Number</label> <span class="asterisk"> *</span>
+                            <input type="text" class="form-control" placeholder="Enter Bill Number"
+                                formControlName="billNumber" (blur)="getDocumentList()">
+                            <div *ngIf="billForm.controls['billNumber'].invalid && billForm.controls['billNumber'].touched"
+                                class="text-danger">
+                                Bill Number is required.
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Invoice Period Start Date</label> <span class="asterisk"> *</span>
+                            <input type="date" class="form-control" formControlName="invoicePeriodStart">
+                            <div *ngIf="billForm.controls['invoicePeriodStart'].invalid && billForm.controls['invoicePeriodStart'].touched"
+                                class="text-danger">
+                                Start Date is required.
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Invoice Period End Date</label> <span class="asterisk"> *</span>
+                            <input type="date" class="form-control" formControlName="invoicePeriodEnd">
+                            <div *ngIf="billForm.controls['invoicePeriodEnd'].invalid && billForm.controls['invoicePeriodEnd'].touched"
+                                class="text-danger">
+                                End Date is required.
+                            </div>
+                            <div *ngIf="billForm.errors?.['dateInvalid']" class="text-danger">
+                                End date cannot be before the start date.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Contractor's Bill Ref.</label> <span class="asterisk"> *</span>
+                            <input type="text" class="form-control" placeholder="Enter Bill Ref"
+                                formControlName="billRef">
+                            <div *ngIf="billForm.controls['billRef'].invalid && billForm.controls['billRef'].touched"
+                                class="text-danger">
+                                Bill Reference is required.
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Date</label> <span class="asterisk"> *</span>
+                            <input type="date" class="form-control" formControlName="dated">
+                            <div *ngIf="billForm.controls['dated'].invalid && billForm.controls['dated'].touched"
+                                class="text-danger">
+                                Date is required.
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Invoice Amount</label> <span class="asterisk"> *</span>
+                            <div class="input-group">
+                                <span class="input-group-text">INR</span>
+                                <input type="text" class="form-control" placeholder="Enter Amount"
+                                    (keypress)="validateAmountInput($event)" formControlName="invoiceAmount">
+                            </div>
+                            <div *ngIf="billForm.controls['invoiceAmount'].invalid && billForm.controls['invoiceAmount'].touched"
+                                class="text-danger">
+                                <span *ngIf="billForm.controls['invoiceAmount'].errors?.['required']">Invoice Amount is
+                                    required.</span>
+                                <span *ngIf="billForm.controls['invoiceAmount'].errors?.['pattern']">Only numbers are
+                                    allowed.</span>
+                            </div>
+                            <div *ngIf="billForm.errors?.['invalidAmount']" class="mt-1 text-danger">
+                                <b>Invoice Amount</b> should be same as <b>Amount As Per Line Items </b>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3" *ngIf="invoiceTypeName == 'RA Bill' || invoiceTypeName == 'Final Bill'">
+                            <label class="form-label">Amount As Per Line Items</label> <span class="asterisk"> *</span>
+                            <div class="input-group">
+                                <span class="input-group-text">INR</span>
+                                <input type="text" class="form-control" placeholder="Enter Amount"
+                                    formControlName="amountAsPerLineItems">
+                            </div>
+                            <div *ngIf="billForm.controls['amountAsPerLineItems'].invalid && billForm.controls['amountAsPerLineItems'].touched"
+                                class="text-danger">
+                                Amount is required.
+                            </div>
+                        </div>
+                        <!-- </div>
+      
+              <div class="row"> -->
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Complete Bill Rect. Date</label> <span class="asterisk"> *</span>
+                            <input type="date" class="form-control" formControlName="billReceiptDate">
+                            <div *ngIf="billForm.controls['billReceiptDate'].invalid && billForm.controls['billReceiptDate'].touched"
+                                class="text-danger">
+                                Bill Receipt Date is required.
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3">
+                            <label class="form-label">Payment Due Time & Date</label>
+                            <input type="text" class="form-control" formControlName="paymentDueDate">
+                        </div>
+                        <div *ngIf="invoiceTypeName == 'DPR'" class="col-lg-3 col-md-3">
+                            <label class="form-label">DPR No.</label>
+                            <input type="text" class="form-control" formControlName="sesDprNo"
+                                placeholder="Enter DPR No.">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div class="profile-card mt-4" *ngIf="invoiceTypeName == 'RA Bill' || invoiceTypeName == 'Final Bill'">
+        <div class="col-lg-12 col-md-12 col-xs-12" *ngIf="!isExpired">
+            <label for="" class="form-label m-0 mt-3">PO Items</label>
+            <!-- <span class="asterisk"> *</span> -->
+
+            <div class="fliter icon-border mt-2" style="display: inline; float: right;" title="Filter">
+                <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal" data-bs-target="#filterModal"
+                    style="height: 29px; width: 29px; padding: 7px;">
+            </div>
+
+            <div class="po-item table-container" id="htmlData">
+                <table class="styled-table"> <!-- *ngIf="items.length>0" -->
+                    <thead>
+                        <tr>
+                            <!-- <th><input class="custom-checkbox" type="checkbox" (change)="toggleAllSelection($event)"
+                                    matTooltip="{{disableAllSelection() ? 'All items quantity is zero' : 'Select All'}}"
+                                    [disabled]="disableAllSelection()" [checked]="allSelected">
+                            </th> -->
+                            <th></th>
+                            <th>PO Item No.</th>
+                            <th>Package No.</th>
+                            <th>Item Description</th>
+                            <th>Material No.</th>
+                            <th>Plant Code</th>
+                            <th>Unit Of Measure</th>
+                            <th>Balance Quantity</th>
+                            <th>Balance Net Price</th>
+                            <th>Price Per Unit</th>
+                            <!-- <th>Quantity</th> -->
+
+                            <!-- <th>Contract No.</th> -->
+                            <!-- <th>Contract item No.</th> -->
+                            <!-- <th>Package No.</th> -->
+                            <th>Is Service Inv.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of pagedData">
+                            <!-- matTooltip="{{item.quantity <=0 ? 'The Quantity is Zero' : ''}}"
+                                    [(ngModel)]="item.isSelected" [disabled]="item.quantity <=0" -->
+                            <td> <input type="checkbox" class="custom-checkbox" [(ngModel)]="item.isSelected"
+                                    (change)="toggleSelection(item,$event)" [disabled]="item.itemCat == '0'"
+                                    matTooltip="{{item.itemCat == '0' ? 'GRN Item' : ''}}" /></td>
+                            <td>{{ item.purchaseOrderItemNo }}</td>
+                            <td>{{item?.packageNo}}</td>
+                            <td>{{ item?.itemDescription }}</td>
+                            <td>{{ item?.materialNumber ?item?.materialNumber:'-' }}</td>
+                            <td>{{ item.plantCode }}</td>
+                            <td>{{item?.unitOfMeasure}}</td>
+                            <td>{{item.quantity}}</td>
+                            <td>{{ item?.netPrice | indianCurrency }}</td>
+                            <td>{{ item.pricePerUnit }}</td>
+                            <!-- <td>{{item.quantity}}</td> -->
+                            <!-- <td>{{ item.contractNo ? item.contractNo :'-' }}</td> -->
+                            <!-- <td>{{item.contractItemNo}}</td> -->
+                            <!-- <td>{{item?.packageNo}}</td> -->
+                            <td [ngStyle]="{color:item?.itemCat == '9' ? 'Green':'Red'}">{{item?.itemCat == '9' ?
+                                'Yes':'No'}}</td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="pagination-content">
+                <div class="pagination">
+                    <button class="btn" (click)="prevPage()" [disabled]="currentPage == 1">&lt;</button>
+                    <ng-container *ngFor="let page of visiblePages">
+                        <button (click)="goToPage(page)" [class.active]="currentPage == page">{{ page
+                            }}</button>
+                    </ng-container>
+                    <button (click)="nextPage()" [disabled]="currentPage == totalPages">&gt;</button>
+
+                    <label for="pageDropdown" class="pg-dp-label d-md-block d-sm-none display-none">Jump to </label>
+                    <select class="form-select d-md-block d-sm-none display-none" id="pageDropdown"
+                        [ngModel]="currentPage" (change)="onPageChange($event)" style="width: 115px;">
+                        <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                    </select>
+
+                </div>
+
+                <div class="total" style="margin-right: 15px;">Total: <span
+                        style="font-size: 15px; font-weight: 700; margin-left: 15px;padding-right: 5px;">{{
+                        totalItems }}</span></div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-xs-12 mt-3" *ngIf="POServiceItemList.length >0">
+            <label for="" class="form-label m-0 mt-3">PO Services List</label>
+            <!-- <span class="asterisk"> *</span> -->
+
+            <div class="fliter icon-border mt-2" style="display: inline; float: right;" title="Filter">
+                <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal" data-bs-target="#filterModal"
+                    style="height: 29px; width: 29px; padding: 7px;">
+            </div>
+
+            <div class="po-item table-container" id="htmlData">
+                <table class="styled-table"> <!-- *ngIf="items.length>0" -->
+                    <thead>
+                        <tr>
+                            <th><input class="custom-checkbox" type="checkbox" (change)="toggleAllSelection($event)"
+                                    matTooltip="{{disableAllSelection() ? 'All items quantity is zero' : 'Select All'}}"
+                                    [disabled]="disableAllSelection()" [checked]="allSelected">
+                            </th>
+                            <th>Sub Package No.</th>
+                            <th>Line Item</th>
+                            <th>Tax Code</th>
+                            <th>Tax Code Tarrif</th>
+                            <th>Rate</th>
+                            <th>Quantity</th>
+                            <th>Remaining Qty.</th>
+                            <th>Net Value</th>
+                            <th>Short Text</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of POServiceItemList">
+                            <td> <input type="checkbox" class="custom-checkbox"
+                                    matTooltip="{{item.quantity <=0 ? 'The Quantity is Zero' : ''}}"
+                                    [(ngModel)]="item.isSelected" [disabled]="item.quantity <=0"
+                                    (change)="toggleSelectionForService(item,$event)" /></td>
+                            <td>{{ item.packageNo }}</td>
+                            <td>{{ item?.lineNo }}</td>
+                            <td>{{ item?.taxCode ?item?.taxCode:'-' }}</td>
+                            <td>{{ item.taxTariffCode }}</td>
+                            <td>{{item.grPrice | indianCurrency}}</td>
+                            <td>{{item.quantity}}</td>
+                            <td>{{ item?.remainingQuantity }}</td>
+                            <td>{{ item.quantity * item?.grPrice | indianCurrency }}</td>
+                            <td>{{ item?.itemDescription}}</td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="pagination-content">
+                <div class="pagination">
+                    <button class="btn" (click)="prevPage()" [disabled]="currentPage == 1">&lt;</button>
+                    <ng-container *ngFor="let page of visiblePages">
+                        <button (click)="goToPage(page)" [class.active]="currentPage == page">{{ page
+                            }}</button>
+                    </ng-container>
+                    <button (click)="nextPage()" [disabled]="currentPage == totalPages">&gt;</button>
+
+                    <label for="pageDropdown" class="pg-dp-label d-md-block d-sm-none display-none">Jump to </label>
+                    <select class="form-select d-md-block d-sm-none display-none" id="pageDropdown"
+                        [ngModel]="currentPage" (change)="onPageChange($event)" style="width: 115px;">
+                        <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                    </select>
+
+                </div>
+
+                <div class="total" style="margin-right: 15px;">Total: <span
+                        style="font-size: 15px; font-weight: 700; margin-left: 15px;padding-right: 5px;">{{
+                        totalItems }}</span></div>
+
+            </div>
+        </div>
+        <div *ngIf="selectedItems.length > 0" class="col-12 mt-4 po-item table-container">
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Purchase Order Item No.</th>
+                        <!-- <th>HSN/SAC Code</th> -->
+                        <th>Quantity</th>
+                        <!-- <th>Rate</th> -->
+                        <th>Net Amount</th>
+                        <!-- <th>Tax</th> -->
+                        <th>Gross Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of selectedItems; let index = index">
+                        <td>{{ item.purchaseOrderItemNo }}</td>
+                        <!-- <td><input type="text" class="form-control" [(ngModel)]="item.hsnCode"
+                                placeholder="Enter HSN/SAC Code" (keypress)="allowOnlyNumbers($event)" /></td> -->
+                        <td><input class="form-control" type="number" [(ngModel)]="item.updatedQuantity"
+                                pattern="^\d*\.?\d*$" placeholder="Enter Quantity" min="0">
+                            <span *ngIf="item.updatedQuantity > item.quantity" class="text-danger">Exceeds original
+                                quantity</span>
+                        </td>
+                        <!-- <td>{{ item.rate }}</td> -->
+                        <td>{{ item.grPrice | indianCurrency}}</td>
+                        <!-- <td><input type="text" class="form-control" [(ngModel)]="item.tax" placeholder="Enter Tax"
+                                (keypress)="allowOnlyNumbers($event)" /></td> -->
+                        <td>{{calculateGrossAmount(item,index) | indianCurrency}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: end;"><b>Total</b></td>
+                        <td>{{getTotalNetPrice() | indianCurrency}}</td>
+                        <td>{{getTotalGrossAmount() | indianCurrency}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row mt-4" *ngIf="!isExpired">
+        <div class="col-12">
+            <div class="profile-card">
+                <h1 class="project-h1">INVOICE UPLOAD</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-xs-6">
+                        <h1 class="sideHeading">Upload</h1>
+                        <app-file-upload label="Invoice Upload" [isRequired]="true" [allowedFormats]="'.pdf'"
+                            [allowMultiple]="false" (filesSelected)="onFilesUploadedInvoice($event)">
+                        </app-file-upload>
+                        <button *ngIf="!isLoader && selectedFiles_invoice.length>0" type="button"
+                            class="button-submit w-100 m-0" (click)="uploadDocument('invoiceUpload')">Upload</button>
+
+                        <button *ngIf="isLoader && selectedFiles_invoice.length > 0" id="bt_loader"
+                            class="button-submit w-100 m-0" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <div *ngIf="errorMessage != ''&& selectedFiles_invoice.length > 0" class="text-danger">
+                            {{errorMessage}}
+                        </div>
+                        <div *ngIf="fileErrorExists !='' && selectedFiles_invoice.length > 0" class="text-danger">
+                            {{fileErrorExists}}
+
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-xs-6">
+                        <h1 class="sideHeading">Support Document</h1>
+                        <div class="mb-2">
+                            <label for="" class="form-label m-0">Required Document</label>
+                            <span class="asterisk"> *</span>
+                            <select class="form-select" aria-label="Default select example"
+                                (change)="onChangeRequiredDocument($event)" [(ngModel)]="selectedRequiredDocId">
+                                <option value="">Select Required Document</option>
+                                <option *ngFor="let item of optionDocumentDetails" [value]="item.invoicedocumenttypeid">
+                                    {{item.doctypename}}</option>
+                            </select>
+                        </div>
+                        <app-file-upload label="Document Upload" [isRequired]="true" [allowedFormats]="'.pdf,.zip'"
+                            [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)"
+                            [disabled]="selectedRequiredDocId == ''">
+                        </app-file-upload>
+                        <button *ngIf="!isLoader && selectedFiles_document.length>0" type="button"
+                            class="button-submit w-100 m-0" (click)="uploadDocument()">Upload</button>
+
+                        <button *ngIf="isLoader && selectedFiles_document.length > 0" id="bt_loader"
+                            class="button-submit w-100 m-0" type="button" disabled>
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Loading...
+                        </button>
+                        <div *ngIf="errorMessage != '' && selectedFiles_document.length > 0" class="text-danger">
+                            {{errorMessage}}
+                        </div>
+                        <div *ngIf="fileErrorExists !='' && selectedFiles_document.length > 0" class="text-danger">
+                            {{fileErrorExists}}
+
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+                <ng-container *ngIf="DocumentDetails.length>0">
+                    <h1 class="project-h1">Document Uploaded List</h1>
+                    <app-simple-table [tableData]="DocumentDetails" [isloading]="isLoader" [columns]="Documentcolumns"
+                        (handleClickHere)="onView($event)" (handleView)="onView($event)"
+                        (handleDelete)="onDelete($event)"></app-simple-table>
+                </ng-container>
+                <!-- <div *ngIf="isLoader" id="ad-Table" class="loading">
+                </div> -->
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex mt-4">
+                            <button *ngIf="!isLoader" type="button" id="bt_approve" [disabled]="isSubmitLoader"
+                                class="button-submit button-left m-0" (click)="finalSubmit()">
+                                <span class="ps-5">Submit</span>
+                                <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                                    class="left-arrow" />
+                            </button>
+                            <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button"
+                                disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </button>
+                            <button type="button" id="bt_reject" class="button-back button-left">
+                                <span class="ps-4">Reset</span>
+                                <img alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                            </button>
+
+                        </div>
+                        <div *ngIf="billForm.invalid && submitted" class="text-danger">
+                            <span>Please Fill Bill Details</span>
+                        </div>
+                        <div *ngIf="documentError" class="text-danger">
+                            <span>Please upload all the documents.</span>
+
+                        </div>
+                        <div *ngIf="!this.isQuantityValid()">
+                            <span class="text-danger">Some items have exceeded the original quantity. Please correct
+                                them before submitting.</span>
+                        </div>
+                        <div *ngIf="errorMessageForSubmit != ''" class="text-danger">
+                            {{errorMessageForSubmit}}
+                        </div>
+                        <div *ngIf="submitted && selectedItems.length <=0 && invoicetypeId =='13'" class="text-danger">
+                            Please select PO Items.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<app-custom-modal *ngIf="isDocumentModalOpen" (onClickCross)="closeDocumentModal()" (closeModal)="closeDocumentModal()"
+    [title]="'Document'" class="document-modal">
+    <div *ngIf="!isLoader">
+        <ngx-extended-pdf-viewer [base64Src]="base64String" [textLayer]="true"></ngx-extended-pdf-viewer>
+    </div>
+
+    <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Loading...
+    </div>
+
+</app-custom-modal>
+<app-center-modal *ngIf="ExpiredModalOpen" (closeModal)="closeExpiredModal()" [title]="'Expired Documents'">
+    <hr>
+    <div id="htmlData" class="expired-doc-list">
+        <div *ngFor="let item of expiredDocList" class="expired-doc-card m-2">
+            <div class="card-header ">
+                📘 {{ item.compliancetypename }}
+            </div>
+            <div class="card-body">
+                <p><strong>Expired On:</strong> {{ item.validityenddate }}</p>
+                <p><strong>Category:</strong> {{ item.compliancecategoryname }}</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        <p class="mt-3 error-message">
+            Note.: Please renew it and submit the updated version to the contract administration team for verification
+            and record updates, which will enable invoice uploads.
+        </p>
+    </div>
+
+</app-center-modal>
+<!-- <app-custom-modal *ngIf="isDocumentModalOpen" (onClickCross)="closeDocumentModal()" [title]="'Document'"
+    class="history-modal">
+    <img [src]="DocLink" alt="">
+</app-custom-modal> -->

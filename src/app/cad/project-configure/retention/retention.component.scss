@@ -1,0 +1,94 @@
+::ng-deep .retention-modal .custom-modal-content  {
+    width: 400px;
+}
+
+label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.insit-img {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    right: 14px;
+    bottom: 6px;
+}
+
+.insit-img-right {
+    width: 62px;
+    height: 62px;
+    position: relative;
+    left: 94px;
+    bottom: 38px;
+}
+
+.project-label {
+    color: #0B74B0;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.space-between-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.custom-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Toggle Background */
+.toggle-switch {
+    width: 50px;
+    height: 24px;
+    // background-color: #ccc; /* Default background */
+    background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+    border-radius: 24px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+/* When "Activate" is selected, apply gradient background */
+.toggle-switch.active {
+    // background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+    background-color: #ccc;
+}
+
+/* Toggle Knob */
+.toggle-switch::before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    /* Always white */
+    border-radius: 50%;
+    top: 2px;
+    left: 3px;
+    transition: transform 0.3s;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Move knob when checked */
+input[type="checkbox"]:checked+.toggle-switch::before {
+    transform: translateX(26px);
+}
+
+/* Label Styling */
+.custom-toggle span {
+    font-size: 14px;
+    font-weight: bold;
+    color: #0B74B0;
+    transition: color 0.3s;
+}
+
+.custom-toggle span.active {
+
+    color: #888;
+}

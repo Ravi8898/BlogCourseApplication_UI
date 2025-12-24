@@ -1,0 +1,13 @@
+<div class="custom-modal-overlay" (click)="close()">
+  <div class="custom-modal-content" (click)="$event.stopPropagation()">
+      <div class="custom-modal-header">
+          <h5 class="mb-0">{{title}}</h5>
+          <button class="close-button" (click)="close()">×</button>
+      </div>
+      <div class="custom-modal-body">
+          <ng-content></ng-content>
+      </div>
+      <div class="custom-modal-footer">
+      </div>
+  </div>
+</div>

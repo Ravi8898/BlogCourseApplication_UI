@@ -1,0 +1,34 @@
+<app-master-toast-msg [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-master-toast-msg>
+
+
+<h4>Add FI Data</h4>
+<div class="feature-card mt-2 px-3 text-start">
+    <div class="back-to-listing"><img src="assets/svg/left-arrow.svg" (click)="gotoFiDataListing()" alt="Back"
+            style="width: 40px; height: 40px;" class="me-2"><span>Back to FI Data Listing</span></div>
+    <form class="bill-form" [formGroup]="fiDataForm" (ngSubmit)="submitForm()">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-xs-2  mt-3 input-text-group" *ngFor="let field of fiFields">
+                <label [for]="field.key" class="form-label m-0">{{ field.label }}</label>
+                <span class="asterisk" *ngIf="field.required">*</span>
+                <input *ngIf="field.type !== 'select'" [type]="field.type" class="form-control" [formControlName]="field.key" [name]="field.key" [placeholder]="'Enter ' + field.label">
+                <div *ngIf="fiDataForm.get(field.key)?.invalid && fiDataForm.get(field.key)?.touched" class="text-danger">
+                    {{ field.label }} is required.
+                </div>
+            </div>
+        </div>
+        <div class="buttons">
+            <div class="submitBtn mt-3">
+                <button type="submit" [disabled]="fiDataForm.invalid" class="button-submit">
+                    {{ isEdit ? 'Update' : 'Add' }}
+                </button>
+                <img class="aligns" src="./assets/svg/right-arrow.svg" alt="" />
+            </div>
+            <div class="resetbtn mt-3 ms-4">
+                <button type="button" class="button-back" (click)="resetForm()">
+                    Reset
+                </button>
+                <img class="aligns" src="./assets/svg/reset.png" alt="" />
+            </div>
+        </div>
+    </form>
+</div>

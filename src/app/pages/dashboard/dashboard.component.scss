@@ -1,0 +1,44 @@
+.tab-menu {
+    background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+    height: 44px;
+    padding-left: 22px;
+}
+
+a {
+
+    text-decoration: none;
+}
+
+ul li a {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.dropdown-divider{
+    padding: 0;
+    margin: 0;
+}
+
+.menu-label {
+    color: #fff;
+    cursor: pointer;
+
+    font-size: 14px;
+    font-weight: 500;
+    padding: 15px;
+}
+
+.menu-label.active {
+    color: #0B74B0;
+    background-color: #fff;
+    text-align: left;
+    font: 600 13px "Adani", sans-serif;
+    margin-left: 10px;
+    padding-bottom: 23px;
+    padding-top: 10px;
+    margin-bottom: 0;
+    margin-top: 14px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    line-height: 1px;
+}

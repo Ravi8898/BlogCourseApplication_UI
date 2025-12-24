@@ -1,0 +1,121 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+
+<div class="row">
+
+    <div class="col-12">
+        <div class="justify-content-between space-between-center project-label mb-2">
+            <label>Currency List</label>
+
+            <button type="button" class="button-submit d-flex m-0" (click)="addCurrency()">
+                <span class="insit-img"><img src="../../../assets/svg/add.svg"></span>
+                <span style="margin-top: 10px;">Create</span>
+            </button>
+
+        </div>
+
+        <app-simple-table [columns]="columns" [tableData]="currencyDetails" [isloading]="isLoader" (handleEdit)="onEdit($event)"
+            [isloading]="isLoader" (handleDelete)="onDelete($event)"></app-simple-table>
+    </div>
+
+</div>
+
+<app-custom-modal *ngIf="currencyModal" (onClickCross)="closeCurrencyModal()" class="currency-modal"
+    [title]="'CURRENCY'">
+    <div class="row">
+        <div class="col-12">
+            <form [formGroup]="currencyForm">
+
+                <div class="form-group">
+                    <label for="currencyName">Currency Name</label>
+                    <label class="asterisk">*</label>
+                    <!-- <input type="text" formControlName="currencyname" class="form-control" id="currencyName"
+                        maxlength="250" placeholder="Enter Currency Name"> -->
+                        <ng-select class="dropdown-list-autocomplete" formControlName="currencyname" [items]="currencies"
+                             placeholder="Select Currency Name" (change)="onCurrencyNameChange($event)">
+                        </ng-select>
+                    <span id="currencyName_error" class="text-danger"
+                        *ngIf="(currencyForm.get('currencyname')?.touched || submitted) && currencyForm.get('currencyname')?.errors?.['required']">
+                        Currency Name is required
+                    </span>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label for="currencyCode">Currency Code</label>
+                    <label class="asterisk">*</label>
+                    <!-- <input type="text" formControlName="currencycode" class="form-control" id="currencyCode"
+                        maxlength="3" placeholder="Enter Currency Code"> -->
+                        <ng-select class="dropdown-list-autocomplete" formControlName="currencycode" [items]="currencyCodes"
+                            placeholder="Select Currency Code" [disabled]="true" >
+                        </ng-select>
+                    <span id="currencyCode_error" class="text-danger"
+                        *ngIf="(currencyForm.get('currencycode')?.touched || submitted) && currencyForm.get('currencycode')?.errors?.['required']">
+                        Currency Code is required
+                    </span>
+                    <span id="countryCode_error" class="text-danger"
+                        *ngIf="currencyForm.get('currencycode')?.errors?.['maxlength']">
+                        Maximum 3 characters allowed
+                    </span>
+                </div>
+
+                <div class="form-group mt-2" >
+                    <label for="Country Name">Country Name</label>
+                    <label class="asterisk">*</label>
+                    <!-- <input type="text" formControlName="countryname" class="form-control" id="countryName"
+                        maxlength="250" placeholder="Enter Country Name"> -->
+                        <ng-select class="dropdown-list-autocomplete" formControlName="countryname" [items]="countries"
+                            placeholder="Select Country Name" [disabled]="true" >
+                        </ng-select>
+                    <span id="countryName_error" class="text-danger"
+                        *ngIf="(currencyForm.get('countryname')?.touched || submitted) && currencyForm.get('countryname')?.errors?.['required']">
+                        Country Name is required
+                    </span>
+                </div>
+
+                <div class="form-group mt-2">
+                    <label for="countryCode">Country Code</label>
+                    <label class="asterisk">*</label>
+                    <!-- <input type="text" formControlName="countrycode" class="form-control" id="countryCode"
+                        maxlength="3" placeholder="Enter Country Code"> -->
+                        <ng-select class="dropdown-list-autocomplete" formControlName="countrycode" [items]="countryCodes"
+                            placeholder="Select Country Code">
+                        </ng-select>
+                    <span id="countryCode_error" class="text-danger"
+                        *ngIf="(currencyForm.get('countrycode')?.touched || submitted) && currencyForm.get('countrycode')?.errors?.['required']">
+                        Country Code is required
+                    </span>
+                    <span id="countryCode_error" class="text-danger"
+                        *ngIf="currencyForm.get('countrycode')?.errors?.['maxlength']">
+                        Maximum 3 characters allowed
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex mt-4">
+                <button *ngIf="!isLoader" type="button" [disabled]="!isUpdated && isEdit" id="bt_approve"
+                    class="button-submit button-left" (click)="saveData()">
+                    <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                    <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+                </button>
+                <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+                <button type="button" id="bt_reject" class="button-back button-left"   (click)="isEdit ? closeCurrencyModal() :resetForm()">
+                    <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                    <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                    <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg" class="left-arrow" />
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="mt-4">
+                <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+            </div>
+        </div>
+    </div>
+</app-custom-modal>

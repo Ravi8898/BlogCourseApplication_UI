@@ -1,0 +1,291 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<app-popup-alert *ngIf="showAlert" [message]="popupMessage" (response)="handleResponse($event)"></app-popup-alert>
+
+<form [formGroup]="contractForm">
+  <div class="row">
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">WO Number</label>
+      <span class="asterisk"> *</span>
+      <div class="d-flex">
+        <input type="text" placeholder="Enter WO Number" class="form-control right-corner-radius-0 lh-lg"
+          formControlName="WONumber" name="WONumber" maxlength="250" [readOnly]="this.contractId != ''">
+        <button type="submit" class="bt-text-include" style="width: 200px;" (click)="isExistContract()"
+          [disabled]="contractId != ''">Get WO Details</button>
+      </div>
+
+      <span id="WONumber_error" class="text-danger"
+        *ngIf="(contractForm.get('WONumber')?.touched ||submitted) && contractForm.get('WONumber')?.errors?.['required']">
+        WO Number already exists
+      </span>
+      <span id="WONumber_error" class="text-danger"
+        *ngIf="(contractForm.get('WONumber')?.touched ||submitted) && (contractForm.get('WONumber')?.errors?.['pattern'] || contractForm.get('WONumber')?.errors?.['maxlength'])">
+        Please Enter Valid WO Number
+      </span>
+
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Plant</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Plant" class="form-control lh-lg" formControlName="plant" maxlength="250">
+      <span id="plant_error" class="text-danger"
+        *ngIf="(contractForm.get('plant')?.touched ||submitted) && contractForm.get('plant')?.errors?.['required']">
+        Plant is required
+      </span>
+
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Company</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Company Code" class="form-control lh-lg" formControlName="company"
+        maxlength="250">
+      <span id="Company_error" class="text-danger"
+        *ngIf="(contractForm.get('company')?.touched ||submitted) && contractForm.get('company')?.errors?.['required']">
+        Company is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Vendor Code</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Vendor Code" class="form-control lh-lg" formControlName="vendorCode"
+        maxlength="250">
+      <span id="vendorCode_error" class="text-danger"
+        *ngIf="(contractForm.get('vendorCode')?.touched ||submitted) && contractForm.get('vendorCode')?.errors?.['required']">
+        Vendor Code is required
+      </span>
+    </div>
+
+  </div>
+  <div class="row mt-2">
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Vendor Name</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Vendor Name" class="form-control lh-lg" formControlName="vendorName"
+        maxlength="250">
+      <span id="vendorName_error" class="text-danger"
+        *ngIf="(contractForm.get('vendorName')?.touched ||submitted) && contractForm.get('vendorName')?.errors?.['required']">
+        Vendor Name is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">WBS No./Cost Center</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter WBS No./Cost Center" class="form-control lh-lg" formControlName="WBSNo"
+        maxlength="250">
+      <span id="WBSNo_error" class="text-danger"
+        *ngIf="(contractForm.get('WBSNo')?.touched ||submitted) && contractForm.get('WBSNo')?.errors?.['required']">
+        WBS No./Cost Center is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0" style="font-size: 11px;">WBS/CC Description/Project Name &
+        Location</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Project Name & Location" class="form-control lh-lg"
+        formControlName="projectName" maxlength="250">
+      <span id="projectName_error" class="text-danger"
+        *ngIf="(contractForm.get('projectName')?.touched ||submitted) && contractForm.get('projectName')?.errors?.['required']">
+        WBS/CC Description/Project Name &
+        Location is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Package</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Package" class="form-control lh-lg" formControlName="Package"
+        maxlength="250">
+      <span id="Package_error" class="text-danger"
+        *ngIf="(contractForm.get('Package')?.touched ||submitted) && contractForm.get('Package')?.errors?.['required']">
+        Package is required
+      </span>
+    </div>
+
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">TDS %</label>
+      <span class="asterisk"> *</span>
+      <input type="number" placeholder="Enter TDS %" class="form-control lh-lg" formControlName="tds" maxlength="18">
+      <span id="tds_error" class="text-danger"
+        *ngIf="(contractForm.get('tds')?.touched ||submitted) && contractForm.get('tds')?.errors?.['required']">
+        TDS % is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Contract Start Date</label>
+      <span class="asterisk"> *</span>
+      <input type="date" class="form-control lh-lg" [max]="currentDate" [value]="currentDate"
+        formControlName="contractStartDate">
+      <span id="contractStartDate_error" class="text-danger"
+        *ngIf="(contractForm.get('contractStartDate')?.touched ||submitted) && contractForm.get('contractStartDate')?.errors?.['required']">
+        Contract Start Date is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Value</label>
+      <span class="asterisk"> *</span>
+      <div class="input-group">
+        <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+        <input type="text" placeholder="Enter Value" class="form-control lh-lg" formControlName="value" maxlength="18"
+          appIndianCurrency>
+      </div>
+      <span id="value_error" class="text-danger"
+        *ngIf="(contractForm.get('value')?.touched ||submitted) && contractForm.get('value')?.errors?.['required']">
+        Value is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Currency</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Currency" class="form-control lh-lg" formControlName="currency"
+        maxlength="250">
+      <span id="currency_error" class="text-danger"
+        *ngIf="(contractForm.get('currency')?.touched ||submitted) && contractForm.get('currency')?.errors?.['required']">
+        Currency is required
+      </span>
+    </div>
+
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Date Of Last AMDT.</label>
+      <!-- <span class="asterisk"> *</span> -->
+      <input type="date" class="form-control lh-lg" [min]="currentDate" [value]="currentDate"
+        formControlName="LastAmndDate" [ngClass]="{'blink-border' :  blink_LastAmndDate }"
+        [ngStyle]="{'border-color': LastAmndDate_clr}">
+      <span id="AMDT_error" class="text-danger" *ngIf="contractForm.get('LastAmndDate')?.errors?.['required']">
+        Date Of Last AMDT. is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Last Amended Contract / WO Value</label>
+      <!-- <span class="asterisk"> *</span> -->
+      <div class="input-group">
+        <span class="input-group-text" style="font-size: 12px;font-weight: 600;">₹</span>
+        <input type="text" placeholder="Enter Last Amended Contract / WO Value" class="form-control lh-lg"
+          formControlName="WOValue" maxlength="18" appIndianCurrency [(ngModel)]="WOAmount">
+      </div>
+      <span id="WOValue_error" class="text-danger" *ngIf="contractForm.get('WOValue')?.errors?.['required']">
+        Last Amended Contract / WO Value is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Original Completion Date</label>
+      <span class="asterisk"> *</span>
+      <input type="date" placeholder="Aoto Populated" class="form-control lh-lg" [min]="currentDate"
+        [value]="currentDate" formControlName="ogCompletionDate" [ngClass]="{'blink-border' :  blink_OriginalDate }"
+        [ngStyle]="{'border-color': OriginalDate_clr}">
+      <span id="completionDate_error" class="text-danger"
+        *ngIf="(contractForm.get('ogCompletionDate')?.touched ||submitted) && contractForm.get('ogCompletionDate')?.errors?.['required']">
+        Original Completion Date is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Last Amended Completion Date</label>
+      <!-- <span class="asterisk"> *</span> -->
+      <input type="date" placeholder="Auto Populated" class="form-control lh-lg"
+        formControlName="lastAmndCompletionDate" [min]="currentDate" [value]="currentDate"
+        [ngClass]="{'blink-border' :  blink_ActualComDate }" [ngStyle]="{'border-color': ActualComDate_clr}">
+      <span id="lastCompletionDate_error" class="text-danger"
+        *ngIf="contractForm.get('lastAmndCompletionDate')?.errors?.['required']">
+        Last Amended Completion Date is required
+      </span>
+    </div>
+
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Vendor GSTN (From SAP)</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Vendor GSTN" class="form-control lh-lg" formControlName="VendorGSTN"
+        maxlength="18">
+      <span id="VendorGSTN_error" class="text-danger"
+        *ngIf="(contractForm.get('VendorGSTN')?.touched ||submitted) && contractForm.get('VendorGSTN')?.errors?.['required']">
+        Vendor GSTN (From SAP) is required
+      </span>
+      <span id="VendorGSTN_error" class="text-danger"
+        *ngIf="(contractForm.get('VendorGSTN')?.touched ||submitted) && contractForm.get('VendorGSTN')?.errors?.['pattern']">
+        Vendor GSTN (From SAP) should be 15 characters long
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">Client GSTN</label>
+      <span class="asterisk"> *</span>
+      <input type="text" placeholder="Enter Client GSTN" class="form-control lh-lg" formControlName="ClientGSTN"
+        maxlength="18">
+      <span id="ClientGSTN_error" class="text-danger"
+        *ngIf="(contractForm.get('ClientGSTN')?.touched ||submitted) && contractForm.get('ClientGSTN')?.errors?.['required']">
+        Client GSTN is required
+      </span>
+      <span id="ClientGSTN_error" class="text-danger"
+        *ngIf="(contractForm.get('ClientGSTN')?.touched ||submitted) && contractForm.get('ClientGSTN')?.errors?.['pattern']">
+        Client GSTN is required
+      </span>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">DLP</label>
+      <ng-select class="dropdown-list-autocomplete" (change)="onChangeDLP($event)" placeholder="Select DLP">
+        <ng-option *ngFor="let dlp of dlpList" [value]="dlp.value">{{ dlp.label }}</ng-option>
+      </ng-select>
+    </div>
+    <div class="col-lg-3 col-md-3 col-xs-3">
+      <label for="" class="form-label m-0">DLP Date</label>
+      <!-- <span class="asterisk"> *</span> -->
+      <input type="date" placeholder="Auto Populated" class="form-control lh-lg" formControlName="dlpDate"
+        [min]="currentDate" [value]="currentDate">
+      <span id="dlpDate_error" class="text-danger" *ngIf="contractForm.get('dlpDate')?.errors?.['required']">
+        DLP Date is required
+      </span>
+    </div>
+
+  </div>
+
+  <div class="row mt-4">
+
+    <div class="col-2">
+      <button type="submit" class="button-submit" (click)="saveData()">Submit</button>
+
+    </div>
+    <div class="col-2">
+      <button type="button" class="button-back" (click)="cancelData()" *ngIf="getContractId() == ''">Cancel</button>
+
+    </div>
+    <div class="col-2">
+      <button *ngIf="poHeaderTexts && poHeaderTexts.length > 0" type="button" class="button-back" (click)="contractModal = true">View
+        More</button>
+    </div>
+
+  </div>
+</form>
+
+<app-custom-modal *ngIf="contractModal" [title]="'Contract Information'" (closeModal)="contractModal = false"
+  (onClickCross)="contractModal = false" class="contract-modal">
+
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-xs-12">
+
+      <div *ngFor="let item of poHeaderTexts">
+        <ng-container *ngIf="item.title == 'Header text'">
+          <p style="font-weight: 600"><strong style="color: #0B74B0;">PO Number:</strong> {{ item.poNumber }}</p>
+          <!-- <h2 style="font-size: 14px;font-weight: 600;color: #0B74B0;">{{ item.title }}</h2> -->
+          <p style="white-space: pre-line;font-size: 12px;font-weight: 600;">{{ item.textLine }}</p>
+          <hr />
+        </ng-container>
+      </div>
+
+
+      <div *ngFor="let item of poHeaderTexts">
+        <ng-container *ngIf="item.title !== 'Header text'">
+          <h2 style="font-size: 14px;font-weight: 600;color: #0B74B0;">{{ item.title.replace('DNU-','') }}</h2>
+          <p style="white-space: pre-line;font-size: 12px;font-weight: 600;">{{ item.textLine.replace('<(>&<)>','') }}
+          </p>
+        </ng-container>
+        <hr />
+      </div>
+
+    </div>
+  </div>
+
+</app-custom-modal>

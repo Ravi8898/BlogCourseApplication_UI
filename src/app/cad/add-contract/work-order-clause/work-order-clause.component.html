@@ -1,0 +1,247 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+<div class="row">
+
+    <div class="col-12">
+        <div class="d-flex justify-content-between space-between-center project-label mb-2">
+            <label>Work Order Clause List</label>
+
+            <button *ngIf="roleName !== 'Project Manager' && roleName !== 'Checker'" type="button"
+                class="button-submit m-0 d-flex" (click)="addworkOrder()"><span class="insit-img"><img
+                        src="../../../assets/svg/add.svg"></span><span style="margin-top: 10px;">
+                    Add</span></button>
+
+        </div>
+
+    </div>
+    <div class="row m-0 mt-2">
+        <div class="col-12 p-0">
+            <app-simple-table [tableData]="orderClauseDetails" [columns]="clauseColumns" (handleEdit)="onEdit($event)"
+                (handleDelete)="onDelete($event)" (handleView)="openDocumentModal($event)"></app-simple-table>
+        </div>
+    </div>
+</div>
+
+
+<app-custom-modal *ngIf="WorkOrderModal" (onClickCross)="closeWorkOrderModal()" class="workOrder-modal"
+    [title]="'Work Order Clause'">
+    <div class="row">
+        <div class="col-12">
+            <form [formGroup]="workOrderForm">
+                <div class="form-group ">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <label for="" class="form-label m-0">Clause Type</label>
+                            <span class="asterisk"> *</span>
+                        </div>
+                        <a style="cursor: pointer;" (click)="openCaluseTypeModal()">
+                            <img src="../../../../assets/svg/add.svg" alt="" class="form-icon">
+                        </a>
+                    </div>
+                    <ng-select formControlName="clauseType" class="dropdown-list-autocomplete"
+                        placeholder="Select Clause Type">
+                        <ng-option value="">Select Clause Type</ng-option>
+                        <ng-option *ngFor="let item of optionOrderClause" [value]="item.clausetypeid">
+                            {{item.clausetypename}}</ng-option>
+
+                    </ng-select>
+                    <span id="clauseType_error" class="text-danger"
+                        *ngIf="(workOrderForm.get('clauseType')?.touched ||submitted) && workOrderForm.get('clauseType')?.errors?.['required']">
+                        Clause Type is required
+                    </span>
+                </div>
+
+                <div class="form-group ">
+
+                    <label for="" class="form-label m-0">Clause Description</label>
+                    <span class="asterisk"> *</span>
+                    <input type="text" placeholder="Enter Clause Description" class="form-control lh-lg"
+                        formControlName="clauseDescription" maxlength="240">
+                    <span id="clauseDescription_error" class="text-danger"
+                        *ngIf="(workOrderForm.get('clauseDescription')?.touched ||submitted) && workOrderForm.get('clauseDescription')?.errors?.['required']">
+                        Clause Description is required
+                    </span>
+                </div>
+
+                <div class="form-group ">
+
+                    <label for="" class="form-label m-0">Pay Duration (Days)</label>
+                    <span class="asterisk"> *</span>
+                    <input type="text" placeholder="Enter Pay Duration" class="form-control lh-lg"
+                        formControlName="payDuration" maxlength="3" (keypress)="allowOnlyNumbers($event)">
+                    <span id="payDuration_error" class="text-danger"
+                        *ngIf="(workOrderForm.get('payDuration')?.touched ||submitted) && workOrderForm.get('payDuration')?.errors?.['required']">
+                        Pay Duration is required
+                    </span>
+                </div>
+
+                <div class="form-group ">
+
+                    <label for="" class="form-label m-0">Max Pay %</label>
+                    <span class="asterisk"> *</span>
+                    <input type="text" maxlength="9" placeholder="Enter Max Pay" class="form-control lh-lg"
+                        formControlName="maxPay">
+                    <span id="maxPay_error" class="text-danger"
+                        *ngIf="(workOrderForm.get('maxPay')?.touched ||submitted) && workOrderForm.get('maxPay')?.errors?.['required']">
+                        Max Pay is required
+                    </span>
+                    <span id="maxPay_error" class="text-danger"
+                        *ngIf="workOrderForm.get('maxPay')?.errors?.['pattern']">
+                        Invalid format! Please enter a number with exactly 2 digits before and 2-3 digits after the
+                        decimal.
+                    </span>
+                </div>
+
+                <div class="form-group ">
+
+                    <label for="" class="form-label m-0">Max Percentage %</label>
+                    <span class="asterisk"> *</span>
+                    <input type="text" maxlength="9" placeholder="Enter Max Percentage" class="form-control lh-lg"
+                        formControlName="maxPercentage">
+                    <span id="maxPercentage_error" class="text-danger"
+                        *ngIf="(workOrderForm.get('maxPercentage')?.touched ||submitted) && workOrderForm.get('maxPercentage')?.errors?.['required']">
+                        Max Percentage is required
+                    </span>
+                    <span id="maxPercentage_error" class="text-danger"
+                        *ngIf="workOrderForm.get('maxPercentage')?.errors?.['pattern']">
+                        Invalid format! Please enter a number with exactly 2 digits before and 2-3 digits after the
+                        decimal.
+                    </span>
+                </div>
+
+                <div class="form-group ">
+
+                    <label for="" class="form-label m-0">Max Value</label>
+                    <span class="asterisk"> *</span>
+                    <input type="text" maxlength="9" class="form-control lh-lg" placeholder="Enter Max Value"
+                        formControlName="maxValue" (keypress)="allowOnlyNumbers($event)">
+                    <span id="maxValue_error" class="text-danger"
+                        *ngIf="(workOrderForm.get('maxValue')?.touched ||submitted) && workOrderForm.get('maxValue')?.errors?.['required']">
+                        Max Value is required
+                    </span>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex mt-4">
+                            <button *ngIf="!isLoaderDoc" type="button" [disabled]="!isUpdated && isEdit" id="bt_approve"
+                                class="button-submit button-left" (click)="saveData()">
+                                <span class="ps-5"> {{isEdit ? 'Update':'Create'}}</span>
+                                <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                                    class="left-arrow" />
+                            </button>
+                            <button *ngIf="isLoaderDoc" id="bt_loader" class="button-submit m-0 pt-2" type="button"
+                                disabled>
+                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                Loading...
+                            </button>
+                            <button type="button" id="bt_reject" class="button-back button-left"
+                                (click)="isEdit ? closeWorkOrderModal() :resetFormDoc()">
+                                <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                                <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                                <img *ngIf="isEdit" style="margin-left: -31px" alt=""
+                                    src="../../../assets/svg/reject.svg" class="left-arrow" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mt-4">
+                            <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</app-custom-modal>
+
+<app-custom-modal *ngIf="documentViewModal" (onClickCross)="closeDocumentModal()" (closeModal)="closeDocumentModal()"
+    title="DOCUMENTS" class="document-modal">
+    <form [formGroup]="documentForm">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="row pb-2">
+                    <div class="form-group col-6">
+
+                        <label for="" class="form-label m-0">Document Type</label>
+                        <span class="asterisk"> *</span>
+                        <ng-select class="dropdown-list-autocomplete" formControlName="documentType"
+                            placeholder="Select Document Type" (change)="onDocumentTypeChange($event)">
+                            <ng-option value="">Select Document Type</ng-option>
+                            <ng-option *ngFor="let document of optionDocumentType"
+                                [value]="document.documentTypeId">{{document.documentTypeName}}</ng-option>
+                        </ng-select>
+                        <span id="documentType_error" class="text-danger"
+                            *ngIf="(documentForm.get('documentType')?.touched ||submitted) && documentForm.get('documentType')?.errors?.['required']">
+                            Document Type is required
+                        </span>
+                    </div>
+
+                    <div class="form-group col-6">
+
+                        <label for="" class="form-label m-0">Version</label>
+                        <span class="asterisk"> *</span>
+                        <input type="text" [ngModel]="var_version" formControlName="docVersion" maxlength="18"
+                            placeholder="Enter Version" class="form-control lh-lg">
+                        <span id="docVersion_error" class="text-danger"
+                            *ngIf="(documentForm.get('docVersion')?.touched ||submitted) && documentForm.get('docVersion')?.errors?.['required']">
+                            Version is required
+                        </span>
+                        <span id="docVersion_error" class="text-danger"
+                            *ngIf="documentForm.get('docVersion')?.errors?.['pattern']">
+                            Invalid format! Please enter a number with exactly 1 digits before and 1 digits after the
+                            decimal.
+                        </span>
+                    </div>
+                </div>
+
+                <app-file-upload label="Document Upload" [isRequired]="true" [allowedFormats]="'.pdf,.doc,.docx'"
+                    [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)">
+                </app-file-upload>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex mt-4">
+                    <button *ngIf="!isLoaderDoc && roleName !== 'Checker'" type="button" id="bt_approve"
+                        class="button-submit button-left m-0" (click)="uploadDocument()">
+                        <span class="ps-5"> {{isEdit ? 'Update':'Submit'}}</span>
+                        <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                            class="left-arrow" />
+                    </button>
+                    <button *ngIf="isLoaderDoc" id="bt_loader" class="button-submit m-0 pt-2" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button type="button" id="bt_reject" class="button-back button-left" (click)="resetFormDocument()">
+                        <span class="ps-5">{{isEdit ? 'Cancel' :'Reset'}}</span>
+                        <img *ngIf="!isEdit" alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+                        <img *ngIf="isEdit" style="margin-left: -31px" alt="" src="../../../assets/svg/reject.svg"
+                            class="left-arrow" />
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-4">
+                    <div class="text-danger" *ngIf="errorMessage != ''">{{errorMessage}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <app-simple-table [columns]="documentColumns" [tableData]="documentDetails"
+                    (handleEdit)="onEditDoc($event)" (downloadDocument)="DownloadDoc($event)"></app-simple-table>
+            </div>
+        </div>
+    </form>
+</app-custom-modal>
+
+<app-center-modal *ngIf="clauseTypeModal" (closeModal)="closeCaluseTypeModal()">
+    <app-clouse-type></app-clouse-type>
+</app-center-modal>

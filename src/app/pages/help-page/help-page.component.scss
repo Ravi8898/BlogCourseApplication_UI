@@ -1,0 +1,41 @@
+.profile-card {
+    padding: 15px 10px;
+    background: #F9F9F9;
+    border-radius: 15px;
+    border: 1px solid #f5ecec;
+}
+
+.card {
+    padding: 10px 15px;
+    // margin: 10px;
+    // width: 610px;
+    border-radius: 15px;
+    .title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .content {
+        font-size: 14px;
+    }
+}
+
+.button-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 30px;
+    height: 39px;
+    color: #FFF;
+    font-size: 12px;
+    font-weight: 600;
+    width: 156px;
+    padding: 0px 20px;
+    span {
+        margin-left: 28px !important;
+    }
+    img {
+        margin-right: -28px;
+        height: 57px;
+        width: 57px;
+    } 
+}

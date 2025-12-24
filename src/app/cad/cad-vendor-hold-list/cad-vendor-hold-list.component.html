@@ -1,0 +1,114 @@
+<div class="bd-tab-content-inner space-between">
+    <p class="page-heading mb-0">Invoice No: {{invoiceData && invoiceData['Invoice Number']}}</p>
+    <a href="javascript:void(0)" (click)="goBack()">Back to listing</a>
+</div>
+
+<app-ad-table-ng [title]="'Hold List'" [columns]="columns_holdList" [tableData]="data_holdList"
+    (goToEditing)="releaseAmt($event)">
+</app-ad-table-ng>
+
+<app-custom-modal *ngIf="isAddReleaseModelOpen" (onClickCross)="closeReleaseModal()" [title]="'Hold Release'"
+    class="release-modal">
+    <form [formGroup]="releaseForm">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="row pb-2">
+                    <!-- <div class="form-group col-6">
+
+                        <label for="" class="form-label m-0">Hold Release</label>
+                        <span class="asterisk"> *</span>
+                        <ng-select class="dropdown-list-autocomplete" formControlName="holdRelease"
+                            placeholder="Select">
+                            <ng-option value="">Select</ng-option>
+                        </ng-select>
+                        <span id="holdRelease_error" class="text-danger"
+                            *ngIf="(releaseForm.get('holdRelease')?.touched ||submitted) && releaseForm.get('holdRelease')?.errors?.['required']">
+                            Hold Release is required
+                        </span>
+                    </div> -->
+                    <!-- <div class="form-group col-6">
+                    </div> -->
+
+                    <div class="form-group col-6">
+
+                        <label for="" class="form-label m-0">Document Type</label>
+                        <span class="asterisk"> *</span>
+                        <ng-select class="dropdown-list-autocomplete" formControlName="docType" placeholder="Select">
+                            <ng-option value="">Select</ng-option>
+                            <ng-option *ngFor="let item of holdDocumentList"
+                                [value]="item.documentid">{{item.documentname}}</ng-option>
+                        </ng-select>
+                        <span id="docType_error" class="text-danger"
+                            *ngIf="(releaseForm.get('docType')?.touched ||submitted) && releaseForm.get('docType')?.errors?.['required']">
+                            Hold Release is required
+                        </span>
+                    </div>
+                </div>
+
+                <app-file-upload label="Document Upload" [isRequired]="true" [allowedFormats]="'.pdf,.doc,.docx,.zip'"
+                    [allowMultiple]="false" (filesSelected)="onFilesUploaded($event)">
+                </app-file-upload>
+                <button *ngIf="!isLoader && selectedFiles_document.length>0" type="button"
+                    class="button-submit w-100 m-0" (click)="uploadDocument()">Upload</button>
+
+                <button *ngIf="isLoader" id="bt_loader" class="button-submit w-100 m-0" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading...
+                </button>
+                <div *ngIf="errorMessage != ''" class="text-danger">
+                    {{errorMessage}}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row mt-4" *ngIf="holdDocumentList.length > 0">
+            <div class="col-12">
+                <app-simple-table [columns]="documentColumns" [tableData]="holdDocumentList"></app-simple-table>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="form-group col-6">
+                    <label for="" class="form-label m-0">Release Amount </label>
+                    <span class="asterisk"> *</span>
+                    <input type="text" formControlName="releaseAmount" maxlength="25" placeholder="Enter Release Amount"
+                        class="form-control lh-lg">
+                    <span id="docType_error" class="text-danger" *ngIf="">
+                        Release Amount is required
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex mt-4">
+                    <button *ngIf="!isLoader" type="button" id="bt_approve" class="button-submit button-left m-0" (click)="onSubmit()">
+                        <span class="ps-5">Submit</span>
+                        <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px"
+                            class="left-arrow" />
+                    </button>
+                    <button *ngIf="isLoader" id="bt_loader" class="button-submit m-0" type="button" disabled>
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        Loading...
+                    </button>
+                    <button type="button" id="bt_reject" class="button-back button-left" (click)="reset()">
+                        <span class="ps-5">Reset</span>
+                        <img alt="" src="../../../assets/svg/reset.svg" class="left-arrow" />
+
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-2">
+                    <div class="text-danger" *ngIf="errorMessage_afterSubmit != ''">{{errorMessage_afterSubmit}}</div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</app-custom-modal>

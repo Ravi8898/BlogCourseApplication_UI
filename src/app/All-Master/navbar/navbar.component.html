@@ -1,0 +1,29 @@
+<div class="bd-container">
+    <div class="position-header">
+        <!-- <app-header [showElement]="true"></app-header> -->
+    </div>
+
+    <div class="tab-menu d-flex align-items-center">
+      <a href="javascript:void(0);" *ngIf="!(roleList.includes('AllFrieghtMaster') && roleList.length === 1)"
+        (click)="activateNav('/dashboard/home')">
+        <label class="menu-label" [class.active]="active === '/dashboard/home'">Home</label>
+      </a>
+
+      <!-- <a href="javascript:void(0);" (click)="activateNav('/All-Master')">
+        <label class="menu-label" [class.active]="active === '/All-Master'">All master data</label>
+      </a> -->
+      <a href="javascript:void(0);" (click)="activateNav('/All-Master/frieght')">
+        <label class="menu-label" [class.active]="active === '/All-Master/frieght'">Frieght Rate Master</label>
+      </a>
+    </div>
+
+
+    <!-- <div class="m-4" style="padding-bottom: 40px;">
+        <app-breadcrumb></app-breadcrumb>
+        <router-outlet></router-outlet>
+    </div>
+
+    <div class="position-footer">
+        <app-footer></app-footer>
+    </div> -->
+</div>

@@ -1,0 +1,194 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+<div class="row">
+    <div class="col-12">
+
+        <div class="row">
+            <div class="">
+                <div class="bd-tab-content">
+                    <div class="bd-tab-content-inner">
+                        <p class="page-heading">Welcome to vSPEED</p>
+                    </div>
+                    <div class="tab-content">
+                        <ng-container>
+                            <div class="feature-card">
+                                <app-ad-table *ngIf="!isLoader" [tableData]="tableData" [isTableTile]="true"
+                                    [isTableFilter]="true" [loginType]="loginType" [isSearchShow]="true"
+                                    (searchParamObj)="applyTableFilter($event)" [searchObject]="tableSearchObject"
+                                    (editId)="getTableEditId($event)" (excelDownload)="ExportToExcel()" [modalElementId]="modalName"
+                                    (deleteConfirmed)="onDeleteConfirmedTable($event)"
+                                    [searchModal]="searchModal" [tableTitle]="tableTitle" [showHistory]="false">
+                                </app-ad-table>
+
+                                <div *ngIf="isLoader" id="ad-Table" class="loading"></div>
+                            </div>
+                        </ng-container>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Approval Modal -->
+<button id="approvalModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#approvalModal">Open</button>
+<!-- <button id="closeApprovalModalButton" [hidden]="" data-toggle="modal" data-target="#approvalModal" class="btn btn-default" data-dismiss="modal">Close</button> -->
+<div class="modal right fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="approvalModal" aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document" [ngClass]="mode == 'doview' ? 'cl500' : 'cl350'"> <!-- [class.cl500]="mode == 'doview'" -->
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <ng-container *ngIf="mode=='approval'">
+                    <h6 class="modal-title" id="myModalLabel2">APPROVAL</h6>
+                    <button #closeModalButton id="closeModalButton" type="button" class="close" data-bs-toggle="modal" data-bs-target="" ><!-- (click)="closeModal()" -->
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="mode=='doview'">
+                    <h6 class="modal-title" id="myModalLabel2">LR DOCUMENT</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="openModal('approval')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </ng-container>
+
+                <ng-container *ngIf="mode=='alert'">
+                    <h6 class="modal-title" id="myModalLabel2">ALERT</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="openModal('approval')">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </ng-container>
+            </div>
+
+            <div class="modal-body" style="height: calc(100vh - 100px);">
+                <ng-container *ngIf="mode=='approval'">
+                    <div class="alert-overflow">
+                        <p class="approve-subtext mb-2">Uploaded LR Documents</p>
+                        <p *ngFor="let item of doList['Action']">
+                            <span class="do-span">{{item['Do No']}}</span> <button type="button" class="button-view" (click)="viewDO(item)">View</button>
+                        </p>
+                    </div>
+    
+                    <div class="signed">
+                        <p class="approve-subtext mt-2">Signed Documents</p>
+                        <button type="button" id="bt_next" class="button-view-document mt-1" data-bs-toggle="" data-bs-target="" (click)="viewdocument()">
+                            <span class="">View Document</span><img src="assets/svg/group-view.svg" class="icon-right">
+                        </button>
+                    </div>
+    
+                    <div class="mt-4 d-flex" *ngIf="doList['Invoice Status']=='Pending'">
+                        <button type="button" id="bt_upload" class="button-accept" data-bs-toggle="" data-bs-target="" (click)="openapproveReject('approve')">
+                            <span class="">Approve</span><img src="assets/svg/group-tick.svg" class="icon-right">
+                        </button>
+                        <button type="button" id="bt_next" class="button-reject" data-bs-toggle="" data-bs-target="" (click)="openapproveReject('reject')">
+                            <span class="">Reject</span><img src="assets/svg/group-cancel.svg" class="icon-right">
+                        </button>
+                    </div>
+
+                    <div class="mt-4" *ngIf="doList['Invoice Status']!='Pending'">
+                        <p class="approve-subtext mb-2">Remark</p>
+                        <div class="form-group">
+                            <textarea class="form-control" id="remarkTextareaShow" rows="5" [(ngModel)]="remark" disabled></textarea>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="mode=='doview'">
+                    <div>
+                        <!-- <ngx-extended-pdf-viewer [height]="'auto'" [textLayer]="true" [showHandToolButton]="true" [base64Src]="pdfSrc"></ngx-extended-pdf-viewer> -->
+                        <ngx-extended-pdf-viewer [base64Src]="pdfSrc"></ngx-extended-pdf-viewer>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="mode=='alert'">
+                    <div class="">
+                        <p class="approve-subtext mb-2">Remark <span class="asterisk"> *</span></p>
+                        <div class="form-group">
+                            <textarea class="form-control" id="remarkTextarea" rows="10" [(ngModel)]="remark"></textarea>
+                        </div>
+                    </div>
+    
+                    <div class="mt-4 d-flex">
+                        <button type="button" id="remark_submit" class="button-accept" data-bs-toggle="" data-bs-target="" (click)="submitapproveReject()" [disabled]="!remark">
+                            <span class="" style="margin-left: 45px;">Submit</span><img src="assets/svg/group-tick.svg" class="icon-right">
+                        </button>
+                        <button type="button" id="remark_reject" class="button-reject" (click)="closeapproveReject()">
+                            <span class="" style="margin-left: 46px;">Close</span><img src="assets/svg/group-cancel.svg" class="icon-right">
+                        </button>
+                    </div>
+                </ng-container>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- LR Document Modal -->
+<!-- <button id="lrDocumentModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#lrDocumentModal">Open</button>
+<div class="modal right fade" id="lrDocumentModal" tabindex="-1" role="dialog" aria-labelledby="lrDocumentModal" aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document" style="width: 400px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2">LR DOCUMENT</h6>
+            </div>
+
+            <div class="modal-body">
+                
+
+                <p class="approve-subtext">Signed Documents</p>
+                <button type="button" id="bt_next" class="button-view-document button-action button-right" data-bs-toggle="" data-bs-target="">
+                    <span class="">View Document</span><img src="assets/svg/group-view.svg" class="icon-right">
+                </button>
+
+                <div class="mt-4 d-flex">
+                    <button type="button" id="bt_upload" class="button-accept" data-bs-toggle="" data-bs-target="" (click)="approveReject('approve')">
+                        <span class="">Approve</span><img src="assets/svg/group-tick.svg" class="icon-right">
+                    </button>
+                    <button type="button" id="bt_next" class="button-reject" data-bs-toggle="" data-bs-target="" (click)="approveReject('reject')">
+                        <span class="">Reject</span><img src="assets/svg/group-cancel.svg" class="icon-right">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+
+<!-- Alert Modal -->
+<!-- <button id="alertModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#alertModal">Open</button>
+<div class="modal right fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="alertModal" aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document" style="width: 400px;">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <ng-container>
+                    <h6 class="modal-title" id="myModalLabel2">ALERT</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </ng-container>
+            </div>
+
+            <div class="modal-body">
+                <div class="">
+                    <p class="approve-subtext mb-2">Remark</p>
+                    <div class="form-group">
+                        <textarea class="form-control" id="remarkTextarea" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex">
+                    <button type="button" id="remark_submit" class="button-accept" data-bs-toggle="" data-bs-target="" (click)="approveReject('approve')">
+                        <span class="">Submit</span><img src="assets/svg/group-tick.svg" class="icon-right">
+                    </button>
+                    <button type="button" id="remark_reject" class="button-reject" data-bs-toggle="" data-bs-target="" (click)="approveReject('reject')">
+                        <span class="">Close</span><img src="assets/svg/group-cancel.svg" class="icon-right">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

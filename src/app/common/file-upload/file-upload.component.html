@@ -1,0 +1,20 @@
+<div class="file-upload-container" [ngClass]="disabled ? 'disabled' : ''">
+    <label class="file-upload-label">{{label}} <span *ngIf="isRequired" class="required">*</span></label>
+    <div class="file-drop-area" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+        (drop)="onFileDrop($event)">
+        <input type="file" #fileInput (change)="onFileSelect($event)" hidden [accept]="allowedFormats"
+            [multiple]="allowMultiple" [disabled]="disabled"/>
+        <div class="upload-content" (click)="fileInput.click()">
+            <img src="../../../assets/svg/upload-admin.svg" alt="Upload" class="upload-icon" />
+            <p>Drag & drop files or <a href="javascript:void(0)">Browse</a></p>
+            <p class="format-info">Supported formats: {{ allowedFormats }}</p>
+        </div>
+    </div>
+</div>
+
+<ul *ngIf="selectedFiles.length">
+    <li *ngFor="let file of selectedFiles;let i = index">{{ file.name }}
+
+        <button class="remove-btn" (click)="removeFile(i)">X</button>
+    </li>
+</ul>

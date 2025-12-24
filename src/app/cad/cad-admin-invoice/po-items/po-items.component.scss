@@ -1,0 +1,52 @@
+.po-item {
+    font-size: 12px;
+
+
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .styled-table thead tr {
+        background-color: #0B74B0;
+        color: #ffffff;
+        text-align: left;
+
+    }
+
+    .styled-table tr {
+        border: 1px solid #ddd;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+        // border: 1px solid #ddd;
+
+    }
+
+    .styled-table tbody tr:hover {
+        background-color: #f0f0f0;
+    }
+
+    .styled-table th {
+        font-weight: 600px;
+    }
+
+    .styled-table td {
+        text-align: left;
+    }
+
+    .styled-table .amount {
+        color: #2d2d2d;
+        font-weight: 500;
+    }
+}
+
+.border-top {
+    border-top: 2px dashed #C0C0C0 !important;
+}
+.form-label{
+    font-weight: 600;
+    font-size: 12px;
+}

@@ -1,0 +1,1012 @@
+<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"
+    (action)="performAction($event)"></app-toast-message>
+
+<div class="bg-color" style="height: 100vh;">
+
+    <div class="">
+        <h4 class="page-heading">Invoice</h4>
+        <p class="m-0">All asterick(*) fields are mandatory</p>
+
+        <div class="profile-card">
+            <form [formGroup]="purchaseForm">
+                  <div class="row">
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0">Invoice Type</label>
+                        <span class="asterisk"> *</span>
+                        <select class="form-select" formControlName="invoice_type" aria-label="Default select example"
+                            (change)="invoiceTypeSelect($event)">
+                            <option value="choose" [selected]="true" disabled="true">Choose</option>
+                            <option value="Material">Material</option>
+                            <option value="Service">Service</option>
+                            <option value="Freight-Inbound">Freight-Inbound</option>
+                            <option value="SLA">SLA</option>
+                            <option value="Reward">Reward</option>
+                            <option value="Contracts">Contracts</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3"
+                        *ngIf="purchaseForm['value']['invoice_type']!='Freight-Inbound'">
+                        <label for="" class="form-label m-0">PO Number</label>
+                        <span class="asterisk"> *</span>
+                        <div class="input-group mb-13">
+                            <input type="text" class="form-control" formControlName="po_number"
+                                onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                placeholder="Enter PO Number" aria-label="po numner" aria-describedby="basic-addon1">
+                            <div class="input-group-append">
+                                <button class="btn-outline-secondary button-browser"
+                                    [disabled]="!(purchaseForm['controls']['po_number']['valid'] && purchaseForm['controls']['invoice_type']['valid'])"
+                                    (click)="getPODetail(purchaseForm['value']['po_number'],purchaseForm['value']['invoice_type'])">Get
+                                    PO Detail</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3"
+                        *ngIf="purchaseForm['value']['invoice_type']=='Freight-Inbound'">
+                        <label for="" class="form-label m-0">PO Number</label>
+                        <span class="asterisk"> *</span>
+                        <div class="input-group mb-13">
+                            <select id="" class="form-select" formControlName="po_number">
+                                <option value="choose" [selected]="true" value="Choose PO Number" disabled="true">Choose
+                                    PO Number</option>
+                                <option *ngFor="let item of poNumberArray" [value]="item">{{item}}</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn-outline-secondary button-browser"
+                                    [disabled]="!(purchaseForm['controls']['po_number']['valid'] && purchaseForm['controls']['invoice_type']['valid'])"
+                                    (click)="getPODetail(purchaseForm['value']['po_number'],purchaseForm['value']['invoice_type'])">Get
+                                    PO Detail</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0">Invoice Number</label>
+                        <span class="asterisk"> *</span>
+                        <!-- <input type="text" placeholder="Enter Invoice Number" formControlName="invoice_number" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" (blur)="validateInvoiceNumber($event)" class="form-control"> -->
+                        <input type="text" placeholder="Enter Invoice Number" (keypress)="allowInvoiceChars($event)"
+                            formControlName="invoice_number" (blur)="validateInvoiceNumber($event)"
+                            class="form-control">
+                        <span class="mismatch-error"
+                            *ngIf="purchaseForm.get('invoice_number').hasError('invoice_exist')">Invoice number already
+                            exist</span>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0">Invoice Date</label>
+                        <span class="asterisk"> *</span>
+                        <input type="date" formControlName="invoice_date" class="form-control" [max]="currentDate"
+                            [value]="currentDate">
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Invoice Amount Without Tax</label>
+                        <span class="asterisk"> *</span>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon3" style="font-size: 12px;">₹.</span>
+                            </div>
+                            <input type="text" placeholder="Enter Amount" formControlName="invoice_amount"
+                                class="form-control" id="invoice_amount" aria-describedby="basic-addon3"
+                                onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46)"
+                                (focusout)="compareAmount($event)">
+                        </div>
+                        <span class="mismatch-error"
+                            *ngIf="purchaseForm.get('invoice_amount').hasError('amount_mismatch')">Invoice Amount
+                            mismatch Line Items Amount</span>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Total Amount As Per Line Items</label>
+                        <span class="asterisk"> *</span>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon3" style="font-size: 12px;">₹.</span>
+                            </div>
+                            <input type="text" placeholder="Total Amount" formControlName="invoice_amount_line"
+                                class="form-control" id="invoice_amount" aria-describedby="basic-addon3"
+                                onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                        </div>
+                        <!-- <span class="mismatch-error" *ngIf="purchaseForm.get('invoice_amount').hasError('amount_mismatch')">Invoice Amount mismatch Line Items Amount</span> -->
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3 d-flex justify-content-between">
+                        <div class="">
+                            <label for="" class="form-label m-0 mt-3">Company</label>
+                            <span class="asterisk"> *</span>
+                            <!-- <select class="form-select" value="" formControlName="company" aria-label="Default select example">
+                                <option value="choose" [selected]="true" disabled="true">Company</option>
+                                <option value="IN10">ACC</option>
+                                <option value="IN20">Ambuja</option>
+                            </select> -->
+                            <input type="text" placeholder="Company" formControlName="company" class="form-control">
+                        </div>
+                        <div class="ms-2">
+                            <label for="" class="form-label m-0 mt-3">Currency</label>
+                            <input type="text" placeholder="Currency" formControlName="currency" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Plant Code</label>
+                        <input type="text" placeholder="Plant Code" formControlName="plant_code" class="form-control">
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Department</label>
+                        <span class="asterisk" *ngIf="this.purchaseForm.controls['department'].validator"> *</span>
+                        <select class="form-select" value="" formControlName="department"
+                            aria-label="Default select example">
+                            <!-- <option value="choose" selected disabled>Choose</option> -->
+                            <option value="choose" [selected]="true" disabled="true">Select</option>
+                            <option value="logistics">Logistics</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="hr">HR</option>
+                            <option value="it">IT</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Receiver GST Number</label>
+                        <input type="text" placeholder="Receiver GST Number"
+                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                            formControlName="rece_gst_no" class="form-control">
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Supplier GST Number</label>
+                        <span class="asterisk"> *</span>
+                        <input type="text" placeholder="Supplier GST Number"
+                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                            formControlName="supp_gst_no" class="form-control">
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Child GST</label>
+                        <span class="asterisk"> *</span>
+                        <select class="form-select" formControlName="child_gst" aria-label="Default select example"
+                            [value]="" (change)="selectChileVendorCode($event)">
+                            <option value="choose" [selected]="true" disabled="true">Select</option>
+                            <option *ngFor="let item of childGSTArr" [value]=item.gstNumber>{{item['gstNumber']}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Payment Mode</label>
+                        <span class="asterisk"> *</span>
+                        <select class="form-select" value="" formControlName="payment_mode"
+                            aria-label="Default select example">
+                            <!-- <option value="choose" selected disabled>Choose</option> -->
+                            <option value="choose" [selected]="true" disabled="true">Select</option>
+                            <option value="rtgs">RTGS</option>
+                            <option value="neft">NEFT</option>
+                            <option value="dd">DD</option>
+                            <option value="cheque">Cheque</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Adani Contact Details</label>
+                        <!-- <input type="text" placeholder="Enter Adani Contact Details" formControlName="adani_contact" class="form-control" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 32"> -->
+                        <input type="text" placeholder="Enter Adani Contact Details" formControlName="adani_contact"
+                            class="form-control">
+                    </div>
+
+                    <!-- <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Submission To</label>
+                        <span class="asterisk"> *</span>
+                        <select class="form-select" aria-label="Default select example" [value]=""
+                            formControlName="submission_to">
+                            <option value="choose" [selected]="true" disabled="true">Select</option>
+                            <option *ngFor="let item of submissionArr" [value]=item.loginId>{{item['employeeName']}}
+                            </option>
+                        </select>
+                    </div> -->
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Payment Term To</label>
+                        <input type="text" placeholder="Payment Term To" formControlName="payment_term"
+                            class="form-control" [readonly]="true">
+                    </div>
+                      <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Bank Account</label>
+                        <span class="asterisk"> *</span>
+                        <select class="form-select" [value]="" formControlName="bank_details" aria-label="Default select example">
+                            <option value="choose" [selected]="true" disabled="true">Select</option>
+                            <option *ngFor="let item of bankAccountDetails" [value]="item">{{item['Bank_Account']}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="!editPurchaseData['poNumber']">
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Upload Invoice PDF</label>
+                        <span class="asterisk"> *</span>
+                        <div class="input-group mb-0">
+                            <input type="file" #invoice class="form-control" formControlName="attach"
+                                placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"
+                                accept=".pdf" (change)="onImageCapture($event)">
+                            <!-- <div class="input-group-append">
+                                <button class="btn-outline-secondary button-browser">Browser</button>
+                            </div> -->
+                        </div>
+
+                        <p class="hint m-0 d-inline" *ngIf="selectedAllAttachment.length==0">**only PDF file is allowed
+                        </p>
+                        <ng-container *ngIf="selectedAllAttachment.length>0">
+                            <p class="attach m-0 px-2 mt-1" *ngFor="let item of selectedAllAttachment">
+                                {{item['fileName']}}<span class="pointer float-end"
+                                    (click)="deleteAttachment(item)">X</span></p>
+                        </ng-container>
+                        <!-- <p class="hint m-0 d-inline float-end pointer" *ngIf="this.editPurchaseData['invoiceAttachment']" data-toggle="tooltip" title="View Attachement" (click)="viewAttachment()">View Uploaded Attachment<span class="badge badge-light close pointer text-secondary" (click)="$event.stopPropagation(); deleteAttachment($event)" data-toggle="tooltip" title="Delete Attachement" aria-hidden="true">&times;</span></p> -->
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-xs-3">
+                        <label for="" class="form-label m-0 mt-3">Upload Supported Document</label>
+                        <span class="asterisk" *ngIf="purchaseForm.value.invoice_type=='Service'"> *</span>
+                        <div class="input-group mb-0">
+                            <!-- <input type="file" #suppportinvoice class="form-control" multiple formControlName="attach_data_supp" placeholder="Username"
+                                aria-label="Username" aria-describedby="basic-addon1" accept=".pdf" *ngIf="purchaseForm['value']['invoice_type']=='Material'"
+                                (change)="onImageCaptureSupport($event)">
+                            <input type="file" #suppportinvoice class="form-control" multiple formControlName="attach_data_supp" placeholder="Username"
+                                aria-label="Username" aria-describedby="basic-addon1" accept=".pdf, .xls, .csv, .xlsx"  *ngIf="purchaseForm['value']['invoice_type']=='Service'"
+                                (change)="onImageCaptureSupport($event)"> -->
+
+                            <input type="file" #suppportinvoice class="form-control" multiple placeholder="Username"
+                                aria-label="Username" aria-describedby="basic-addon1"
+                                [accept]="purchaseForm['value']['invoice_type']=='Service'?'.pdf, .xls, .csv, .xlsx':'.pdf'"
+                                (change)="onImageCaptureSupport($event)"> <!-- formControlName="attach_data_supp"  -->
+
+                            <!-- <div class="input-group-append">
+                                <button class="btn-outline-secondary button-browser">Browser</button>
+                            </div> -->
+                        </div>
+
+                        <p class="hint m-0 d-inline"
+                            *ngIf="selectedAllAttachmentSupport.length==0 && purchaseForm.value.invoice_type=='Material'">
+                            **PDF file is allowed</p>
+                        <p class="hint m-0 d-inline"
+                            *ngIf="selectedAllAttachmentSupport.length==0 && purchaseForm.value.invoice_type=='Service'">
+                            **PDF, Excel file is allowed</p>
+                        <ng-container *ngIf="selectedAllAttachmentSupport.length>0">
+                            <p class="attach m-0 px-2 mt-1" *ngFor="let item of selectedAllAttachmentSupport">
+                                {{item['fileName']}}<span class="pointer float-end"
+                                    (click)="deleteAttachmentSupp(item)">X</span></p>
+                        </ng-container>
+                        <!-- <p class="hint m-0 d-inline float-end pointer" *ngIf="this.editPurchaseData['invoiceAttachment']" data-toggle="tooltip" title="View Attachement" (click)="viewAttachment()">View Uploaded Attachment<span class="badge badge-light close pointer text-secondary" (click)="$event.stopPropagation(); deleteAttachment($event)" data-toggle="tooltip" title="Delete Attachement" aria-hidden="true">&times;</span></p> -->
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-xs-6 pt-2 d-flex"
+                        *ngIf="purchaseForm['value']['invoice_type']=='Material'">
+                        <!-- <button type="button" class="button-back mt-4" (click)="downloadMergedAttachment()" [disabled]="!enableDownloadMerge">Download Merged</button> -->
+                        <button type="button" class="button-back button-upload mt-4"
+                            (click)="downloadMergedAttachment()" [disabled]="!canDownloadMerged">
+                            <span>Download Merged File*</span>
+                            <!-- <span *ngIf="uploadedDigitalSigned.length==0" class="mt-2 d-block"> **Please Download Merge file</span> -->
+                            <span *ngIf="!enableUploadDigital" class="mt-12 d-block text"> **Please Download Merge
+                                file</span>
+                        </button>
+
+                        <button type="button" class="button-back button-upload mt-4" (click)="signedAttach.click()"
+                            [disabled]="!enableUploadDigital">
+                            <span>Upload Digital Signed Document</span>
+                            <span *ngIf="uploadedDigitalSigned.length==0" class="mt-12 d-block text"> **Upload Digitally
+                                signed file (pdf)</span>
+                            <!-- <span *ngIf="uploadedDigitalSigned.length>0" class="mt-2 d-block"> Digitally signed file verified successfully</span> -->
+                            <ng-container *ngIf="uploadedDigitalSigned.length>0">
+                                <!-- <p class="attach m-0 px-2 mt-3" *ngFor="let item of uploadedDigitalSigned" title="{{item['fileName']}}">{{item['fileName']}}<span class="pointer float-end ms-2" title="Delete File" (click)="deleteDigitalSignedAttachment(item)">X</span></p> -->
+                                <p class="attach m-0 px-2 mt-3" *ngFor="let item of uploadedDigitalSigned"><span
+                                        class="ellipsis" title="{{item['fileName']}}">{{item['fileName']}}</span><span
+                                        class="pointer float-end ms-2" title="Delete File"
+                                        (click)="deleteDigitalSignedAttachment(item)">X</span></p>
+                            </ng-container>
+                        </button>
+
+                        <input id="signedAttach" #signedAttach type="file" class="form-control" accept=".pdf, .tiff"
+                            (change)="uploadMergedSignAttachment($event)" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="getmyData.Status === 'sent-back'">
+                  <div class="col-lg-3 col-md-3 col-xs-3">
+                    <label for="" class="form-label m-0 mt-3">Upload Credit Note</label>
+                    <span class="asterisk"> *</span>
+                    <div class="input-group mb-0">
+                      <input type="file" #creditnote class="form-control" multiple formControlName="attach_credit_note"
+                        placeholder="Username" aria-label="Username" aria-describedby="basic-addon1"
+                        [accept]="purchaseForm['value']['invoice_type']=='Material'?'.pdf, .xls, .csv, .xlsx':'.pdf'"
+                        (change)="onImageCaptureCreditNote($event)">
+                    </div>
+                    <p class="hint m-0 d-inline"
+                      *ngIf="selectedAllAttachmentCreditNote.length==0 && purchaseForm.value.invoice_type=='Material'">
+                      **PDF, Excel file is allowed</p>
+
+                    <!-- Show download links for credit notes when in view mode -->
+                    <div *ngIf="commonService.viewPurchase && selectedAllAttachmentCreditNote.length > 0" class="mt-2">
+                      <p class="m-0">Credit Note Documents:</p>
+                      <div *ngFor="let attachment of selectedAllAttachmentCreditNote">
+                        <a href="javascript:void(0)" (click)="downloadAttachment(attachment)" class="text-primary text-decoration-none">
+                          📄 {{attachment.fileName}}
+                        </a>
+                      </div>
+                    </div>
+
+                    <ng-container *ngIf="selectedAllAttachmentCreditNote.length>0 && !commonService.viewPurchase">
+                      <p class="attach m-0 px-2 mt-1" *ngFor="let item of selectedAllAttachmentCreditNote">
+                        {{item['fileName']}}<span class="pointer float-end" (click)="deleteAttachmentCreditNote(item)">X</span></p>
+                    </ng-container>
+                  </div>
+
+                  <div class="col-lg-3 col-md-3 col-xs-3" *ngIf="getmyData.Status === 'sent-back'">
+                        <label for="" class="form-label m-0 mt-3">Credit Note Amount</label>
+                        <input type="text" placeholder="Credit Note Amount"
+                            formControlName="credit_note_amount" class="form-control">
+                        </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-offset-lg-6 col-offset-md-6 col-offset-xs-6  col-lg-6 col-md-6 col-xs-6">
+                        <label for="" class="form-label m-0 mt-3">Remarks</label>
+                        <span class="asterisk"> *</span>
+                        <textarea type="text" formControlName="remarks" placeholder="Enter Remarks" class="form-control"
+                            rows="3"></textarea>
+                        <span *ngIf="purchaseForm.get('remarks').hasError('maxlength')">Remarks exceeds max 256
+                            character</span>
+                    </div>
+
+                    <div class="col-offset-lg-6 col-offset-md-6 col-offset-xs-6  col-lg-6 col-md-6 col-xs-6"
+                        *ngIf="editPurchaseData['reviewerRemarks']">
+                        <label for="" class="form-label m-0 mt-3">Reviewer Remarks</label>
+                        <!-- <textarea type="text" formControlName="reviewer_remarks" placeholder="Enter Remarks" class="form-control" rows="3"></textarea> -->
+                        <textarea type="text" [value]="editPurchaseData['reviewerRemarks']" placeholder="Enter Remarks"
+                            class="form-control" rows="3" disabled></textarea>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                        <label for="" class="form-label m-0 mt-3">PO Items</label>
+                        <span class="asterisk"> *</span>
+
+                        <div class="fliter" style="display: inline; float: right;" title="Filter">
+                            <!-- icon-border mt-2 -->
+                            <input placeholder="Search description" type="text" (keyup)="searchList($event)"
+                                class="input-text-ty1 icon-border d-inline-block search-icon" id="searchinput">
+                            <!-- <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal" data-bs-target="#filterModal" style="height: 29px; width: 29px; padding: 7px;"> -->
+                        </div>
+
+                        <div class="table-responsive" id="htmlData">
+                            <table class="table table-striped1 data-grid"> <!-- *ngIf="items.length>0" -->
+                                <thead class="data-grid-thead">
+                                    <tr>
+                                        <th scope="col"><input class="" type="checkbox" [checked]="selectedAll"
+                                                [disabled]="commonService.updatePurchase" value="" id=""
+                                                (change)="checkAll($event)"></th>
+                                        <!-- <th scope="col">Purchase Order Item No.</th> -->
+                                        <!-- <th scope="col">Item Description</th> -->
+                                        <th scope="col">Item No.</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Material Number</th>
+                                        <th scope="col">Plant Code</th>
+                                        <!-- <th scope="col">Unit Of Measure</th> -->
+                                        <th scope="col">UoM</th>
+                                        <th scope="col">Net Price</th>
+                                        <th scope="col">Price Per Unit</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Remaining Quantity</th>
+                                        <th scope="col" *ngIf="contractNoExist">Contract Number</th>
+                                        <th scope="col" *ngIf="contractNoExist">Contract item Number</th>
+                                        <!-- <th scope="col">Package Number</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="items.length>0">
+                                    <tr *ngFor="let item of items">
+                                        <td scope="row"><input class="form-check-input1" type="checkbox"
+                                                [checked]="item['checked']" [disabled]="commonService.updatePurchase"
+                                                id="" (change)="poSelect($event, item)"></td>
+                                        <td>{{item['purchaseOrderItemNo']}}</td>
+                                        <td>{{item['itemDescription']}}</td>
+                                        <td>{{item['materialNumber']}}</td>
+                                        <td>{{item['plantCode']}}</td>
+                                        <td>{{item['unitOfMeasure']}}</td>
+                                        <td>{{item['netPrice']}}</td>
+                                        <!-- <td>{{item['netPrice'] | number:'0.2'}}</td> -->
+                                        <td>{{item['pricePerUnit']}}</td>
+                                        <td>{{item['quantity']}}</td>
+                                        <td>{{item['remainingQuantity']}}</td>
+                                        <td *ngIf="contractNoExist">{{item['contractNo']}}</td>
+                                        <td *ngIf="contractNoExist">{{item['contractItemNo']}}</td>
+                                        <!-- <td>{{item['packageNo']}}</td> -->
+                                    </tr>
+                                </tbody>
+
+                                <tbody *ngIf="items.length==0">
+                                    <tr>
+                                        <td colspan="12" class="text-center">No Data Found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination-content mb-4" *ngIf="items && items.length > 0">
+                            <div class="pagination">
+                                <button class="btn" (click)="prevPage()" [disabled]="currentPage == 1">&lt;</button>
+                                <ng-container *ngFor="let page of visiblePages">
+                                    <button (click)="goToPage(page)" [class.active]="currentPage == page">{{ page
+                                        }}</button>
+                                </ng-container>
+                                <button (click)="nextPage()" [disabled]="currentPage == totalPages">&gt;</button>
+
+                                <!-- Dropdown Pagination -->
+                                <label for="pageDropdown" class="pg-dp-label">Jump to </label>
+                                <select class="form-select" id="pageDropdown" [value]="currentPage"
+                                    (change)="onPageChange($event)" style="width: 100px;">
+                                    <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                                </select>
+                            </div>
+
+                            <div class="total">Total: <span>{{ apiitems.length }}</span></div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive mt-4" *ngIf="sesSubList.length>0">
+                        <label for="" class="form-label m-0 mt-3">PO SES List</label>
+                        <span class="asterisk"> *</span>
+
+                        <div class="table-responsive" id="seshtmlData">
+                            <table class="table table-striped1 data-grid">
+                                <thead class="data-grid-thead">
+                                    <tr>
+                                        <th scope="col"><input class="" type="checkbox" [checked]="selectedAllSES"
+                                                [disabled]="commonService.updatePurchase" value="" id=""
+                                                (change)="checkAllSesItems($event)"></th>
+                                        <th scope="col">Package No.</th>
+                                        <th scope="col">Sub Package No.</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Tax Code</th>
+                                        <th scope="col">Tax Code Tariff</th>
+                                        <th scope="col">Short Text</th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="sesSubList.length>0">
+                                    <tr *ngFor="let item of sesSubList">
+                                        <td scope="row"><input class="form-check-input" type="checkbox"
+                                                [checked]="item['checked']" [disabled]="commonService.updatePurchase"
+                                                (change)="selectUnselectSesItem($event, item)"></td>
+                                        <td>{{item['pckgNo']}}</td>
+                                        <td>{{item['subPackageNo']}}</td>
+                                        <td>{{item['quantity']}}</td>
+                                        <td>{{item['taxCode']}}</td>
+                                        <td>{{item['taxCodeTariff']}}</td>
+                                        <td>{{item['shortText']}}</td>
+                                    </tr>
+                                </tbody>
+
+                                <tbody *ngIf="sesSubList.length==0">
+                                    <tr>
+                                        <td colspan="12" class="text-center">No Data Found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="pagination-content mb-4" *ngIf="sesSubList && sesSubList.length > 0">
+                            <div class="pagination">
+                                <button class="btn" (click)="prevPageSes()"
+                                    [disabled]="currentPageSes == 1">&lt;</button>
+                                <ng-container *ngFor="let page of visiblePagesSes">
+                                    <button (click)="goToPageSes(page)" [class.active]="currentPageSes == page">{{ page
+                                        }}</button>
+                                </ng-container>
+                                <button (click)="nextPageSes()"
+                                    [disabled]="currentPageSes == totalPagesSes">&gt;</button>
+
+                                <label for="pageDropdown" class="pg-dp-label">Jump to </label>
+                                <select class="form-select" id="pageDropdown" [value]="currentPageSes"
+                                    (change)="onPageChangeSes($event)" style="width: 100px;">
+                                    <option *ngFor="let page of visiblePagesSes" [value]="page">{{ page }}</option>
+                                </select>
+                            </div>
+
+                            <div class="total">Total: <span>{{ apisesSubList.length }}</span></div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive mt-4"
+                        *ngIf="purchaseForm.value.invoice_type=='Material' || this.commonService.correctionRequiredData?.Status === 'correction_required'">
+                        <table class="table table-striped1 data-grid po-items"
+                            *ngIf="items.length>0 && selectedItemsArr.length>0">
+                            <thead class="data-grid-thead">
+                                <tr>
+                                    <th scope="col">Purchase Order Item No.</th>
+                                    <th scope="col">Description</th>
+                                    <!-- <th scope="col">HSN / SAC Code</th> -->
+                                    <!-- <th scope="col">Tax Rate</th> -->
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Rate</th>
+                                    <th scope="col">Net Amount</th>
+                                    <!-- <th scope="col">Tax</th> -->
+                                    <th scope="col">Gross Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of selectedItemsDataArr">
+                                    <!-- <td scope="row"><input class="form-check-input" type="checkbox" [checked]="item['checked']" id="" (change)="poSelect($event, item)"></td> -->
+                                    <td><input type="text" [value]="item['purchaseOrderItemNo']" readonly disabled></td>
+                                    <td>{{item['itemDescription']}}</td>
+                                    <!-- <td>
+                                        <input type="text" [value]="item['hsnCode']" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)" (focusout)="updateTotal($event, 'hsnCode', item)">
+                                        <p class="m-0 quantity_error" [ngClass]="{show:!item['hsnCode'], hide:item['hsnCode']}">Please Enter HSN Code</p>
+                                    </td> -->
+                                    <!-- <td>
+                                        <input type="text" [value]="item['taxRate']*100" readonly disabled>
+                                        <p class="m-0 quantity_error" [ngClass]="{show: (item['hsnCode']!='' && item['taxRate']==''), hide:(item['hsnCode']!='' && item['taxRate']!=''), hiden:(item['hsnCode']=='' && item['taxRate']=='')}">Tax Rate not maintained for HSN</p>
+                                    </td> -->
+                                    <td>
+                                        <input type="text" [value]="item['quantity']"
+                                            onkeypress="return event.charCode >= 46 && event.charCode <= 57"
+                                            (keyup)="validateNumber($event)"
+                                            (focusout)="updateTotal($event, 'quantity', item)"
+                                            [disabled]="!item['hsnCode'] || getmyData?.Status === 'sent-back' || purchaseForm['value']['invoice_type']=='Service'">
+                                        <!--  || event.charCode == 46 -->
+                                        <!-- <p class="m-0 quantity_error hide">Entered quantity exceeds remaining quantity of {{item['actualquantity']}}</p> -->
+                                        <p class="m-0 quantity_error hide">Max allow Qty is {{item['maxAllowQty']}}</p>
+                                        <p class="m-0 quantity_error hide">Invalid Number</p>
+                                    </td>
+                                    <td><input type="text" [value]="item['netPrice']"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
+                                            (focusout)="updateTotal($event, 'netPrice', item)" readonly disabled></td>
+                                    <td><input type="text" [value]="item['netAmount']" readonly disabled></td>
+                                    <!-- <td><input type="text" [value]="item['tax']" readonly disabled></td> -->
+                                    <td><input type="text" [value]="item['grossAmount']" readonly disabled></td>
+                                </tr>
+                                <tr>
+                                    <!-- <td></td> -->
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <p>Total</p>
+                                    </td> <!-- colspan="3" -->
+                                    <td><input type="text" [value]="totalNetAmount" readonly disabled></td>
+                                    <!-- <td><input type="text" [value]="totalTax" readonly disabled></td> -->
+                                    <td><input type="text" [value]="totalGrossAmount" readonly disabled></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-xs-12 table-responsive mt-4"
+                        *ngIf="selectedSesSubItems.length>0">
+                        <label for="" class="form-label m-0 mt-3">Selected SES</label>
+                        <span class="asterisk"> *</span>
+                        <table class="table table-striped1 data-grid po-items" *ngIf="selectedSesSubItems.length>0">
+                            <thead class="data-grid-thead">
+                                <tr>
+                                    <th scope="col">Line No.</th>
+                                    <th scope="col">Package No.</th>
+                                    <th scope="col">Sub Package No.</th>
+                                    <th scope="col">HSN / SAC Code</th>
+                                    <th scope="col">Tax Rate</th>
+                                    <th scope="col">Net Amount</th>
+                                    <th scope="col">Tax</th>
+                                    <th scope="col">Gross Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of selectedSesSubItems">
+                                    <td><input type="text" [value]="item['extLineNo']" readonly disabled></td>
+                                    <td><input type="text" [value]="item['pckgNo']" readonly disabled></td>
+                                    <td><input type="text" [value]="item['subPackageNo']" readonly disabled></td>
+                                    <td>
+                                        <input type="text" [value]="item['taxCodeTariff']"
+                                            onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57)"
+                                            (focusout)="sesUpdateTotal($event, 'taxCodeTariff', item)">
+                                        <p class="m-0 quantity_error"
+                                            [ngClass]="{show:!item['taxCodeTariff'], hide:item['taxCodeTariff']}">Please
+                                            Enter HSN Code</p>
+                                    </td>
+                                    <td>
+                                        <input type="text" [value]="item['taxRate']*100" readonly disabled>
+                                        <p class="m-0 quantity_error"
+                                            [ngClass]="{show: (item['hsnCode']!='' && item['taxRate']==''), hide:(item['hsnCode']!='' && item['taxRate']!=''), hiden:(item['hsnCode']=='' && item['taxRate']=='')}">
+                                            Tax Rate not maintained for HSN</p>
+                                    </td>
+                                    <td>
+                                        <input type="text" [value]="item['netAmount']"
+                                            onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46"
+                                            (focusout)="sesUpdateTotal($event, 'netAmount', item)">
+                                        <p class="m-0 quantity_error hide">Amount exceed net value</p>
+                                        <p class="m-0 quantity_error hide">Invalid Number</p>
+                                    </td>
+
+                                    <td><input type="text" [value]="item['tax']" readonly disabled></td>
+                                    <td><input type="text" [value]="item['grossAmount']" readonly disabled></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <p>Total</p>
+                                    </td>
+                                    <td><input type="text" [value]="sesTotalNetAmount" readonly disabled></td>
+                                    <td><input type="text" [value]="sesTotalTax" readonly disabled></td>
+                                    <td><input type="text" [value]="sesTotalGrossAmount" readonly disabled></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- <div *ngIf="showPOGRN" class="col-lg-12 col-md-12 col-xs-12" style="display: none;">
+                        <p class="mt-3 mb-0 po-items">GRN</p>
+                        <table class="table" *ngIf="poGrnDetails.length>0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Document Date</th>
+                                    <th scope="col">Purchase Order Item Number</th>
+                                    <th scope="col">Material Document Fiscal Year</th>
+                                    <th scope="col">Material Document Number</th>
+                                    <th scope="col">Material Document Item Number</th>
+                                    <th scope="col">Vehicle Number</th>
+                                    <th scope="col">Material Number</th>
+                                    <th scope="col">Material Description</th>
+                                    <th scope="col">Plant Code</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of poGrnDetails">
+                                    <td>{{item['documentDate']}}</td>
+                                    <td>{{item['materialDocumentItemNumber']}}</td>
+                                    <td>{{item['materialDocumentFiscalYear']}}</td>
+                                    <td>{{item['materialDocumentNumber']}}</td>
+                                    <td>{{item['materialDocumentItemNumber']}}</td>
+                                    <td>{{item['vehicleNumber']}}</td>
+                                    <td>{{item['materialNumber']}}</td>
+                                    <td>{{item['materialDescription']}}</td>
+                                    <td>{{item['plantCode']}}</td>`
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> -->
+
+                    <!-- <div class="col-lg-12 col-md-12 col-xs-12" style="display: none;">
+                        <p class="mt-3 mb-0 po-items">SES</p>
+                        <table class="table" *ngIf="poSesDetails.length>0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sub Package Number</th>
+                                    <th scope="col">Ext Service Item Number</th>
+                                    <th scope="col">Service Item Number</th>
+                                    <th scope="col">Service Description</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Unit Of Measure</th>
+                                    <th scope="col">Gr Price</th>
+                                    <th scope="col">Price Per Unit</th>
+                                    <th scope="col">Net Value</th>
+                                    <th scope="col">Tax Code Tariff</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of poSesDetails">
+                                    <td>{{item['subPackageNo']}}</td>
+                                    <td>{{item['extServiceItemNo']}}</td>
+                                    <td>{{item['serviceItemNo']}}</td>
+                                    <td>{{item['serviceDescription']}}</td>
+                                    <td>{{item['quantity']}}</td>
+                                    <td>{{item['unitOfMeasure']}}</td>
+                                    <td>{{item['grPrize']}}</td>
+                                    <td>{{item['prizePerUnit']}}</td>
+                                    <td>{{item['netValue']}}</td>
+                                    <td>{{item['taxCodeTariff']}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div> -->
+
+ <div class="col-lg-12 col-md-12 col-xs-12" *ngIf="poGRNItems.length>0">
+        <div class="w-100">
+            <div class="fliter text-end px-3" title="Filter" (click)="$event.stopPropagation()"> <!-- icon-border -->
+                <p class="m-0" style="float: left;">Selected GRN : {{selectedGRNArr.length}}</p>
+                <div class="" >
+                    <img src="../../../assets/svg/upload.svg" title="Upload Excel" (click)="uploadExcel.click()"
+                        style="height: 32px; width: 32px; padding: 0px 0px;">
+                    <input type="file" id="uploadExcel" #uploadExcel accept=".xlsx"
+                        style="display: none;">
+                    <img src=" ../../../assets/img/icons/excel.png" class="" alt="" title="Download Excel"  (click)="downloadGRNExcelFile()"
+                        style="height: 32px; width: 32px; padding:7px" >
+                    <img src="../../../assets/img/icons/filter.png" data-bs-toggle="modal" data-bs-target="#filterModal"
+                        style="height: 32px; width: 32px; padding: 7px;">
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="data-grid-thead" style="vertical-align: middle;">
+                    <tr>
+                        <th scope="col"><input class="" type="checkbox" [checked]="isAllGRLSelected"  [disabled]="commonService.updatePurchase"
+                                value="" id="" (change)="checkAllPOGRN($event)"></th>
+                         <th scope="col">Purchase Order Item No.</th>
+                        <th scope="col">Posting Date</th>
+                        <th scope="col">Ref Number</th>
+                        <th scope="col">Doc Number</th>
+                        <th scope="col">Doc Item No.</th>
+                        <th scope="col">Challan No.</th>
+                        <th scope="col">Challan Date</th>
+                        <th scope="col">LR No.</th>
+                        <th scope="col">LR Date</th>
+                        <th scope="col">Vehicle Number</th>
+                        <th scope="col">Material Desc</th>
+                        <th scope="col">Rate(Rs)</th>
+                        <th scope="col">Quantity(MT)</th>
+                        <th scope="col">Amount</th>
+                    </tr>
+                </thead>
+                <tbody *ngIf="poGRNItems.length>0">
+                    <tr *ngFor="let item of poGRNItems">
+                        <td scope="row"><input class="form-check-input1" type="checkbox" [disabled]="item['disabled']"
+                            (change)="selectPOGRN($event,item)"    [checked]="item['checked']" id="" ></td>
+                           <td>{{item['purchaseOrderItemNo']}}</td>
+                        <td>{{item['documentDate']}}</td>
+                        <td>{{item['refInvoiceNumber']}}</td>
+                        <td>{{item['materialDocumentNumber']}}</td>
+                        <td>{{item['materialDocumentItemNumber']}}</td>
+                        <td>{{item['challanNo']}}</td>
+                        <td>{{item['challanDate']}}</td>
+                        <td>{{item['lrNo']}}</td>
+                        <td>{{item['lrDate']}}</td>
+                        <td>{{item['truckId']}}</td>
+                        <td>{{item['materialDes']}}</td>
+                        <td>{{ item['rate']}}
+                        <td>{{item['quantity'] | number}}</td>
+                        <td>{{item['amount']}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="13" class="pe-4" style="font-weight: 600; text-align: right;">Total :</td>
+                        <td> {{totalGRNQuantity | number}} </td> 
+                        <td> {{totalGRNAmount}} </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination-content mb-4" *ngIf="poGRNItems && poGRNItems.length > 0">
+            <div class="pagination">
+                <button class="btn" (click)="prevPage()" [disabled]="currentPage == 1">&lt;</button>
+                <ng-container *ngFor="let page of visiblePages">
+                    <button (click)="goToPage(page)" [class.active]="currentPage == page">{{ page }}</button>
+                </ng-container>
+                <button (click)="nextPage()" [disabled]="currentPage == totalPages">&gt;</button>
+                <label for="pageDropdown" class="pg-dp-label">Jump to </label>
+                <select class="form-select" id="pageDropdown" [value]="currentPage" (change)="onPageChange($event)"
+                    style="width: 100px;">
+                    <option *ngFor="let page of pages" [value]="page">{{ page }}</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+                    <div class="col-lg-12 col-md-12 col-xs-12" style="margin-bottom: 25px;"
+                      *ngIf="this.commonService['viewPurchase'] == false">
+                      <div class="my-1">
+                        <!-- Submit/Resubmit Button -->
+                        <button type="submit" class="button-submit" *ngIf="purchaseForm['value']['invoice_type']!='Service'"
+                          [disabled]="!purchaseForm['valid'] || selectedItemsArr.length==0 || uploadedDigitalSigned.length==0 || quantityExceedsArray.length>0 || wrongInputArray.length>0 || submissionArr.length==0 || blankHsnCodeArray.length>0 || invoiceNoExist"
+                          (click)="submitPurchaseForm($event)">
+                          {{ getButtonText() }}
+                        </button>
+
+                        <!-- Service Invoice Type Button -->
+                        <button type="submit" class="button-submit" *ngIf="purchaseForm['value']['invoice_type']=='Service'"
+                          [disabled]="!purchaseForm['valid'] || selectedItemsArr.length==0 || uploadedDigitalSigned.length==0 || selectedAllAttachmentSupport.length==0 || quantityExceedsArray.length>0 || wrongInputArray.length>0 || selectedSesSubItems.length==0 || blankHsnCodeArray.length>0 || invoiceNoExist"
+                          (click)="submitPurchaseForm($event)">
+                          {{ getButtonText() }}
+                        </button>
+
+                        <!-- Reset button - only show when NOT in correction_required or sent-back status -->
+                        <button type="button" class="button-back"
+                          *ngIf="getmyData?.Status !== 'correction_required' && getmyData?.Status !== 'sent-back'"
+                          (click)="resetPurchaseForm()">Reset</button>
+                      </div>
+                    </div>
+
+                    <!-- Site Controller -->
+                    <!-- <div class="col-lg-12 col-md-12 col-xs-12" *ngIf="logintype == 'sitecontroller'">
+                        <div class="my-3 p-3 site_area">
+                            <div class="d-flex row">
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Invoice Series Type *</label>
+                                    <select class="form-select" value="" formControlName="company" placeholder="choose" aria-label="Default select example">
+                                        <option value="Ambuja">Ambuja</option>
+                                        <option value="ACC">ACC</option>
+                                        <option value="Adani">Adani</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-xs-3">
+                                    <label for="" class="form-label m-0 mt-3">Reviewer Remark *</label>
+                                    <input type="text" formControlName="lr_number" class="form-control" placeholder="Enter reviewer remark">
+                                </div>
+                            </div>
+
+                            <p class="mt-3 mb-0">GRN/SES</p>
+                            <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th scope="col"><input class="" type="checkbox" [checked]=selectedAll value="" id="" (change)="checkAll($event)"></th>
+                                    <th scope="col">Item No.</th>
+                                    <th scope="col">Vehicle No.</th>
+                                    <th scope="col">Material Desc</th>
+                                    <th scope="col">Weight</th>
+                                    <th scope="col">Document Date</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let item of siteTable">
+                                    <td scope="row"><input class="form-check-input" type="checkbox" [checked]="item['checked']" id="" (change)="siteselect($event, item)"></td>
+                                    <td>{{item['item_no']}}</td>
+                                    <td>{{item['vehicle_no']}}</td>
+                                    <td>{{item['material_desc']}}</td>
+                                    <td>{{item['weight']}}</td>
+                                    <td>{{item['document_date']}}</td>
+                                  </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> -->
+
+                    <!-- <div class="col-lg-12" *ngIf="logintype == 'sitecontroller'">
+                        <div class="my-1">
+                            <button type="button" class="button-back accept ms-0" data-bs-toggle="modal" data-bs-target="#barcodeModal" (click)="siteOrderAction('accept')">Accept</button>
+                            <button type="button" class="button-back sent" data-bs-toggle="modal" data-bs-target="#confirmModal" (click)="siteOrderAction('sentback')">Send Back</button>
+                            <button type="button" class="button-back reject" data-bs-toggle="modal" data-bs-target="#confirmModal" (click)="siteOrderAction('reject')">Reject</button>
+                            <button type="button" class="button-back hold" data-bs-toggle="modal" data-bs-target="#confirmModal" (click)="siteOrderAction('onhold')">OnHold</button>
+                        </div>
+                    </div> -->
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Error Response Modal -->
+<div class="modal fade show" [class.d-block]="showErrorModal" id="errorResponseModal" data-bs-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="errorResponseModalLabel" aria-hidden="true" *ngIf="showErrorModal">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="errorResponseModalLabel">Error Response</h5>
+            </div>
+
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert">
+                    <p class="mb-1"><strong>Invoice No:</strong> {{invoiceNumber}}</p>
+                    <p class="mb-1"><strong>Status:</strong> Correction Required</p>
+                    <p class="mb-0"><strong>Reason:</strong> {{errorModalMessage}}</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="my-1 text-center w-100">
+                    <button type="button" class="button-submit" (click)="handleErrorModalAction('close')">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Backdrop for modal -->
+<div class="modal-backdrop fade show" *ngIf="showErrorModal" (click)="handleErrorModalAction('close')"></div>
+
+<!-- Confirmation Modal -->
+<div class="modal right fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-confirm" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <p class="modal-title" id="myModalLabel2"><span>Alert</span></p>
+            </div>
+
+            <div class="modal-body text-center">
+                <p>{{confirmModalMessage}}</p>
+                <div class="my-1">
+                    <button type="submit" class="button-submit" (click)="submitPurchaseStatus($event)">Yes</button>
+                    <button type="button" class="button-back" data-bs-toggle="modal"
+                        data-bs-target="#confirmModal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Barcode Modal -->
+<!-- <div class="modal right fade" id="barcodeModal" tabindex="-1" role="dialog" aria-labelledby="barcodeModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-track" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel2">Barcode</h5>
+            </div>
+
+            <div class="modal-body">
+                <p>Barcode Number</p>
+                <p class="barcode_number">10312459687</p>
+                <p class="barcode_message">Barcode Number Has Been Successfully Generated</p>
+                <div class="my-1 text-center">
+                    <button type="submit" class="button-submit" data-bs-toggle="modal" data-bs-target="#barcodeModal">Ok</button>
+                    <button type="button" class="button-back" data-bs-toggle="modal" data-bs-target="#barcodeModal">Cancel</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div> -->
+
+<!-- Filter Modal -->
+<div class="modal right fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel2">Filter</h4>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="dynamicFilterForm">
+                    <!-- <div *ngFor="let controlName of searchObject"> -->
+
+                    <div class="input-text-group">
+                        <!-- <label>{{ controlName.forLabel }}</label>
+                            <input *ngIf="controlName.forContrl != 'status'" [placeholder]="controlName.forPlace" [formControlName]="controlName.forContrl"
+                                [id]="controlName.forContrl" class="input-text"
+                                [type]="(!controlName.forContrl.includes('Date'))?'text':'date'" /> -->
+                        <label>PO Item Numbers</label>
+                        <input type="text" placeholder="Enter Item Number" formControlName="item_number" id=""
+                            class="input-text" />
+                    </div>
+                    <!-- </div> -->
+                    <div class="bt-section mt-5">
+                        <button class="button-back" data-bs-dismiss="modal" (click)="resetFilter()">Reset</button>
+                        <button class="button-submit" data-bs-dismiss="modal" (click)="applyFilter()">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div><!-- modal-content -->
+    </div><!-- modal-dialog -->
+</div><!-- modal -->
+
+
+<!-- COnditional vendor modal -->
+<!-- <button id="conditionalConfirmModalButton" [hidden]="true" data-bs-toggle="modal" data-bs-target="#conditionalConfirmModal">Open Barcode Modal</button>
+<div class="modal fade" id="conditionalConfirmModal" data-bs-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-track" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="myModalLabel2" style="font-weight: 600;">GET PO DETAIL</h6>
+            </div>
+
+            <div class="modal-body">
+                <div class="condi-conf">
+                    <p class="m-0">Vendor code mismatch with PO.</p>
+                    <p class="m-0">Do you want to submit Freight invoice.</p>
+                    <div class="my-1 text-center">
+                        <button type="submit" class="button-submit mx-1" data-bs-toggle="modal" data-bs-target="#conditionualConfirmModal" [routerLink]="['../conditional-vendor']">Yes</button>
+                        <button type="submit" class="button-back mx-0" data-bs-toggle="modal" data-bs-target="#conditionalConfirmModal" style="width: 156px;">NO</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div> -->

@@ -1,0 +1,101 @@
+::ng-deep .custom-modal-content .currency-modal  {
+  width: 400px;
+}
+
+.acordion-item {
+
+  .accordion-header {
+    background: #FFFFFF;
+    // border: 1px #1770AE solid;
+    border-radius: 15px;
+    box-shadow: 2px 3px 6px #92ABBA33;
+    padding: 7px 20px;
+    margin-left: 68px;
+    margin-bottom: 20px;
+  }
+
+  label {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+
+}
+
+.step-circle {
+  width: 38px;
+  height: 38px;
+  line-height: 36px;
+  text-align: center;
+  border-radius: 50%;
+  border: 1px solid #0B74B0;
+  background-color: #FFF;
+  color: #333;
+  /* font-weight: bold; */
+  /* margin-right: 12px; */
+  position: absolute;
+  left: 30px;
+}
+
+// .line {
+//   height: 26px;
+//   border-left: 1px dashed;
+//   position: absolute;
+//   left: 50px;
+//   margin-top: 41px;
+// }
+
+.vertical-line {
+  position: absolute;
+  left: 50px;
+  border-left: 1px dashed #000;
+  z-index: 0;
+  margin-top: 7px;
+}
+
+.bt-text-include {
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%);
+  color: #FFF;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.right-corner-radius-0 {
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.insit-img {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  right: 14px;
+  bottom: 6px;
+}
+
+.insit-img-right {
+  width: 62px;
+  height: 62px;
+  position: relative;
+  left: 94px;
+  bottom: 38px;
+}
+
+.project-label {
+  color: #0B74B0;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.space-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

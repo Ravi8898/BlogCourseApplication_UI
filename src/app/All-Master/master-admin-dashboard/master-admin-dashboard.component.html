@@ -1,0 +1,15 @@
+
+<div class="bd-container">
+  <div class="position-header">
+    <app-header [showElement]="true"></app-header>
+  </div>
+  <app-navbar></app-navbar>
+  <div style="height: calc(100% - 100px);">
+    <div class="m-4">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <div class="position-footer">
+    <app-footer></app-footer>
+  </div>
+</div>

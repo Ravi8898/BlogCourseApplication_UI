@@ -1,0 +1,646 @@
+<app-popup-dialog [showPopup]="successPopup" [popupMessage]="popupMessage"></app-popup-dialog>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="row mb-2">
+
+            <div class="">
+                <div class="bd-tab-content">
+                    <div class="bd-tab-content-inner space-between">
+                        <p class="page-heading pt-2">CJPC Action</p>
+                        <a href="javascript:void(0)" (click)="goBack()">Back to listing</a>
+
+                    </div>
+                    <div class="tab-content">
+                        <div class="feature-card">
+                            <form [formGroup]="cjpcForm">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Project name & location</label>
+
+                                        <div class="d-flex">
+                                            <input type="text" placeholder="Project name & locationVDC"
+                                                class="form-control right-corner-radius-0 lh-lg"
+                                                formControlName="ProjectName" name="WONumber" maxlength="250">
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Project Code</label>
+
+                                        <input type="text" placeholder="Project Code" class="form-control lh-lg"
+                                            formControlName="projectCode" maxlength="250">
+
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Package</label>
+
+                                        <input type="text" placeholder="Package" class="form-control lh-lg"
+                                            formControlName="package" maxlength="250">
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Contractor’s Name</label>
+
+                                        <input type="text" placeholder="Contractor’s Name" class="form-control lh-lg"
+                                            formControlName="ContractorName" maxlength="250">
+
+                                    </div>
+
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Vendor Code</label>
+
+                                        <input type="text" placeholder="Vendor Code" class="form-control lh-lg"
+                                            formControlName="vendorCode" maxlength="250">
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Contract / WO ref.</label>
+
+                                        <input type="text" placeholder="Contract / WO ref." class="form-control lh-lg"
+                                            formControlName="ContractWO" maxlength="250">
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">WO
+                                            Date</label>
+
+                                        <input type="text" placeholder="WO Date" class="form-control lh-lg"
+                                            formControlName="WODate" maxlength="250">
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Date Of Last AMDT.</label>
+
+                                        <input type="text" placeholder="Amended Date" class="form-control lh-lg"
+                                            formControlName="LastAmndDate" maxlength="250">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Original completion Value</label>
+
+                                        <div class="input-group">
+                                            <span class="input-group-text"
+                                                style="font-size: 12px;font-weight: 600;">₹</span>
+                                            <input type="text" placeholder="Original completion Value"
+                                                class="form-control lh-lg" formControlName="completionValue"
+                                                maxlength="18" appIndianCurrency readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Last Amended contact / WO Value</label>
+
+                                        <div class="input-group">
+                                            <span class="input-group-text"
+                                                style="font-size: 12px;font-weight: 600;">₹</span>
+                                            <input type="text" class="form-control lh-lg"
+                                                placeholder="Last Amended contact / WO Value"
+                                                formControlName="amendedContact" appIndianCurrency readonly>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Final workdone / Wo value</label>
+
+                                        <div class="input-group">
+                                            <span class="input-group-text"
+                                                style="font-size: 12px;font-weight: 600;">₹</span>
+                                            <input type="text" placeholder="Final workdone / Wo value"
+                                                class="form-control lh-lg" formControlName="finalWork" maxlength="18"
+                                                appIndianCurrency readonly>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Original Completion Date</label>
+
+                                        <input type="text" placeholder="Auto Populated" class="form-control lh-lg"
+                                            formControlName="ogCompletionDate" maxlength="250"
+                                            [ngStyle]="{'border-color': OriginalDate_clr}"
+                                            [ngClass]="{'blink' :  blink_OriginalDate }">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Last Amended Completion Date</label>
+                                        <input type="text" class="form-control lh-lg"
+                                            formControlName="lastAmndCompletionDate"
+                                            [ngStyle]="{'border-color': LastAmndDate_clr}"
+                                            [ngClass]="{'blink' :  blink_LastAmndDate }">
+
+                                    </div>
+                                    <!-- <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">Actual Completion Date</label>
+
+                                        <input type="text" class="form-control lh-lg" formControlName="ActualComDate"
+                                            maxlength="250" [ngStyle]="{'border-color': ActualComDate_clr}"
+                                            [ngClass]="{'blink' :  blink_ActualComDate }">
+
+                                    </div> -->
+
+                                    <div class="col-lg-3 col-md-3 col-xs-3">
+                                        <label for="" class="form-label m-0">DLP Date</label>
+                                        <input type="text" class="form-control lh-lg" formControlName="DLPDate"
+                                            maxlength="250">
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="acordion-item">
+            <div class="" style="height: 100%;"></div>
+            <div *ngFor="let panel of panels; let i = index">
+                <div *ngIf="panel.visible" class="accordion-header">
+                    <div (click)="togglePanel(panel)">
+                        <a href="javascript:void(0)">
+                            <div class="space-between align-items-center">
+                                <label>{{ panel.title }}</label>
+
+                                <div style="height: 35px; width: 35px;">
+                                    <img src="../../../assets/img/down-arrow-circle.png" alt="" *ngIf="!panel.isOpen" />
+                                    <img src="../../../assets/svg/up-arrow-circle.svg" alt="" *ngIf="panel.isOpen" />
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div *ngIf="(panel.isOpen && panel.title == 'Advance and Retention')" class="mb-4">
+                        <hr>
+                        <app-advance-and-retention [CJPCID]="CJPCID" [contractDetails]="contractDetails"
+                            [billingDetails]="billingDetails"></app-advance-and-retention>
+                    </div>
+
+                    <div *ngIf=" (panel.isOpen && panel.title == 'Clause and Compliance Documents')">
+                        <hr>
+                        <app-clause-and-compliance-document></app-clause-and-compliance-document>
+                    </div>
+
+                    <div *ngIf="panel.isOpen && panel.title == 'Bill Details'">
+                        <hr>
+                        <app-bill-details [CJPCID]="CJPCID"></app-bill-details>
+                    </div>
+
+                    <div *ngIf=" (panel.isOpen && panel.title == 'Payments Admitted')">
+                        <hr>
+                        <app-payments-admitted [invoiceTypeName]="invoiceTypeName" [invoiceId]="invoiceId"
+                            [CJPCID]="CJPCID" [SummaryDetailsA]="SummaryDetailsA"></app-payments-admitted>
+                    </div>
+                    <div *ngIf=" (panel.isOpen && panel.title == 'Recoveries')">
+                        <hr>
+                        <app-cjpc-recoveries [contractId]="ContractId" [CJPCID]="CJPCID" [cjpcStatus]="cjpcStatus"
+                            [contractDetails]="contractDetails" (updatePaymentDetails)="getPaymentadmittedDetails()"
+                            [recoveryTable]="recoveryTable"></app-cjpc-recoveries>
+                    </div>
+                    <div *ngIf=" (panel.isOpen && panel.title == 'Holds and Releases')">
+                        <hr>
+                        <app-cjpc-holds [contractId]="ContractId" [CJPCID]="CJPCID" [cjpcStatus]="cjpcStatus"
+                            [contractDetails]="contractDetails" (updatePaymentDetails)="getPaymentadmittedDetails()"
+                            [holdsTable]="holdsTable"></app-cjpc-holds>
+                    </div>
+                    <div *ngIf=" (panel.isOpen && panel.title == 'Deduction of Taxes')">
+                        <hr>
+                        <app-deduction-of-taxes [invoiceTypeName]="invoiceTypeName" [invoiceId]="invoiceId"
+                            [CJPCID]="CJPCID"
+                            (updatePaymentDetails)="getPaymentadmittedDetails()"></app-deduction-of-taxes>
+                    </div>
+                    <div *ngIf="panel.isOpen && panel.title == 'Documents'" class="">
+                        <hr>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex ">
+                                    <span style="margin-right: 20px;">
+                                        <label for="" class="form-label m-0">Invoice PDF</label>
+                                        <span class="asterisk"> *</span>
+                                        <button type="button" id="bt_reject" class="button-view "
+                                            (click)="openInvoiceDocumentModal()">
+                                            <span>View Document</span>
+                                        </button>
+                                    </span>
+                                    <span>
+                                        <label for="" class="form-label m-0">Supported Document</label>
+                                        <span class="asterisk"> *</span>
+                                        <button type="button" id="bt_reject" class="button-view " (click)="rowAction()">
+                                            <span>View Document</span>
+                                        </button>
+                                    </span>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 mt-4 d-flex align-items-stretch" *ngIf="cjpcType == 'Hold Release'">
+        <div class="feature-card w-100">
+            <h1 class="project-h1">Release Amount Details</h1>
+            <hr>
+            <div class="row">
+                <div class="col-3">
+                    <label for="" class="form-label m-0">Hold Release Amount</label>
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter Amount" class="form-control right-corner-radius-0 lh-lg"
+                            name="relaeaseamount" maxlength="250"
+                            [value]="ReleaseAmountDetails[0]?.relaeaseamount | indianCurrency" [disabled]="true">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="" class="form-label m-0">Release Remark</label>
+
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                            name="holdreleaseremarks" maxlength="250"
+                            [value]="ReleaseAmountDetails[0]?.holdreleaseremarks" [disabled]="true">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="" class="form-label m-0">Department</label>
+
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                            name="holdtypename" maxlength="250" [value]="ReleaseAmountDetails[0]?.departmentname || ''"
+                            [disabled]="true">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="" class="form-label m-0">Hold For</label>
+
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                            name="holdtypename" maxlength="250" [value]="ReleaseAmountDetails[0]?.holdtypename"
+                            [disabled]="true">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="" class="form-label m-0">Hold Remark</label>
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                            name="holdremark" maxlength="250" [value]="ReleaseAmountDetails[0]?.holdremark"
+                            [disabled]="true">
+                    </div>
+                </div>
+                <div class="col-3 mt-2">
+                    <label for="" class="form-label m-0">Hold Amount</label>
+
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                            name="holdamount" maxlength="250"
+                            [value]="ReleaseAmountDetails[0]?.holdamount | indianCurrency" [disabled]="true">
+                    </div>
+                </div>
+
+                <div class="col-3 mt-2">
+                    <label for="" class="form-label m-0">Total Release Amount</label>
+
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                            name="total_released_amount" maxlength="250"
+                            [value]="ReleaseAmountDetails[0]?.total_released_amount | indianCurrency" [disabled]="true">
+                    </div>
+                </div>
+
+                <div class="col-3 mt-2">
+                    <label for="" class="form-label m-0">Remaining Release Amount</label>
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                            name="remaining_release_amount" maxlength="250"
+                            [value]="(ReleaseAmountDetails[0]?.holdamount - ReleaseAmountDetails[0]?.total_released_amount) | indianCurrency"
+                            [disabled]="true">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mt-4 d-flex align-items-stretch" *ngIf="cjpcType == 'Retention Release'">
+        <div class="feature-card w-100">
+            <h1 class="project-h1">Retention Release Details ({{retentionType}})</h1>
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Invoice Number</th>
+                                <th>Invoice Date</th>
+                                <th>Bill Amount</th>
+                                <th>Retention %</th>
+                                <th>Retention Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of retentionReleaseData">
+                                <td>{{ item.invoicenumber }}</td>
+                                <td>{{ item.invoicedate | date:'dd-MMM-yyyy' }}</td>
+                                <td>{{ item.billamount | indianCurrency }}</td>
+                                <td>{{ item.amountretentionper }}%</td>
+                                <td>{{ item.retentionamount | indianCurrency }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" style="text-align: right;"><strong>Total Retention Amount</strong>
+                                </td>
+                                <td><strong>{{ totalRetentionAmount | indianCurrency }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row p-0 m-0">
+        <div class="col-12 mt-4 d-flex align-items-stretch">
+            <div class="feature-card w-100">
+                <h1 class="project-h1">Net Certified Amount Payable to Contractor</h1>
+                <hr>
+                <div class="row" *ngIf="cjpcType != 'Retention Release'">
+                    <div class="col-3">
+                        <label for="" class="form-label m-0">Amount In Number</label>
+                        <div class="d-flex">
+                            <input type="text" placeholder="Enter Amount"
+                                class="form-control right-corner-radius-0 lh-lg" name="WONumber" maxlength="250"
+                                [disabled]="true" [value]="paymentDetails?.grossAmt | indianCurrency">
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <label for="" class="form-label m-0">Amount In Word</label>
+
+                        <div class="d-flex">
+                            <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                                name="WONumber" maxlength="250" [disabled]="true"
+                                [value]="paymentDetails?.numberToword">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="cjpcType == 'Retention Release'">
+                    <div class="col-3">
+                        <label for="" class="form-label m-0">Amount In Number</label>
+                        <div class="d-flex">
+                            <input type="text" placeholder="Enter Amount"
+                                class="form-control right-corner-radius-0 lh-lg" name="WONumber" maxlength="250"
+                                [disabled]="true" [value]="totalRetentionAmount | indianCurrency">
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <label for="" class="form-label m-0">Amount In Word</label>
+
+                        <div class="d-flex">
+                            <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                                name="WONumber" maxlength="250" [disabled]="true"
+                                [value]="totalRetentionAmountWithWords">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- <div class="row">
+    <div class="col-12 mt-4 d-flex align-items-stretch">
+        <div class="feature-card w-100">
+            <h1 class="project-h1">GST (RCM + Full), if any, directly payable by Service Receipient (Owner)</h1>
+            <hr>
+            <div class="row">
+                <div class="col-3">
+                    <label for="" class="form-label m-0">GST</label>
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter amount" class="form-control right-corner-radius-0 lh-lg"
+                            name="gst" maxlength="250">
+                    </div>
+                </div>
+                <div class="col-5">
+                    <label for="" class="form-label m-0">Remarks</label>
+
+                    <div class="d-flex">
+                        <input type="text" placeholder="Enter here" class="form-control right-corner-radius-0 lh-lg"
+                            name="WONumber" maxlength="250">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+    <div class="row p-0 m-0">
+        <div class="col-12 mt-4 d-flex align-items-stretch">
+            <div class="feature-card w-100">
+                <h1 class="project-h1">Approval</h1>
+                <hr>
+                <div class="row">
+                    <div class="col-3 pb-1" *ngFor="let item of statusDetails">
+                        <div class="statusCard">
+                            <p class="cardHeading1"><strong>{{ item.entityname }}</strong></p>
+                            <div class="d-flex justify-content-between">
+                                <p class=" cardContent mb-1">{{ item.username }}</p>
+                                <p class="cardContent mb-1">{{ item.validatedon | date:'dd-MMM-yyyy' }}</p>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <p class=" cardContent mb-1">Status</p>
+                                <p class="cardContent {{ item.validationstatus }} mb-1">{{ item.validationstatus }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-2">
+                    <div class="statusCard">
+                        <p class="cardHeading1"><strong>HR</strong></p>
+                        <div class="d-flex justify-content-between">
+                            <p class=" cardContent mb-1">Rahul Joshi</p>
+                            <p class="cardContent mb-1">06-Oct-2024</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class=" cardContent mb-1">Status</p>
+                            <p class="cardContent approve mb-1">Approved</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="statusCard">
+                        <p class="cardHeading1"><strong>Safety</strong></p>
+                        <div class="d-flex justify-content-between">
+                            <p class=" cardContent mb-1">Rahul Joshi</p>
+                            <p class="cardContent mb-1">06-Oct-2024</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class=" cardContent mb-1">Status</p>
+                            <p class="cardContent reject mb-1">Reject</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="statusCard">
+                        <p class="cardHeading1"><strong>Quality</strong></p>
+                        <div class="d-flex justify-content-between">
+                            <p class=" cardContent mb-1">Rahul Joshi</p>
+                            <p class="cardContent mb-1">06-Oct-2024</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class=" cardContent mb-1">Status</p>
+                            <p class="cardContent approve mb-1">Approved</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="statusCard">
+                        <p class="cardHeading1"><strong>Project Manager</strong></p>
+                        <div class="d-flex justify-content-between">
+                            <p class=" cardContent mb-1 ">Rahul Joshi</p>
+                            <p class="cardContent mb-1">06-Oct-2024</p>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <p class=" cardContent mb-1">Status</p>
+                            <p class="cardContent approve mb-1">Approved</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2"></div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex my-3">
+        <button *ngIf="roleName !== 'CAD Admin'" [disabled]="isApproved || isDisable" (click)="checkedOrApproved()"
+            type="submit" id="bt_approve" class="button-submit button-left m-0">
+            <span class="">{{roleName == 'CAD Admin' ? 'Final Approval' : roleName == 'Project Manager' ?
+                'Approve':'Checked'}}</span>
+            <img alt="" src="../../../assets/svg/right-arrow.svg" style="margin-left: -33px" class="left-arrow" />
+        </button>
+        <button *ngIf="cjpcType == 'Hold Release' && roleName !== 'CAD Admin'" [disabled]="isApproved || isDisable"
+            (click)="checkedOrApproved()" type="submit" id="bt_approve" class="button-back button-left">
+            <span class="">Reject</span>
+            <img alt="" src="../../../assets/svg/reject.svg" style="margin-left: -33px" class="left-arrow" />
+        </button>
+        <button type="button" id="bt_reject" class="button-back button-left" (click)="goBack()">
+            <span class="ps-3">Back</span>
+            <img alt="" src="../../../assets/svg/left-arrow.svg" class="left-arrow" />
+        </button>
+        <button *ngIf="!isChecklistSent && (isApproved && roleName == 'CAD Admin')" type="button" id="bt_reject"
+            class="button-back button-left" (click)="DownloadChecklist()">
+            <span class="ps-3">Download Checklist</span>
+        </button>
+
+        <button *ngIf="isChecklistSent" id="bt_loader" class="button-back" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Checklist sending...
+        </button>
+
+        <button *ngIf="isLoader" id="bt_loader" class="button-back button-left" type="button" disabled>
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            Loading...
+        </button>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="mt-2">
+                <div class="text-danger" *ngIf="error_message != ''">{{error_message}}</div>
+            </div>
+        </div>
+    </div>
+
+    <app-custom-modal *ngIf="remarkModal" [title]="'Remarks'" (onClickCross)="closeRemarkModal()"
+        (closeModal)="closeRemarkModal()" class="remark-modal">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <label for="" class="form-label m-0">Remarks</label>
+                    <textarea rows="5" class="form-control" placeholder="Enter your remarks here"
+                        [(ngModel)]="remark"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer mt-2">
+            <button [disabled]="remark.trim() == ''" type="button" class="btn btn-primary"
+                (click)="cjpcType == 'Hold Release' ? rejectCJPC() : submitRemark()">Submit</button>
+        </div>
+    </app-custom-modal>
+
+    <div style="height: 30px;"></div>
+
+    <app-custom-modal *ngIf="openDocumentListModal" [title]="'Supported Documents'"
+        (onClickCross)="openDocumentListModal = false" class="recoveries-modal">
+        <ng-container *ngIf="recoveryDocuments.length > 0">
+            <ng-container *ngFor="let item of recoveryDocuments">
+                <div class="row">
+                    <div class="col-12 space-between-center m-1">
+                        <div class="col-11">
+                            <label><b>{{item?.documentname}}</b></label>
+                        </div>
+                        <div class="col-1">
+                            <a href="javascript:void(0)" (click)="onViewDocument(item?.location)">
+                                <img src="assets/svg/eye.svg" alt="Download" style="height: 30px;width: 30px;">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+        </ng-container>
+        <div *ngIf="recoveryDocuments.length==0">
+            <div class="row noRecond">
+                <div class="col">
+                    <h3>No Documents found</h3>
+                </div>
+            </div>
+        </div>
+
+    </app-custom-modal>
+    <app-custom-modal *ngIf="docViewModelOpen" (onClickCross)="docViewModelOpen = false" [title]="'View Document'"
+        class="doc-vew-modal">
+
+        <div class="row">
+            <div class="col-12" *ngIf="bash64String && !isLoader">
+                <ngx-extended-pdf-viewer *ngIf="!isLoader" [base64Src]="bash64String" height="100%" [textLayer]="true"
+                    [showDownloadButton]="false" [showPrintButton]="false" [showPagingButtons]="false"
+                    [showPresentationModeButton]="false" [showOpenFileButton]="false"
+                    [showBorders]="true"></ngx-extended-pdf-viewer>
+
+            </div>
+            <div *ngIf="isLoader" class="text-center mt-5 mb-5">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            </div>
+            <div *ngIf="bash64String == '' && !isLoader">
+                <div class="row noRecond">
+                    <div class="col">
+                        <h3>No Document found</h3>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </app-custom-modal>
