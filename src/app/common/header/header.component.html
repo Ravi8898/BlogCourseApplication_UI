@@ -44,16 +44,11 @@
                     <div class="profile-dropdown-img"> <img src="../../../../assets/svg/Avatar.svg" alt="" /> </div>Hi
                     {{username}}!
                 </a>
-                <div *ngIf="roleName">
-                    <label class="profile-dropdown-label">Role: {{roleName}}</label>
-                </div>
-                <div *ngIf="userdata['ACCOUNTNUMBER']">
-                    <label class="profile-dropdown-label">Code: {{userdata['ACCOUNTNUMBER']}}</label>
-                </div>
+                
                 <div>
                     <hr class="dropdown-divider">
                 </div>
-                <a *ngIf="logintype=='vendor'" class="dropdown-item d-flex align-items-center"
+                <a class="dropdown-item d-flex align-items-center"
                     href="javascript:void(0);" routerLink="./profile">
                     <div class="profile-dropdown-img"> <img src="../../../../assets/svg/User--profile.svg" alt="" />
                     </div>View Profile

@@ -65,52 +65,53 @@ export class HomeComponent {
     this.roleNameArray = localStorage.getItem('roleNameArray');
     // this.roleName = localStorage.getItem('roleName');
     this.username = localStorage.getItem('username');
-    this.loginType = localStorage.getItem('logintype');
+    // this.loginType = localStorage.getItem('logintype');
     this.roleName = localStorage.getItem('roleName');
     this.searchModal = this.loginType;
   }
 
 
   ngOnInit() {
-    if(this.loginType == 'vendor'){
-      if(this.userdata.ROLE=='PRIMARY'){
-        this.commonService.routeToPage('./dashboard/all');
-      }else{
+    // if(this.loginType == 'vendor'){
+    //   if(this.userdata.ROLE=='PRIMARY'){
+    //     this.commonService.routeToPage('./dashboard/all');
+    //   }else{
         this.getPurchaseOrderList();
-        this.roleName = 'vendor';
-      }
-    }else{
-      this.roleNameArray = this.roleNameArray && this.roleNameArray.split(',');
-      if(localStorage.getItem('roleName')){
-        this.roleName = localStorage.getItem('roleName');
-        // this.activeTab = localStorage.getItem('roleName');
-        if (this.roleName.includes('SiteController')) {
-          this.activeTab = 'SiteController'
-        } else {
-          this.activeTab = localStorage.getItem('roleName')
-        }
-      } else {
-      // if(!(localStorage.getItem('roleName'))){
-        // this.roleNameArray = this.roleNameArray.split(',');
-        this.roleName = this.roleNameArray?.[0];
-        this.activeTab = this.roleNameArray?.[0];
-        localStorage.setItem('roleName', this.roleName);
-      }
-      /* this.roleNameArray = this.roleNameArray.split(',');
-      this.roleName = this.roleNameArray[0];
-      this.activeTab = this.roleNameArray[0]; */
+    //     this.roleName = 'vendor';
+    //   }
+    // }else{
+    //   this.roleNameArray = this.roleNameArray && this.roleNameArray.split(',');
+    //   if(localStorage.getItem('roleName')){
+    //     this.roleName = localStorage.getItem('roleName');
+    //     // this.activeTab = localStorage.getItem('roleName');
+    //     if (this.roleName.includes('SiteController')) {
+    //       this.activeTab = 'SiteController'
+    //     } else {
+    //       this.activeTab = localStorage.getItem('roleName')
+    //     }
+    //   } else {
+    //   // if(!(localStorage.getItem('roleName'))){
+    //     // this.roleNameArray = this.roleNameArray.split(',');
+    //     this.roleName = this.roleNameArray?.[0];
+    //     this.activeTab = this.roleNameArray?.[0];
+    //     localStorage.setItem('roleName', this.roleName);
+    //   }
+    //   /* this.roleNameArray = this.roleNameArray.split(',');
+    //   this.roleName = this.roleNameArray[0];
+    //   this.activeTab = this.roleNameArray[0]; */
 
-      if(this.roleName.includes('RawMaterialIncharge')){
-        this.showHistory = false;
-        this.activeTab = 'RawMaterialIncharge';
-        this.getCreatedCondition();
-      }
-      else if(this.roleName == 'BusinessUser'){
-      this.getPurchaseOrderListByEmployee()
-      }else{
-        this.getSiteControllerOrderList();
-      }
-    }
+    //   if(this.roleName.includes('RawMaterialIncharge')){
+    //     this.showHistory = false;
+    //     this.activeTab = 'RawMaterialIncharge';
+    //     this.getCreatedCondition();
+    //   }
+    //   else if(this.roleName == 'BusinessUser'){
+    //   this.getPurchaseOrderListByEmployee()
+    //   }else{
+    //     this.getSiteControllerOrderList();
+    //   }
+    // }
+
 
     // this.setModalToAdTable();
 
@@ -120,36 +121,27 @@ export class HomeComponent {
   }
 
   setVendorFilterField(){
+    console.log('setVendorFilterField');
     this.purchaseSearchObject = [
       {
-        forLabel: "Reference ID",
-        forContrl: "referenceId",
-        forPlace: "Enter Reference ID"
+        forLabel: "Reference ID.",
+        forContrl: "userId",
+        forPlace: "Enter Document No."
       },
       {
-        forLabel: "Invoice Number",
-        forContrl: "invoiceNumber",
-        forPlace: "Enter Invoice Number"
+        forLabel: "Vendor Name",
+        forContrl: "userName",
+        forPlace: "Enter Vendor Name"
       },
       {
-        forLabel: "Invoice Date",
-        forContrl: "invoiceDate",
-        forPlace: "Enter PO Number"
+        forLabel: "Email",
+        forContrl: "email",
+        forPlace: "Enter Email"
       },
       {
-        forLabel: "Invoice Amount",
-        forContrl: "invoiceAmount",
-        forPlace: "Enter Invoice Amount"
-      },
-      {
-        forLabel: "PO Number",
-        forContrl: "poNumber",
-        forPlace: "Enter PO Number"
-      },
-      {
-        forLabel: "Status",
-        forContrl: "status",
-        forPlace: "Choose"
+        forLabel: "Phone Number",
+        forContrl: "phoneNumber",
+        forPlace: "Enter Phone Number"
       },
     ]
   }
@@ -159,36 +151,27 @@ export class HomeComponent {
 
     let user;
     if(this.loginType == 'vendor'){
-      user = this.userdata['ACCOUNTNUMBER'];
+      user = this.userdata['id'];
     }
-    let url = `POInvoiceDetails?createdBy=${user}`;
-    // this.commonService.getPurchaseOrderList(user).subscribe((res:any)=>{
+    let url = `user/getAllUsers`;
 
     this.commonService.spinner.show();
     this.commonService.dataGet(url).subscribe((res:any)=>{
       console.log(res);
       // res['data'][0].status = 'error';
       this.commonService.spinner.hide();
-      if(res && res['status']=='Success' && res['data'].length>0){
+      if(res && res['status']=='SUCCESS' && res['data'].length>0){
         this.purchaseListAPI = [];
         this.purchaseListAPI = res['data'];
+        console.log(this.purchaseListAPI);
         this.purchaseList = [];
         res['data'].map((item:any)=>{
           this.purchaseList.push(
             {
-              "Reference ID": item['referenceId'],
-              "Entry Date": item['createdDate'],
-              "Invoice Type": item['invoiceType'],
-              "Invoice Number": item['invoiceNumber'],
-              "Invoice Date": item['invoiceDate'],
-              // "Invoice Amount (Rs)": item['invoiceAmount'],
-              "Invoice Amount (Rs)": item['invoiceType']=='Freight-Inbound'?item['totalAmount']:item['invoiceAmount'],
-              "PO Number": item['poNumber'],
-              "Submission To": item['submissionTo'],
-              // "Remark": item['remarks'],
-              "Attachment":item['invoiceAttachment'],
-              "Status": item['status'].toLowerCase(),
-              // "Checklist":item['barCode']?item['barCode']:'',
+              "Reference ID": item['userId']?item['userId']:'',
+              "Vendor Name": item['userName']?item['userName']:'',
+              "Email": item['email']?item['email']:'',
+              "Phone Number":item['phoneNumber']?item['phoneNumber']:'',
               "History": item
             }
           )
@@ -231,21 +214,10 @@ export class HomeComponent {
         res['data'].map((item:any)=>{
           this.purchaseList.push(
             {
-              "Reference ID": item['referenceId'],
-              "Entry Date": item['createdDate'],
-              "Invoice Type": item['invoiceType'],
-              "Invoice Number": item['invoiceNumber'],
-              "Invoice Date": item['invoiceDate'],
-              // "Invoice Amount (Rs)": item['invoiceAmount'],
-              "Invoice Amount (Rs)": item['invoiceType']=='Freight-Inbound'?item['totalAmount']:item['invoiceAmount'],
-              "PO Number": item['poNumber'],
-              "Submission To": item['submissionTo'],
-              "createdBy":item['createdBy'],
-              "bankAccount":item['bankAccount'],
-              // "Remark": item['remarks'],
-              "Attachment":item['invoiceAttachment'],
-              "Status": item['status'].toLowerCase(),
-              // "Checklist":item['barCode']?item['barCode']:'',
+              "Reference ID": item['userId']?item['userId']:'',
+              "Vendor Name": item['userName']?item['userName']:'',
+              "Email": item['email']?item['email']:'',
+              "Phone Number":item['phoneNumber']?item['phoneNumber']:'',
               "History": item
             }
           )
@@ -254,18 +226,11 @@ export class HomeComponent {
       }else{
         this.purchaseList = [
           {
-            "Reference ID":"",
-            "Entry Date": "",
-            "Invoice Number": "",
-            "Invoice Date": "",
-            "Invoice Amount (Rs)": "",
-            "PO Number": "",
-            "Submission To": "",
-            // "Remark": "",
-            "Attachment": "",
-            "Status": "",
-            "Checklist": "",
-            "History": ""
+            "Reference ID": "",
+              "Vendor Name": "",
+              "Email": "",
+              "Phone Number": "",
+              "History": ""
           }
         ];
       }
@@ -288,7 +253,7 @@ export class HomeComponent {
     if(tab=='RawMaterialIncharge'){
       this.getCreatedCondition();
     }else{
-      this.getSiteControllerOrderList();
+      // this.getSiteControllerOrderList();
     }
   }
 
@@ -437,63 +402,6 @@ export class HomeComponent {
     }, 2000)
   }
 
-
-  /* Site Controller */
-  getSiteControllerOrderList(){
-    console.log('getSiteControllerOrderList');
-
-    let user = this.username;
-    let url = `POInvoiceDetailsSubmitTo?submissionTo=${this.username}`
-    // this.commonService.getSiteControllerOrderList(user).subscribe((res:any)=>{
-
-    this.commonService.spinner.show();
-    this.commonService.dataGet(url).subscribe((res:any)=>{
-      console.log(res);
-      this.commonService.spinner.hide();
-      if(res && res['status']=='Success' && res['data'].length>0){
-        this.purchaseListAPI = [];
-        this.purchaseListAPI = res['data'];
-        this.purchaseList = [];
-        res['data'].map((item:any)=>{
-          this.purchaseList.push(
-            {
-              "Reference ID": item['referenceId']?item['referenceId']:'',
-              "Invoice Type": item['invoiceType']?item['invoiceType']:'',
-              "Invoice No.": item['invoiceNumber']?item['invoiceNumber']:'',
-              "Invoice Date": item['invoiceDate']?moment(item['invoiceDate']).format('DD-MMM-YYYY'):'',
-              "Invoice Amount (Rs)": item['invoiceAmount']?item['invoiceAmount']:'',
-              "PO No.": item['poNumber']?item['poNumber']:'',
-              "Vendor Code": item['createdBy']?item['createdBy']:'',
-              "Vendor Name": item['vendorName']?item['vendorName']:'',
-              "Status": item['status'].toLowerCase(),
-              "Checklist":item['barCode']?item['barCode']:'',
-              "History": item
-            }
-          )
-          this.setSiteControllerFilterField();
-        })
-      }else{
-        this.purchaseList = [
-          {
-            "Document No.": '',
-            "Invoice Type": '',
-            "Invoice No.": '',
-            "Invoice Date": '',
-            "Invoice Amount": '',
-            "PO No.": '',
-            "Vendor Code": '',
-            "Vendor Name": '',
-            "Checklist":'',
-            "History": ''
-          }
-        ];
-      }
-    },err=>{
-      this.commonService.spinner.hide();
-      console.log(err)
-    })
-  }
-
   applyPurchaseSearchSiteController(data: any) {
     console.log("applyPurchaseSearch", data);
 
@@ -554,47 +462,23 @@ export class HomeComponent {
     this.purchaseSearchObject = [
       {
         forLabel: "Reference ID.",
-        forContrl: "referenceId",
+        forContrl: "id",
         forPlace: "Enter Document No."
       },
       {
-        forLabel: "Invoice Type",
-        forContrl: "invoiceType",
-        forPlace: "Enter Type"
-      },
-      {
-        forLabel: "Invoice No.",
-        forContrl: "invoiceNumber",
-        forPlace: "Enter Invoice No."
-      },
-      {
-        forLabel: "Invoice Date",
-        forContrl: "invoiceDate"
-      },
-      {
-        forLabel: "Invoice Amount",
-        forContrl: "invoiceAmount",
-        forPlace: "Enter Invoice Amount"
-      },
-      {
-        forLabel: "PO No.",
-        forContrl: "poNumber",
-        forPlace: "Enter PO No."
-      },
-      {
-        forLabel: "Vendor Code",
-        forContrl: "poNumber",
-        forPlace: "Enter Vendor Code"
-      },
-      {
         forLabel: "Vendor Name",
-        forContrl: "vendorName",
+        forContrl: "userName",
         forPlace: "Enter Vendor Name"
       },
       {
-        forLabel: "Status",
-        forContrl: "status",
-        forPlace: "Choose"
+        forLabel: "Email",
+        forContrl: "email",
+        forPlace: "Enter Email"
+      },
+      {
+        forLabel: "Phone Number",
+        forContrl: "phoneNumber",
+        forPlace: "Enter Phone Number"
       },
     ]
   }

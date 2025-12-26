@@ -35,7 +35,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       return true
     } else if (path.includes('purchase') || path.includes('invoice') || path.includes('freight-inbound') && localStorage.getItem('logintype') == 'vendor') {
       return true
-    } else if (path.includes('profile') && localStorage.getItem('logintype') == 'vendor') {
+    } else if (path.includes('profile')) {
       return true
     }
     else if (path.includes('profile') && localStorage.getItem('logintype') == 'Project Manager') {

@@ -81,12 +81,8 @@ export class MasterAdTableComponent implements OnChanges {
     private route: Router,
     private commonService: CommonService
   ) {
-    this.roleName = localStorage.getItem('roleName') ? localStorage.getItem('roleName') : ''
-    this.roleType = localStorage.getItem('roleType') ? localStorage.getItem('roleType') : '';
     this.userdata = localStorage.getItem('userdata') ? JSON.parse(localStorage.getItem('userdata') || '') : '';
-    if (!this.roleName) {
-      this.roleName = this.userdata?.['ROLE'];
-    }
+    
   }
 
   NavigateToedit(item: any) {

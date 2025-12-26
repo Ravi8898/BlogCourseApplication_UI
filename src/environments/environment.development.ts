@@ -1,9 +1,9 @@
 export const environment = {
     production: false,
-    authUrl: 'http://10.212.109.134:8087/authentication',
+    authUrl: 'http://localhost:9090/blog-course-svc-mgr/api',
     baseUrl: 'http://localhost:9090/blog-course-svc-mgr/api',
-    apiUrl: 'http://localhost:9090/api',
-    apiUrllogistics: 'http://localhost:9090/logistics-api',
-    paperlessUrl: 'http://localhost:9090/paperless-api',
-    cadUrl: 'http://localhost:9090/cad/'
+    apiUrl: 'http://localhost:9090/blog-course-svc-mgr/api',
+    apiUrllogistics: 'http://localhost:9090/blog-course-svc-mgr/api',
+    paperlessUrl: 'http://localhost:9090/blog-course-svc-mgr/api',
+    cadUrl: 'http://localhost:9090/blog-course-svc-mgr/api'
 };

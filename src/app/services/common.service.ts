@@ -28,15 +28,9 @@ export class CommonService {
     this.username = localStorage.getItem('username');
   }
 
-  samlauth(data: any, url: any): Observable<any> {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    url = `${environment.baseUrl}` + url
-    return this.http.post(url, data);
-  }
-
   login(data: any): Observable<any> {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    let url = `${environment.baseUrl}/login`
+    let url = `${environment.baseUrl}/auth/login`
     return this.http.post(url, data);
   }
 
@@ -47,11 +41,6 @@ export class CommonService {
       'Authorization': `Bearer ${token}`
     });
     return headers;
-  }
-
-
-  loginSite(json: any) {
-    return this.http.post(`${environment.baseUrl}/login`, json);
   }
 
   sendOTP(json: any) {
@@ -360,7 +349,7 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
   }
 
   dataGet(url: any) {
-    url = `${environment.apiUrl}/api/invoice/${url}`;
+    url = `${environment.apiUrl}/${url}`;
     return this.http.get(url, { headers: this.returnHeader() })
   }
 
@@ -434,9 +423,9 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
     this.router.navigate(['./dashboard']);
   } */
 
-  /* routeToProfile() {
+  routeToProfile() {
     this.router.navigate(['./dashboard/profile']);
-  } */
+  } 
 
   /* routeToPurchaseOrder() {
     // this.router.navigate(['./dashboard/purchase']);

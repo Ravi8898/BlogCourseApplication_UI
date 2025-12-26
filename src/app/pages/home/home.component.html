@@ -8,17 +8,14 @@
                         <p class="page-heading">Welcome to vSPEED</p>
 
                         <!-- <div class="tabs" *ngIf="roleNameArray && roleNameArray.length>0"> -->
-                        <div class="tabs" *ngIf="roleNameArray && roleNameArray.length>1">
+                        <!-- <div class="tabs" *ngIf="roleNameArray && roleNameArray.length>1">
                             <div class="tab" [class.active]="activeTab == 'SiteController'" (click)="activateTab('SiteController')"> Site Controller </div>
                             <div class="tab" [class.active]="activeTab == 'RawMaterialIncharge'" (click)="activateTab('RawMaterialIncharge')"> Raw Material Incharge </div>
-                        </div>
+                        </div> -->
 
                         <div>
                             <button type="button" class="button-submit" *ngIf="loginType =='vendor' && userdata.ACCOUNTNUMBER=='0910028104'" (click)="downloadRewardItemData();">Download PO Item Excel</button>
                             <button type="button" class="button-submit" *ngIf="loginType =='vendor'|| roleName=='BusinessUser'" data-bs-toggle="modal" data-bs-target="#chooseModal">Upload Invoice</button><!-- (click)="navigateToPurchase()" -->
-                            <!-- <button type="button" class="button-submit" *ngIf="roleNameArray && roleNameArray.length>0 && roleName =='RawMaterialIncharge'" (click)="routeToPage()">Update GRN</button> -->
-                            <button type="button" class="button-submit" *ngIf="roleName.includes('RawMaterialIncharge')" (click)="routeToPage()">Update GRN</button>
-                            <!-- <button type="button" class="button-submit" *ngIf="(roleNameArray && roleNameArray.length>0 && roleName !='RawMaterialIncharge')" style="visibility: hidden;">Update GRN1</button> -->
                         </div>
                     </div>
                     <div class="tab-content">

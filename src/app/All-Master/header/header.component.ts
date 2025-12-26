@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -10,32 +12,25 @@ export class HeaderComponent {
   @Input() showElement: boolean = false;
   todaye: Date = new Date;
   username: string | null = '';
-  logintype: any = '';
+  token: string | null = '';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private http: HttpClient) { 
     this.username = localStorage.getItem('username');
-    this.logintype = localStorage.getItem('logintype');
+    this.token = localStorage.getItem('token');
   }
 
   handleLogout(event: MouseEvent) {
+    console.log('Logout clicked');
     // Prevent default behavior of the anchor tag
     event.preventDefault();
 
     // Call the logout function
     this.logout();
-
-    // Open the URL in a new window
-    const newWindow = window.open('https://vspeed.adani.com/saml/logout', '_blank');
-
-    // Automatically close the new window after 3 seconds (or any suitable time)
-    setTimeout(() => {
-      if (newWindow) {
-        newWindow.close();
-      }
-    }, 3000);
   }
 
   logout() {
+    console.log('Logging out user');
+    const token = localStorage.getItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('token');
     localStorage.removeItem('role');
@@ -45,8 +40,24 @@ export class HeaderComponent {
     localStorage.removeItem('roleName');
     localStorage.removeItem('conditionList');
     localStorage.removeItem('conditionListJson');
-    localStorage.clear();
 
-    this.router.navigate(['']);
+    const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+    });
+    let url = `${environment.baseUrl}/auth/logout`
+    return this.http.post(url, {}, { headers }).subscribe(
+      res => {
+      // Clear storage after successful logout
+      localStorage.clear();
+      // Redirect to login/home page
+      this.router.navigate(['']);
+    },
+     err => {
+      console.error('Logout failed', err);
+      // Optional: still clear local data
+      localStorage.clear();
+      this.router.navigate(['']);
+    });
   }
 }
