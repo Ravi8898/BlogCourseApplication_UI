@@ -240,7 +240,13 @@ export class LoginInputComponent {
     this.commonService.login(loginData).subscribe(
       res => {
         localStorage.clear();
-        localStorage.setItem('username', res['data']['username']);
+        localStorage.setItem('userId', res['data']['userId']);
+        localStorage.setItem('firstName', res['data']['firstName']);
+        localStorage.setItem('lastName', res['data']['lastName']);
+        localStorage.setItem('email', res['data']['email']);
+        localStorage.setItem('phoneNumber', res['data']['phoneNumber']);
+        localStorage.setItem('role', res['data']['role']);
+        localStorage.setItem('address', JSON.stringify(res['data']['address']));
         localStorage.setItem('token', res['data']['token']);
         localStorage.setItem('userdata', JSON.stringify(res['data']));
         console.log('Login successful:', res);

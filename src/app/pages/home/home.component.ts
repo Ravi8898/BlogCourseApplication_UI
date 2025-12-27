@@ -64,9 +64,9 @@ export class HomeComponent {
 
     this.roleNameArray = localStorage.getItem('roleNameArray');
     // this.roleName = localStorage.getItem('roleName');
-    this.username = localStorage.getItem('username');
+    this.username = localStorage.getItem('firstName') + ' ' + localStorage.getItem('lastName');
     // this.loginType = localStorage.getItem('logintype');
-    this.roleName = localStorage.getItem('roleName');
+    this.roleName = localStorage.getItem('role');
     this.searchModal = this.loginType;
   }
 
@@ -169,7 +169,7 @@ export class HomeComponent {
           this.purchaseList.push(
             {
               "Reference ID": item['userId']?item['userId']:'',
-              "Vendor Name": item['userName']?item['userName']:'',
+              "Vendor Name": item['firstName']+' '+item['lastName']?item['firstName']+ ' '+item['lastName']:'',
               "Email": item['email']?item['email']:'',
               "Phone Number":item['phoneNumber']?item['phoneNumber']:'',
               "History": item
