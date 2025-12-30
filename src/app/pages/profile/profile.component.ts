@@ -22,7 +22,7 @@ export class ProfileComponent {
 
   ngOnInit():void{
     this.loadprofileForm1();
-    console.log(this.userData);
+    console.log("Inside profile ngOnInit :: "+this.userData);
     // this.loadprofileForm1Value();
   }
 

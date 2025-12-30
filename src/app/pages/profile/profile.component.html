@@ -17,33 +17,39 @@
                 <tbody>
                     <tr>
                         <td class="key">Account Number of Vendor Or Creditor</td>
-                        <td>{{userData['id']}}</td>
+                        <td>{{userData['userId']}}</td>
                         <td class="key">Name</td>
-                        <td>{{userData['username']}}</td>
+                        <td>{{userData['firstName'] + ' ' + userData['lastName']}}</td>
                     </tr>
                     <tr>
-                        <td class="key">Street 1</td>
-                        <td>{{userData['street1']}}</td>
-                        <td class="key">Street 2</td>
-                        <td>{{userData['street2']}}</td>
+                        <td class="key">Address Line 1</td>
+                        <td>{{userData['address']['addressLine1']}}</td>
+                        <td class="key">Address Line 2</td>
+                        <td>{{userData['address']['addressLine2']}}</td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td class="key">Street 3</td>
                         <td>{{userData['street3']}}</td>
                         <td class="key">Street 4</td>
                         <td>{{userData['street4']}}</td>
-                    </tr>
+                    </tr> -->
                     <tr>
-                        <td class="key">Region (State, Province, Country)</td>
-                        <td>{{userData['region']}}</td>
-                        <td class="key">District</td>
-                        <td>{{userData['district']}}</td>
+                        <td class="key">Region (Landmark)</td>
+                        <td>{{userData['address']['landmark']}}</td>
+                        <td class="key">City</td>
+                        <td>{{userData['address']['city']}}</td>
                     </tr>
                     <tr>
                         <td class="key">Postal Code</td>
-                        <td>{{userData['postal_code']}}</td>
-                        <td class="key">City</td>
-                        <td>{{userData['city']}}</td>
+                        <td>{{userData['address']['postalCode']}}</td>
+                        <td class="key">District</td>
+                        <td>{{userData['address']['district']}}</td>
+                    </tr>
+                    <tr>
+                        <td class="key">State</td>
+                        <td>{{userData['address']['state']}}</td>
+                        <td class="key">Country</td>
+                        <td>{{userData['address']['country']}}</td>
                     </tr>
                     <tr>
                         <td class="key">E-Mail Address</td>
@@ -51,16 +57,10 @@
                         <td class="key">Telephone Number</td>
                         <td>{{userData['phoneNumber']}}</td>
                     </tr>
-                    <tr>
-                        <td class="key">GST Number</td>
-                        <td>{{userData['gst']}}</td>
-                        <td class="key">Tax Number At Responsible Tax Authority</td>
-                        <td>{{userData['tax']}}</td>
-                    </tr>
-                    <tr>
+                    <!-- <tr>
                         <td class="key">Vendor Account Group</td>
                         <td>{{profileForm1['vendor_group']}}</td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>

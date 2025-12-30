@@ -243,6 +243,7 @@ export class LoginInputComponent {
         localStorage.setItem('userId', res['data']['userId']);
         localStorage.setItem('firstName', res['data']['firstName']);
         localStorage.setItem('lastName', res['data']['lastName']);
+        localStorage.setItem('username', res['data']['firstName'] + ' ' + res['data']['lastName']);
         localStorage.setItem('email', res['data']['email']);
         localStorage.setItem('phoneNumber', res['data']['phoneNumber']);
         localStorage.setItem('role', res['data']['role']);
@@ -250,6 +251,8 @@ export class LoginInputComponent {
         localStorage.setItem('token', res['data']['token']);
         localStorage.setItem('userdata', JSON.stringify(res['data']));
         console.log('Login successful:', res);
+        console.log("inside login :: ",res['data']['username']);
+        console.log("inside login localStorage:: ",localStorage.getItem('username'));
         this.commonService.routeToPage('./dashboard');
         // Handle successful login
       },
