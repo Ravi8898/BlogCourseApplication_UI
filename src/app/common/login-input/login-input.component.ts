@@ -18,7 +18,8 @@ export class LoginInputComponent {
   loginUserForm!: FormGroup;
   isProduction: boolean = false;
   divisonList: any[] = ['Cement', 'AEML', 'APSEZ']
-  production: boolean = environment.production
+  production: boolean = environment.production;
+  formType = 'login'
   activeTab = 'tab1';
   errMsg = '';
   isLoader = false;
@@ -28,6 +29,7 @@ export class LoginInputComponent {
   otpForm: any;
   otpUsername = false;
   siteLoginForm: any;
+  registerForm: any;
   showOTPField = false;
   vendorLoginForm: any;
 
@@ -54,6 +56,7 @@ export class LoginInputComponent {
   ) { }
 
   ngOnInit(): void {
+    this.loadRegisterForm();
     this.siteLoginForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       password: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -269,5 +272,35 @@ export class LoginInputComponent {
     );
   }
 
+  loadRegisterForm(){
+    this.registerForm = new FormGroup({
+      firstname: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      lastname: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      email: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]),
+      password: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      role: new FormControl('', [Validators.required, Validators.maxLength(50)]),      
+    })
+  }
+
+  register(event:any){
+    console.log('resgiter');
+
+    let json = {
+      firstname: this.registerForm.value.firstname,
+      lastname: this.registerForm.value.lastname,
+      email: this.registerForm.value.email,
+      mobile: this.registerForm.value.mobile,
+      password: this.registerForm.value.password,
+      role: this.registerForm.value.role,
+    }
+
+    this.commonService.register(json).subscribe(res=>{
+      console.log(res);
+    },err=>{
+      console.log(err);
+      
+    })
+  }
 
 }

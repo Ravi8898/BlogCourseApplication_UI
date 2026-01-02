@@ -15,7 +15,7 @@
                 <div class="login-panel">
                     <div class="login-section">
 
-                        <form *ngIf="!production" [formGroup]="siteLoginForm" name="siteLoginForm">
+                        <form *ngIf="formType=='login'" [formGroup]="siteLoginForm" name="siteLoginForm">
 
                             <div class="py-2 text-start">
                                 <label for="username" class="form-label">AD ID</label>
@@ -42,15 +42,57 @@
                                     Loading...
                                 </button>
                             </div>
+                            <p class="text-center">Don't have a Account?<a href="javascript:void(0)" (click)="formType='register'">Register Now</a></p>
 
                         </form>
-                        <div *ngIf="errMsg">
-                            <p class="error-message">{{errMsg}}</p>
-                        </div>
-                        <div *ngIf="loginErrorMsg">
-                            <div class="error-message">{{loginErrorMsg}}
+
+                        <form *ngIf="formType=='register'" [formGroup]="registerForm" name="registerForm">
+                            <div class="py-2 text-start">
+                                <label for="firstname" class="form-label">FirstName</label>
+                                <input type="text" class="form-control" id="firstname" placeholder="Enter firstname"
+                                    formControlName="firstname" maxLength="51" minlength="4">
                             </div>
-                        </div>
+
+                            <div class="py-2 text-start">
+                                <label for="lastname" class="form-label">LastName</label>
+                                <input type="text" class="form-control" id="lastname" placeholder="Enter lastname"
+                                    formControlName="lastname" maxLength="51" minlength="4">
+                            </div>
+
+                            <div class="py-2 text-start">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Enter email"
+                                    formControlName="email" maxLength="51" minlength="4">
+                            </div>
+
+                            <div class="py-2 text-start">
+                                <label for="mobile" class="form-label">MObile</label>
+                                <input type="text" class="form-control" id="mobile" placeholder="Enter Mobile"
+                                    formControlName="mobile" maxLength="10" minlength="10">
+                            </div>
+
+                            <div class="py-2 text-start">
+                                <label for="username" class="form-label">Password</label>
+                                <input type="text" class="form-control" id="password" placeholder="Enter password"
+                                    formControlName="passowrd" maxLength="51" minlength="4">
+                            </div>
+
+                            <div class="py-2">
+                                <label for="role" class="form-label">Role</label>
+                                <!-- <input type="password" class="form-control" id="role"
+                                    formControlName="role" maxLength="50"> -->
+                                <select formControlName="role" class="form-control">
+                                    <option value="1">Admin</option>
+                                    <option value="2">User</option>
+                                    <option value="3">Manager</option>    
+                                </select>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button class="login-button" type="submit" (click)="register($event)">Regsiter</button>                                
+                            </div>
+                            <p class="text-center"><a href="javascript:void(0)" (click)="formType='login'">Login</a></p>
+                        </form>
                     </div>
                 </div>
             </div>
