@@ -56,6 +56,7 @@ export class LoginInputComponent {
   ) { }
 
   ngOnInit(): void {
+
     this.loadRegisterForm();
     this.siteLoginForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -278,8 +279,8 @@ export class LoginInputComponent {
       lastname: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       email: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]),
-      password: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      role: new FormControl('', [Validators.required, Validators.maxLength(50)]),      
+      regPassword: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      role: new FormControl('0', [Validators.required, Validators.min(1)]),
     })
   }
 
