@@ -235,8 +235,8 @@ export class LoginInputComponent {
     }
   }
 
-  
-  login(event : any) {
+
+  login(event: any) {
     const loginData = {
       username: this.siteLoginForm.controls['username'].value,
       password: this.siteLoginForm.controls['password'].value
@@ -255,25 +255,35 @@ export class LoginInputComponent {
         localStorage.setItem('token', res['data']['token']);
         localStorage.setItem('userdata', JSON.stringify(res['data']));
         console.log('Login successful:', res);
-        console.log("inside login :: ",res['data']['username']);
-        console.log("inside login localStorage:: ",localStorage.getItem('username'));
+        console.log("inside login :: ", res['data']['username']);
+        console.log("inside login localStorage:: ", localStorage.getItem('username'));
         this.commonService.routeToPage('./dashboard');
         // Handle successful login
+        if (res.status === 'SUCCESS') {
+        // Success Toast
+        this.toastMsg = res.message || 'Login successfully';
+        this.successToast = true;
+        this.errorToast = false;
+
+        setTimeout(() => {
+          this.successToast = true;
+        }, 3000);
+      }
       },
       error => {
-      this.isLoader = false;
-      console.log(error);
-      this.loginErrorMsg = error['error']['message'] ? error['error']['message'] : 'Server Error! Please try again later!';
-      // this.toastMsg = err['error']['message'];
-      // this.errorToast = true;
-      setTimeout(() => {
-        this.errorToast = false;
-      }, 5000);
+        this.isLoader = false;
+        console.log(error);
+        this.loginErrorMsg = error['error']['message'] ? error['error']['message'] : 'Server Error! Please try again later!';
+        // this.toastMsg = err['error']['message'];
+        // this.errorToast = true;
+        setTimeout(() => {
+          this.errorToast = false;
+        }, 5000);
       }
     );
   }
 
-  loadRegisterForm(){
+  loadRegisterForm() {
     this.registerForm = new FormGroup({
       firstname: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       lastname: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -281,27 +291,79 @@ export class LoginInputComponent {
       mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]),
       regPassword: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       role: new FormControl('0', [Validators.required, Validators.min(1)]),
+      address: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      addressLine1: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      addressLine2: new FormControl('', [Validators.maxLength(100)]),
+      landmark: new FormControl('', [Validators.maxLength(50)]),
+      city: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      district: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      state: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      country: new FormControl('', [Validators.required, Validators.maxLength(50)]),
+      postalCode: new FormControl('', [Validators.required, Validators.maxLength(10)])
     })
   }
 
-  register(event:any){
+  register(event: any) {
     console.log('resgiter');
 
     let json = {
-      firstname: this.registerForm.value.firstname,
-      lastname: this.registerForm.value.lastname,
+      firstName: this.registerForm.value.firstname,
+      lastName: this.registerForm.value.lastname,
       email: this.registerForm.value.email,
-      mobile: this.registerForm.value.mobile,
-      password: this.registerForm.value.password,
+      phoneNumber: this.registerForm.value.mobile,
+      password: this.registerForm.value.regPassword,
       role: this.registerForm.value.role,
+      address: {
+        addressLine1: this.registerForm.value.addressLine1,
+        addressLine2: this.registerForm.value.addressLine2,
+        landmark: this.registerForm.value.landmark,
+        city: this.registerForm.value.city,
+        district: this.registerForm.value.district,
+        state: this.registerForm.value.state,
+        country: this.registerForm.value.country,
+        postalCode: this.registerForm.value.postalCode
+      }
+
     }
 
-    this.commonService.register(json).subscribe(res=>{
+    this.commonService.register(json).subscribe(res => {
+
       console.log(res);
-    },err=>{
-      console.log(err);
-      
-    })
+      if (res.status === 'SUCCESS') {
+        // Success Toast
+        this.toastMsg = res.message || 'Registration completed successfully';
+        this.successToast = true;
+        this.errorToast = false;
+
+        setTimeout(() => {
+          this.successToast = false;
+        }, 3000);
+
+        this.formType = 'login';
+      } else {
+        // Failure returned from API (409, validation, etc.)
+        this.toastMsg = res.message || 'Registration failed';
+        this.errorToast = true;
+        this.successToast = false;
+
+        setTimeout(() => {
+          this.errorToast = false;
+        }, 3000);
+      };
+      this.formType = 'login'
+    }, error => {
+      console.log(error);
+      this.toastMsg =
+        error?.error?.message || 'Server Error! Please try again later!';
+
+      this.errorToast = true;
+      this.successToast = false;
+
+      setTimeout(() => {
+        this.errorToast = false;
+      }, 3000);
+    });
   }
+
 
 }
