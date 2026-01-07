@@ -237,6 +237,10 @@ export class LoginInputComponent {
 
 
   login(event: any) {
+    if (this.siteLoginForm.invalid) {
+      this.siteLoginForm.markAllAsTouched();
+      return;
+    }
     const loginData = {
       username: this.siteLoginForm.controls['username'].value,
       password: this.siteLoginForm.controls['password'].value
@@ -285,26 +289,53 @@ export class LoginInputComponent {
 
   loadRegisterForm() {
     this.registerForm = new FormGroup({
-      firstname: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      lastname: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      email: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]),
-      regPassword: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      role: new FormControl('0', [Validators.required, Validators.min(1)]),
-      address: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-      addressLine1: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-      addressLine2: new FormControl('', [Validators.maxLength(100)]),
-      landmark: new FormControl('', [Validators.maxLength(50)]),
-      city: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      district: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      state: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      country: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      postalCode: new FormControl('', [Validators.required, Validators.maxLength(10)])
+      firstname: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
+  
+      lastname: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
+  
+      email: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
+  
+      mobile: new FormControl('', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]),
+  
+      regPassword: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
+        // OPTIONAL FIELDS (no required)
+    role: new FormControl('0'),
+    addressLine1: new FormControl(''),
+    addressLine2: new FormControl(''),
+    landmark: new FormControl(''),
+    city: new FormControl(''),
+    district: new FormControl(''),
+    state: new FormControl(''),
+    country: new FormControl(''),
+    postalCode: new FormControl('')
+  
     })
   }
 
   register(event: any) {
     console.log('resgiter');
+    if (this.registerForm.invalid) 
+    { 
+      this.registerForm.markAllAsTouched(); 
+      return; 
+    }
+  
 
     let json = {
       firstName: this.registerForm.value.firstname,
