@@ -290,7 +290,7 @@ export class LoginInputComponent {
       email: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       mobile: new FormControl('', [Validators.required, Validators.maxLength(10), Validators.minLength(10)]),
       regPassword: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-      role: new FormControl('0', [Validators.required, Validators.min(1)]),
+      role: new FormControl('', Validators.required),
       address: new FormControl('', [Validators.required, Validators.maxLength(100)]),
       addressLine1: new FormControl('', [Validators.required, Validators.maxLength(100)]),
       addressLine2: new FormControl('', [Validators.maxLength(100)]),
@@ -312,7 +312,7 @@ export class LoginInputComponent {
       email: this.registerForm.value.email,
       phoneNumber: this.registerForm.value.mobile,
       password: this.registerForm.value.regPassword,
-      role: this.registerForm.value.role,
+      role: 'USER',
       address: {
         addressLine1: this.registerForm.value.addressLine1,
         addressLine2: this.registerForm.value.addressLine2,
