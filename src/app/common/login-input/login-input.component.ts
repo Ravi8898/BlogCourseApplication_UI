@@ -264,6 +264,7 @@ export class LoginInputComponent {
         this.commonService.routeToPage('./dashboard');
         // Handle successful login
         if (res.status === 'SUCCESS') {
+          this.resetLoginForm();
         // Success Toast
         this.toastMsg = res.message || 'Login successfully';
         this.successToast = true;
@@ -285,8 +286,20 @@ export class LoginInputComponent {
         }, 5000);
       }
     );
+    
+  }
+  resetLoginForm() {
+    this.siteLoginForm.reset();
+    this.siteLoginForm.markAsPristine();
+    this.siteLoginForm.markAsUntouched();
+  }
+  switchToRegister() {
+    this.resetLoginForm();
+    this.loginErrorMsg = '';
+    this.formType = 'register';
   }
 
+  submittedRegister = false;
   loadRegisterForm() {
     this.registerForm = new FormGroup({
       firstname: new FormControl('', [
@@ -301,11 +314,13 @@ export class LoginInputComponent {
   
       email: new FormControl('', [
         Validators.required,
+        Validators.email,
         Validators.maxLength(50)
       ]),
   
       mobile: new FormControl('', [
         Validators.required,
+        Validators.pattern(/^[6-9]\d{9}$/),
         Validators.minLength(10),
         Validators.maxLength(10)
       ]),
@@ -329,7 +344,9 @@ export class LoginInputComponent {
   }
 
   register(event: any) {
+    this.submittedRegister = true;
     console.log('resgiter');
+
     if (this.registerForm.invalid) 
     { 
       this.registerForm.markAllAsTouched(); 
@@ -362,9 +379,14 @@ export class LoginInputComponent {
       console.log(res);
       if (res.status === 'SUCCESS') {
         // Success Toast
+        this.resetRegisterForm();
         this.toastMsg = res.message || 'Registration completed successfully';
         this.successToast = true;
         this.errorToast = false;
+
+        // RESET FORM 
+        this.registerForm.reset();
+        this.submittedRegister = false;
 
         setTimeout(() => {
           this.successToast = false;
@@ -394,6 +416,16 @@ export class LoginInputComponent {
         this.errorToast = false;
       }, 3000);
     });
+  }
+  resetRegisterForm() {
+    this.registerForm.reset();
+    this.registerForm.markAsPristine();
+    this.registerForm.markAsUntouched();
+  }
+  switchToLogin() {
+    this.resetRegisterForm();
+    this.loginErrorMsg = '';
+    this.formType = 'login';
   }
 
 
