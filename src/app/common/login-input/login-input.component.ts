@@ -330,7 +330,6 @@ export class LoginInputComponent {
         Validators.maxLength(50)
       ]),
         // OPTIONAL FIELDS (no required)
-    role: new FormControl('0'),
     addressLine1: new FormControl(''),
     addressLine2: new FormControl(''),
     landmark: new FormControl(''),
@@ -360,7 +359,7 @@ export class LoginInputComponent {
       email: this.registerForm.value.email,
       phoneNumber: this.registerForm.value.mobile,
       password: this.registerForm.value.regPassword,
-      role: this.registerForm.value.role,
+      role: 'USER',
       address: {
         addressLine1: this.registerForm.value.addressLine1,
         addressLine2: this.registerForm.value.addressLine2,
