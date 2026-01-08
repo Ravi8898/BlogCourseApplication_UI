@@ -18,7 +18,8 @@ export class LoginInputComponent {
   loginUserForm!: FormGroup;
   isProduction: boolean = false;
   divisonList: any[] = ['Cement', 'AEML', 'APSEZ']
-  production: boolean = environment.production
+  production: boolean = environment.production;
+  formType = 'login'
   activeTab = 'tab1';
   errMsg = '';
   isLoader = false;
@@ -28,6 +29,7 @@ export class LoginInputComponent {
   otpForm: any;
   otpUsername = false;
   siteLoginForm: any;
+  registerForm: any;
   showOTPField = false;
   vendorLoginForm: any;
 
@@ -54,6 +56,8 @@ export class LoginInputComponent {
   ) { }
 
   ngOnInit(): void {
+
+    this.loadRegisterForm();
     this.siteLoginForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.maxLength(50)]),
       password: new FormControl('', [Validators.required, Validators.maxLength(50)]),
@@ -231,8 +235,12 @@ export class LoginInputComponent {
     }
   }
 
-  
-  login(event : any) {
+
+  login(event: any) {
+    if (this.siteLoginForm.invalid) {
+      this.siteLoginForm.markAllAsTouched();
+      return;
+    }
     const loginData = {
       username: this.siteLoginForm.controls['username'].value,
       password: this.siteLoginForm.controls['password'].value
@@ -251,22 +259,172 @@ export class LoginInputComponent {
         localStorage.setItem('token', res['data']['token']);
         localStorage.setItem('userdata', JSON.stringify(res['data']));
         console.log('Login successful:', res);
-        console.log("inside login :: ",res['data']['username']);
-        console.log("inside login localStorage:: ",localStorage.getItem('username'));
+        console.log("inside login :: ", res['data']['username']);
+        console.log("inside login localStorage:: ", localStorage.getItem('username'));
         this.commonService.routeToPage('./dashboard');
         // Handle successful login
+        if (res.status === 'SUCCESS') {
+          this.resetLoginForm();
+        // Success Toast
+        this.toastMsg = res.message || 'Login successfully';
+        this.successToast = true;
+        this.errorToast = false;
+
+        setTimeout(() => {
+          this.successToast = true;
+        }, 3000);
+      }
       },
       error => {
-      this.isLoader = false;
-      console.log(error);
-      this.loginErrorMsg = error['error']['message'] ? error['error']['message'] : 'Server Error! Please try again later!';
-      // this.toastMsg = err['error']['message'];
-      // this.errorToast = true;
-      setTimeout(() => {
-        this.errorToast = false;
-      }, 5000);
+        this.isLoader = false;
+        console.log(error);
+        this.loginErrorMsg = error['error']['message'] ? error['error']['message'] : 'Server Error! Please try again later!';
+        // this.toastMsg = err['error']['message'];
+        // this.errorToast = true;
+        setTimeout(() => {
+          this.errorToast = false;
+        }, 5000);
       }
     );
+    
+  }
+  resetLoginForm() {
+    this.siteLoginForm.reset();
+    this.siteLoginForm.markAsPristine();
+    this.siteLoginForm.markAsUntouched();
+  }
+  switchToRegister() {
+    this.resetLoginForm();
+    this.loginErrorMsg = '';
+    this.formType = 'register';
+  }
+
+  submittedRegister = false;
+  loadRegisterForm() {
+    this.registerForm = new FormGroup({
+      firstname: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
+  
+      lastname: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
+  
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(50)
+      ]),
+  
+      mobile: new FormControl('', [
+        Validators.required,
+        Validators.pattern(/^[6-9]\d{9}$/),
+        Validators.minLength(10),
+        Validators.maxLength(10)
+      ]),
+  
+      regPassword: new FormControl('', [
+        Validators.required,
+        Validators.maxLength(50)
+      ]),
+        // OPTIONAL FIELDS (no required)
+    addressLine1: new FormControl(''),
+    addressLine2: new FormControl(''),
+    landmark: new FormControl(''),
+    city: new FormControl(''),
+    district: new FormControl(''),
+    state: new FormControl(''),
+    country: new FormControl(''),
+    postalCode: new FormControl('')
+  
+    })
+  }
+
+  register(event: any) {
+    this.submittedRegister = true;
+    console.log('resgiter');
+
+    if (this.registerForm.invalid) 
+    { 
+      this.registerForm.markAllAsTouched(); 
+      return; 
+    }
+  
+
+    let json = {
+      firstName: this.registerForm.value.firstname,
+      lastName: this.registerForm.value.lastname,
+      email: this.registerForm.value.email,
+      phoneNumber: this.registerForm.value.mobile,
+      password: this.registerForm.value.regPassword,
+      role: 'USER',
+      address: {
+        addressLine1: this.registerForm.value.addressLine1,
+        addressLine2: this.registerForm.value.addressLine2,
+        landmark: this.registerForm.value.landmark,
+        city: this.registerForm.value.city,
+        district: this.registerForm.value.district,
+        state: this.registerForm.value.state,
+        country: this.registerForm.value.country,
+        postalCode: this.registerForm.value.postalCode
+      }
+
+    }
+
+    this.commonService.register(json).subscribe(res => {
+
+      console.log(res);
+      if (res.status === 'SUCCESS') {
+        // Success Toast
+        this.resetRegisterForm();
+        this.toastMsg = res.message || 'Registration completed successfully';
+        this.successToast = true;
+        this.errorToast = false;
+
+        // RESET FORM 
+        this.registerForm.reset();
+        this.submittedRegister = false;
+
+        setTimeout(() => {
+          this.successToast = false;
+        }, 3000);
+
+        this.formType = 'login';
+      } else {
+        // Failure returned from API (409, validation, etc.)
+        this.toastMsg = res.message || 'Registration failed';
+        this.errorToast = true;
+        this.successToast = false;
+
+        setTimeout(() => {
+          this.errorToast = false;
+        }, 3000);
+      };
+      this.formType = 'login'
+    }, error => {
+      console.log(error);
+      this.toastMsg =
+        error?.error?.message || 'Server Error! Please try again later!';
+
+      this.errorToast = true;
+      this.successToast = false;
+
+      setTimeout(() => {
+        this.errorToast = false;
+      }, 3000);
+    });
+  }
+  resetRegisterForm() {
+    this.registerForm.reset();
+    this.registerForm.markAsPristine();
+    this.registerForm.markAsUntouched();
+  }
+  switchToLogin() {
+    this.resetRegisterForm();
+    this.loginErrorMsg = '';
+    this.formType = 'login';
   }
 
 

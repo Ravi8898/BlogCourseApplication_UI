@@ -34,6 +34,12 @@ export class CommonService {
     return this.http.post(url, data);
   }
 
+  register(data: any): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    let url = `${environment.baseUrl}/auth/register`
+    return this.http.post(url, data);
+  }
+
     private createHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
