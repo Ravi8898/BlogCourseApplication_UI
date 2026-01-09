@@ -529,4 +529,12 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
 
     return this.http.post<{ status: string, message: string }>(url, [payload], { headers });
   }
+
+  forgotPassword(payload: { email: string }) {
+    return this.http.post(
+      `${environment.baseUrl}/auth/forgotPassword`,
+      payload
+    );
+  }
+  
 }

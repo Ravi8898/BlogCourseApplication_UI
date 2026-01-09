@@ -115,6 +115,7 @@ import { AdminHomeComponent } from './Paperless-Work/admin-home/admin-home.compo
 import { InvoiceActionComponent } from './Paperless-Work/invoice-action/invoice-action.component';
 import { VendorHomeComponent } from './Paperless-Work/vendor-home/vendor-home.component';
 import { VendorUploadInvoiceComponent } from './Paperless-Work/vendor-upload-invoice/vendor-upload-invoice.component';
+import { ForgotPasswordComponent } from './common/forgot-password/forgot-password.component';
 @NgModule({
   declarations: [
     AllMasterDataComponent,
@@ -222,7 +223,8 @@ import { VendorUploadInvoiceComponent } from './Paperless-Work/vendor-upload-inv
     VendorHomeComponent,
     VendorUploadInvoiceComponent,
     AdminHomeComponent,
-    InvoiceActionComponent
+    InvoiceActionComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,
