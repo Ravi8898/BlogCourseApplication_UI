@@ -21,86 +21,13 @@
     </div> -->
 
     <!--Changes by Suleman-->
-    <div class="tab-menu d-flex align-items-center"> <!-- Suleman please check rolename that different for CAD-->
-        <div *ngIf="loginType == 'vendor' && division == 'Cement' && (this.vendorLogin == 'PRIMARY' || this.vendorLogin == '')">
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/home')">
-                <!-- *ngIf="roleName == 'SiteController' || roleName == 'RawMaterialIncharge'" -->
-                <label class="menu-label" [class.active]="active === '/dashboard/home'">Home</label>
-            </a>
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/help')">
-                <!-- *ngIf="roleName == 'SiteController' || roleName == 'RawMaterialIncharge'" -->
-                <label class="menu-label" [class.active]="active === '/dashboard/help'">Help</label>
-            </a>
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/logistic')"
-                *ngIf="roleName == 'LogisticOfficer'">
-                <label class="menu-label" [class.active]="active === '/dashboard/logistic'">Home</label>
-            </a>
-        </div>
-        <div *ngIf="this.roleName.includes('AllFrieghtMaster')">
-          <a href="javascript:void(0);" *ngIf="!(roleNameArray.includes('AllFrieghtMaster') && roleNameArray.length === 1)"
-            (click)="activateNav('/dashboard/home')">
-            <label class="menu-label" [class.active]="active === '/dashboard/home'">Home</label>
-          </a>
-          <!-- <a href="javascript:void(0);" (click)="activateNav('/All-Master')">
-            <label class="menu-label" [class.active]="active === '/All-Master'">All master data</label>
-          </a> -->
-            <a href="javascript:void(0);" (click)="activateNav('/All-Master/frieght')">
-              <label class="menu-label" [class.active]="active === '/All-Master/frieght'">Frieght Rate Master</label>
-            </a>
-        </div>
-         <div *ngIf="roleName== 'BusinessUser' ">
+    <div class="tab-menu d-flex align-items-center"> 
+        <div *ngIf="roleName== 'USER' ">
             <a href="javascript:void(0);" (click)="activateNav('/dashboard/home')">
                 <label class="menu-label" [class.active]="active === '/dashboard/home'">Home</label>
             </a>
             <a href="javascript:void(0);" (click)="activateNav('/dashboard/help')">
                 <label class="menu-label" [class.active]="active === '/dashboard/help'">Help</label>
-            </a>
-        </div>
-        <div *ngIf="this.vendorLogin == 'CAD'">
-            <a href="javascript:void(0);" (click)="activateNav('/CAD/vendor/home')">
-                <label class="menu-label" [class.active]="active === '/CAD/vendor/home'">Home</label>
-            </a>
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/help')">
-                <label class="menu-label" [class.active]="active === '/dashboard/help'">Help</label>
-            </a>
-        </div>
-        <div *ngIf="roleName == 'LogisticOfficer'">
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/logistic')">
-                <label class="menu-label" [class.active]="active === '/dashboard/logistic'">Home</label>
-            </a>
-        </div>
-        <div *ngIf="roleName == 'CAD Admin'">
-            <a href="javascript:void(0);" (click)="activateNav('/CAD')">
-                <label class="menu-label" [class.active]="active === '/CAD'">Home</label>
-            </a>
-            <a href="javascript:void(0);" (click)="activateNav('/CAD/master/project-configuration')">
-                <label class="menu-label" [class.active]="active === '/CAD/master/project-configuration'">Master</label>
-            </a>
-            <a href="javascript:void(0);" (click)="activateNav('/CAD/contract')">
-                <label class="menu-label" [class.active]="active === '/CAD/contract'">Contract</label>
-            </a>
-            <!-- <a href="javascript:void(0);" (click)="activateNav('/CAD/invoice')">
-                <label class="menu-label" [class.active]="active === '/CAD/invoice'">Invoice</label>
-            </a> -->
-        </div>
-
-        <div *ngIf="roleName == 'Checker' || roleName == 'Project Manager' ">
-            <a href="javascript:void(0);" (click)="activateNav('/CAD')">
-                <label class="menu-label" [class.active]="active === '/CAD'">Home</label>
-            </a>
-            <a href="javascript:void(0);" (click)="activateNav('/CAD/contract')">
-                <label class="menu-label" [class.active]="active === '/CAD/contract'">Contract</label>
-            </a>
-        </div>
-
-         <div *ngIf="roleName == 'InvoiceReviewer'">
-            <a href="javascript:void(0);" (click)="activateNav('/paperless-work')">
-                <label class="menu-label" [class.active]="active === '/paperless-work/home' || active === '/paperless-work'">PO Invoice</label>
-            </a>
-        </div>
-        <div *ngIf="loginType == 'vendor' && division != 'Cement'">
-            <a href="javascript:void(0);" (click)="activateNav('/paperless-work/vendor-home')">
-                <label class="menu-label" [class.active]="active === '/paperless-work/vendor-home'">Invoice</label>
             </a>
         </div>
     </div>
