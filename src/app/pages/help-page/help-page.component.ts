@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonService } from 'src/app/services/common.service';
+import { BreadcrumbService } from 'src/app/common/breadcrumb/breadcrumb.service';
 
 @Component({
   selector: 'app-help-page',
@@ -17,7 +18,8 @@ export class HelpPageComponent {
   playVideoStatus = false;
   videoUrl :any;
 
-  constructor(private commonService:CommonService){
+  constructor(private commonService: CommonService,
+    private breadcrumbService: BreadcrumbService){
     let url = 'C:/EAP-7.4.0/vspeed_help/document/conditionalVendor.pdf';
     let url_video = 'C:/EAP-7.4.0/vspeed_help/video/demo.mp4';
     this.manualList = [
@@ -31,6 +33,7 @@ export class HelpPageComponent {
   }
 
   ngOnInit():void {
+    this.breadcrumbService.setBreadcrumbUrl();
     this.getUserManual();
   }
 

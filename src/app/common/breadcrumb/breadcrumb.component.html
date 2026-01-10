@@ -16,7 +16,7 @@
     <ol class="breadcrumb mb-1">
         <li class="breadcrumb-item" *ngIf="roleName=='LogisticOfficer' && roleName !='CAD Admin'"><a
                 [routerLink]="['/dashboard/logistic']">Home Page</a></li>
-        <li class="breadcrumb-item" *ngIf="!urlPage.includes('paperless-work')"><a [routerLink]="['/dashboard/home']">Home Page</a></li> <!-- *ngIf="roleName=='SiteController' || roleName == 'RawMaterialIncharge'" -->
+        <li class="breadcrumb-item" *ngIf="!urlPage.includes('paperless-work')"><a [routerLink]="['/dashboard/articles']">Home Page</a></li> <!-- *ngIf="roleName=='SiteController' || roleName == 'RawMaterialIncharge'" -->
         <li class="breadcrumb-item"
             *ngIf="(roleName=='CAD Admin' || roleName=='Checker' || roleName == 'Project Manager')"><a
                 [routerLink]="['/CAD']">Home</a></li>

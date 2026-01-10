@@ -261,7 +261,7 @@ export class LoginInputComponent {
         console.log('Login successful:', res);
         console.log("inside login :: ", res['data']['username']);
         console.log("inside login localStorage:: ", localStorage.getItem('username'));
-        this.commonService.routeToPage('./dashboard');
+        this.commonService.routeToPage('./dashboard/articles');
         // Handle successful login
         if (res.status === 'SUCCESS') {
           this.resetLoginForm();
