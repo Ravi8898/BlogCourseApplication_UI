@@ -17,11 +17,8 @@ export class DashboardComponent implements OnInit {
 
   constructor(private router: Router) {
     this.active = router.url;
-    this.roleName = localStorage.getItem('roleName') ? localStorage.getItem('roleName') : '';
-    this.loginType = localStorage.getItem('logintype') ? localStorage.getItem('logintype') : '';
+    this.roleName = localStorage.getItem('role') ? localStorage.getItem('role') : '';
     this.userData = localStorage.getItem('userdata') == null ? '' : localStorage.getItem('userdata');
-    this.division = localStorage.getItem('division') ? localStorage.getItem('division') || '' : '';
-    // this.roleNameArray = localStorage.getItem('roleNameArray') ? localStorage.getItem('roleNameArray') || '' : '';
     this.roleNameArray = this.roleName ? this.roleName.split(',') : [];
 
     let user = JSON.parse(this.userData || '{}');
