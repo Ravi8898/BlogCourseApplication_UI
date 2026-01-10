@@ -49,11 +49,13 @@ import { AllMasterDataComponent } from './All-Master/all-master-data/all-master-
 import { FrieghtmasterComponent } from './All-Master/frieghtmaster/frieghtmaster.component';
 import { AddFrieghtBillComponent } from './All-Master/add-frieght-bill/add-frieght-bill.component';
 import { ForgotPasswordComponent } from './common/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './common/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'sso', component: SamlCallbackComponent },
   { path: 'login/sso', component: SamlCallbackComponent },
   // {path: 'admin', component:AdminComponent, canActivate:[authGuard]},

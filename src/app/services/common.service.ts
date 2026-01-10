@@ -536,5 +536,12 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
       payload
     );
   }
+
+  resetPassword(data: { token: string; newPassword: string }) {
+    return this.http.post(
+      `${environment.baseUrl}/auth/resetPassword`,
+      data
+    );
+  }
   
 }
