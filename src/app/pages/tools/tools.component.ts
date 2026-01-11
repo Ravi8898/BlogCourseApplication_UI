@@ -3,11 +3,11 @@ import { BreadcrumbService } from 'src/app/common/breadcrumb/breadcrumb.service'
 import { CommonService } from 'src/app/services/common.service';
 
 @Component({
-  selector: 'app-courses',
-  templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.scss']
+  selector: 'app-tools',
+  templateUrl: './tools.component.html',
+  styleUrls: ['./tools.component.scss']
 })
-export class CoursesComponent implements OnInit {
+export class ToolsComponent implements OnInit {
 
   constructor(
     private commonService: CommonService,
@@ -16,6 +16,6 @@ export class CoursesComponent implements OnInit {
 
   ngOnInit(): void {
     this.breadcrumbService.setBreadcrumbUrl();
-    console.log('CoursesComponent loaded');
+    console.log('ToolsComponent loaded');
   }
 }

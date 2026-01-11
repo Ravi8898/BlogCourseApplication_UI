@@ -28,6 +28,10 @@
       <label class="menu-label" [class.active]="active === '/dashboard/articles'">Articles</label>
     </a>
 
+    <a (click)="activateNav('/dashboard/process')">
+      <label class="menu-label" [class.active]="active === '/dashboard/process'">Process</label>
+    </a>
+
     <a (click)="activateNav('/dashboard/simulation')">
       <label class="menu-label" [class.active]="active === '/dashboard/simulation'">Simulation</label>
     </a>
@@ -36,8 +40,12 @@
       <label class="menu-label" [class.active]="active === '/dashboard/how-things-work'">How things Work?</label>
     </a>
 
-    <a (click)="activateNav('/dashboard/courses')">
-      <label class="menu-label" [class.active]="active === '/dashboard/courses'">Courses</label>
+    <a (click)="activateNav('/dashboard/tools')">
+      <label class="menu-label" [class.active]="active === '/dashboard/tools'">Tools</label>
+    </a>
+
+    <a (click)="activateNav('/dashboard/course')">
+      <label class="menu-label" [class.active]="active === '/dashboard/course'">Course</label>
     </a>
 
     <a (click)="activateNav('/dashboard/consultation')">

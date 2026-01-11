@@ -51,10 +51,12 @@ import { FrieghtmasterComponent } from './All-Master/frieghtmaster/frieghtmaster
 import { AddFrieghtBillComponent } from './All-Master/add-frieght-bill/add-frieght-bill.component';
 import { SimulationComponent } from './pages/simulation/simulation.component';
 import { HowThingsWorkComponent } from './pages/how-things-work/how-things-work.component';
-import { CoursesComponent } from './pages/courses/courses.component';
+import { CourseComponent } from './pages/course/course.component';
 import { ConsultationComponent } from './pages/consultation/consultation.component';
 import { ForgotPasswordComponent } from './common/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './common/reset-password/reset-password.component';
+import { ProcessComponent } from './pages/process/process.component';
+import { ToolsComponent } from './pages/tools/tools.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -82,8 +84,10 @@ const routes: Routes = [
       {path: 'articles', component: ArticlesComponent},
       {path: 'simulation', component: SimulationComponent},
       {path: 'how-things-work', component: HowThingsWorkComponent},
-      {path: 'courses', component: CoursesComponent},
+      {path: 'course', component: CourseComponent},
       {path: 'consultation', component: ConsultationComponent},
+      {path: 'process', component: ProcessComponent},
+      {path: 'tools', component: ToolsComponent},
       {path: 'profile', component:ProfileComponent, canActivate:[authGuard]},
       {path: 'purchase', component:PurchaseOrderComponent, canActivate:[authGuard]},
       {path: 'conditional-vendor', component:ConditionalVendorComponent, canActivate:[authGuard]},
