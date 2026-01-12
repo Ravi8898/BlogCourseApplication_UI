@@ -49,6 +49,21 @@ export class CommonService {
     return headers;
   }
 
+  getAllArticlesByUserId(): Observable<any> {
+  const token = localStorage.getItem('token');
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return this.http.get(
+    `${environment.baseUrl}/article/getAllArticlesByUserId`,
+    { headers }
+  );
+}
+
+
+
   sendOTP(json: any) {
     // return this.http.post(`${environment.apiUrl}/auth/api/SupplierLogin`,json);
     // return this.http.post(`http://10.212.87.140:8080/packingbags/auth/api/SupplierLogin`,json);

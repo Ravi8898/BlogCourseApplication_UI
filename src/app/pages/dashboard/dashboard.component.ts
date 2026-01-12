@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  active: string = '/dashboard/home';
+  active: string = '/dashboard/articles';
   roleName: any = '';
   loginType: any;
   userData: string | null = '';

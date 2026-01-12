@@ -14,6 +14,7 @@ import { LogisticComponent } from './pages/logistic/logistic.component';
 import { ServiceVendorComponent } from './pages/service-vendor/service-vendor.component';
 import { ConditionalVendorComponent } from './pages/conditional-vendor/conditional-vendor.component';
 import { HelpPageComponent } from './pages/help-page/help-page.component';
+import { ArticlesComponent } from './pages/articles/articles.component';
 import { SamlCallbackComponent } from './pages/saml-callback/saml-callback.component';
 import { SlaInvoiceComponent } from './pages/sla-invoice/sla-invoice.component';
 import { SlaInchargeComponent } from './pages/sla-incharge/sla-incharge.component';
@@ -48,8 +49,14 @@ import { MasterAdminDashboardComponent } from './All-Master/master-admin-dashboa
 import { AllMasterDataComponent } from './All-Master/all-master-data/all-master-data.component';
 import { FrieghtmasterComponent } from './All-Master/frieghtmaster/frieghtmaster.component';
 import { AddFrieghtBillComponent } from './All-Master/add-frieght-bill/add-frieght-bill.component';
+import { SimulationComponent } from './pages/simulation/simulation.component';
+import { HowThingsWorkComponent } from './pages/how-things-work/how-things-work.component';
+import { CourseComponent } from './pages/course/course.component';
+import { ConsultationComponent } from './pages/consultation/consultation.component';
 import { ForgotPasswordComponent } from './common/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './common/reset-password/reset-password.component';
+import { ProcessComponent } from './pages/process/process.component';
+import { ToolsComponent } from './pages/tools/tools.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -74,6 +81,13 @@ const routes: Routes = [
       {path: 'logistic', component:LogisticComponent},
       {path: 'home', component:HomeComponent},
       {path: 'help', component:HelpPageComponent},
+      {path: 'articles', component: ArticlesComponent},
+      {path: 'simulation', component: SimulationComponent},
+      {path: 'how-things-work', component: HowThingsWorkComponent},
+      {path: 'course', component: CourseComponent},
+      {path: 'consultation', component: ConsultationComponent},
+      {path: 'process', component: ProcessComponent},
+      {path: 'tools', component: ToolsComponent},
       {path: 'profile', component:ProfileComponent, canActivate:[authGuard]},
       {path: 'purchase', component:PurchaseOrderComponent, canActivate:[authGuard]},
       {path: 'conditional-vendor', component:ConditionalVendorComponent, canActivate:[authGuard]},

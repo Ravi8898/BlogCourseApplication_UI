@@ -21,16 +21,43 @@
     </div> -->
 
     <!--Changes by Suleman-->
-    <div class="tab-menu d-flex align-items-center"> 
-        <div *ngIf="roleName== 'USER' ">
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/home')">
-                <label class="menu-label" [class.active]="active === '/dashboard/home'">Home</label>
-            </a>
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/help')">
-                <label class="menu-label" [class.active]="active === '/dashboard/help'">Help</label>
-            </a>
-        </div>
-    </div>
+   <div class="tab-menu">
+  <div class="menu-container" *ngIf="roleName == 'USER'">
+
+    <a (click)="activateNav('/dashboard/articles')">
+      <label class="menu-label" [class.active]="active === '/dashboard/articles'">Articles</label>
+    </a>
+
+    <a (click)="activateNav('/dashboard/process')">
+      <label class="menu-label" [class.active]="active === '/dashboard/process'">Process</label>
+    </a>
+
+    <a (click)="activateNav('/dashboard/simulation')">
+      <label class="menu-label" [class.active]="active === '/dashboard/simulation'">Simulation</label>
+    </a>
+
+    <a (click)="activateNav('/dashboard/how-things-work')">
+      <label class="menu-label" [class.active]="active === '/dashboard/how-things-work'">How things Work?</label>
+    </a>
+
+    <a (click)="activateNav('/dashboard/tools')">
+      <label class="menu-label" [class.active]="active === '/dashboard/tools'">Tools</label>
+    </a>
+
+    <a (click)="activateNav('/dashboard/course')">
+      <label class="menu-label" [class.active]="active === '/dashboard/course'">Course</label>
+    </a>
+
+    <a (click)="activateNav('/dashboard/consultation')">
+      <label class="menu-label" [class.active]="active === '/dashboard/consultation'">Consultation</label>
+    </a>
+
+    <a (click)="activateNav('/dashboard/help')">
+      <label class="menu-label" [class.active]="active === '/dashboard/help'">Help</label>
+    </a>
+  </div>
+</div>
+
 
     <div class="m-4" style="padding-bottom: 40px;">
         <app-breadcrumb (changedUrl)="urlChange($event)"></app-breadcrumb>

@@ -1,0 +1,27 @@
+.coming-soon-wrapper {
+  height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fc;
+  text-align: center;
+
+  h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .coming-soon {
+    font-size: 18px;
+    color: #ff9800;
+    font-weight: 500;
+  }
+
+  .info {
+    font-size: 14px;
+    color: #666;
+    margin-top: 8px;
+  }
+}
