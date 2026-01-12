@@ -42,8 +42,12 @@
                                 Password is required
                               </span>
                             </div>
+                            <p class="form-label mt-3 text-end">
+                                <a href="javascript:void(0)" (click)="switchToForgot()">Forgot Password ?</a>
+                              </p>
                             <div class="d-grid gap-2">
-                                <button *ngIf="!isLoader" class="login-button" type="submit"
+                                
+                                <button *ngIf="!isLoader" class="login-button mt-3" type="submit"
                                     [disabled]="siteLoginForm.invalid" (click)="login($event)">Login</button>
 
                                 <button *ngIf="isLoader" class="login-button" type="button" disabled>
@@ -52,14 +56,10 @@
                                     Loading...
                                 </button>
                             </div>
-                            <p class="text-center">
+                            <p class="text-center form-label mt-3">
                                 Don't have an Account?
                                 <a href="javascript:void(0)" (click)="switchToRegister()">Register Now</a>
                               </p>
-                              <p class="text-center">
-                                <a routerLink="/forgot-password">Forgot Password?</a>
-                              </p>
-
                         </form>
 
                         <form *ngIf="formType=='register'" [formGroup]="registerForm" name="registerForm">
@@ -188,6 +188,51 @@
                                 <a href="javascript:void(0)" (click)="switchToLogin()">Login</a>
                               </p>
                         </form>
+
+                        <form *ngIf="formType=='forgot'" [formGroup]="forgotForm" name="forgotForm">
+
+                            <div class="py-2 text-start login-section">
+                              <label class="form-label">
+                                Email <span class="asterisk">*</span>
+                              </label>
+                          
+                              <input
+                                type="email"
+                                class="form-control"
+                                placeholder="Enter your registered email"
+                                formControlName="email"
+                              />
+                          
+                              <span class="text-danger"
+                                    *ngIf="forgotForm.get('email')?.touched &&
+                                           forgotForm.get('email')?.hasError('required')">
+                                Email is required
+                              </span>
+                          
+                              <span class="text-danger"
+                                    *ngIf="forgotForm.get('email')?.touched &&
+                                           forgotForm.get('email')?.hasError('email')">
+                                Enter a valid email address
+                              </span>
+                            </div>
+                          
+                            <div class="d-grid gap-2">
+                              <button
+                                class="login-button mt-3"
+                                type="submit"
+                                [disabled]="forgotForm.invalid"
+                                (click)="sendResetLink($event)">
+                                Send Reset Link
+                              </button>
+                            </div>
+                          
+                            <p class="text-center form-label mt-3">
+                              Remember your password?
+                              <a href="javascript:void(0)" (click)="switchToLogin()">Login</a>
+                            </p>
+                          
+                          </form>
+                          
                     </div>
                 </div>
             </div>

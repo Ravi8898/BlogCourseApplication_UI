@@ -77,6 +77,14 @@ export class LoginInputComponent {
     })
 
     this.namdId = this.activeRoute.snapshot.queryParamMap.get('user')!;
+
+    this.forgotForm = new FormGroup({
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email
+      ])
+    });
+    
   }
 
   customTokenValidator(control: AbstractControl): ValidationErrors | null {
@@ -426,6 +434,50 @@ export class LoginInputComponent {
     this.loginErrorMsg = '';
     this.formType = 'login';
   }
+
+  forgotForm!: FormGroup;
+  isForgotLoading = false;
+  forgotSuccessMsg = '';
+  forgotErrorMsg = '';
+
+  sendResetLink(event: any) {
+    event.preventDefault();
+  
+    if (this.forgotForm.invalid) {
+      this.forgotForm.markAllAsTouched();
+      return;
+    }
+  
+    const email = this.forgotForm.get('email')?.value;
+    if (!email) return;
+  
+    this.isForgotLoading = true;
+  
+    this.commonService.forgotPassword({ email }).subscribe({
+      next: (res: any) => {
+        this.isForgotLoading = false;
+  
+        // Generic success (security-safe)
+        this.forgotSuccessMsg =
+          res?.message || 'If this email exists, a reset link has been sent';
+  
+        this.forgotForm.reset();
+      },
+      error: (err) => {
+        this.isForgotLoading = false;
+        this.forgotErrorMsg =
+          err?.error?.message || 'Something went wrong. Please try again';
+      }
+    });
+  }
+
+  switchToForgot() {
+    this.loginErrorMsg = '';
+    this.forgotSuccessMsg = '';
+    this.forgotErrorMsg = '';
+    this.formType = 'forgot';
+  }
+  
 
 
 }
