@@ -1,197 +1,411 @@
 <!-- <app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message> -->
 
 <div class="bd-tab-content-ss card shadow border-transparent">
-    <div class="bd-tab-content">
-        <div class="d-flex justify-content-center align-items-center adani-logo">
-            <img src="../../../assets/svg/AMX_Logo_Updated.png" alt="" />
-        </div>
-        <!-- <div class="tabs">
+  <div class="bd-tab-content">
+    <div class="d-flex justify-content-center align-items-center adani-logo">
+      <img src="../../../assets/svg/AMX_Logo_Updated.png" alt="" />
+    </div>
+    <!-- <div class="tabs">
             <div class="tab" [class.active]="activeTab === 'tab1'" (click)="changeTab('tab1')">Employee</div>
         </div> -->
 
-        <div class="bd-tab-content">
-            <div *ngIf="activeTab === 'tab1'">
-                <div class="login-panel">
-                    <div class="login-section">
+    <div class="bd-tab-content">
+      <div *ngIf="activeTab === 'tab1'">
+        <div class="login-panel">
+          <div class="login-section">
+            <form
+              *ngIf="formType == 'login'"
+              [formGroup]="siteLoginForm"
+              name="siteLoginForm"
+            >
+              <div class="py-2 text-start">
+                <label for="username" class="form-label"
+                  >Email or Mobile Number <span class="asterisk">*</span></label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="username"
+                  placeholder="Enter your Email or Mobile Number"
+                  formControlName="username"
+                  maxLength="51"
+                  minlength="4"
+                />
 
-                        <form *ngIf="formType=='login'" [formGroup]="siteLoginForm" name="siteLoginForm">
+                <span
+                  *ngIf="siteLoginForm.get('username').hasError('maxlength')"
+                  class="error-message"
+                >
+                  username exceeds max 50 characters
+                </span>
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    siteLoginForm.get('username')?.touched &&
+                    siteLoginForm.get('username')?.hasError('required')
+                  "
+                >
+                  Enter a valid email address or Mobile Number
+                </span>
+              </div>
+              <div class="py-2">
+                <label for="password" class="form-label"
+                  >Password <span class="asterisk">*</span></label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  placeholder="*********"
+                  formControlName="password"
+                  maxLength="50"
+                />
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    siteLoginForm.get('password')?.touched &&
+                    siteLoginForm.get('password')?.hasError('required')
+                  "
+                >
+                  Password is required
+                </span>
+              </div>
+              <div class="d-grid gap-2">
+                <button
+                  *ngIf="!isLoader"
+                  class="login-button"
+                  type="submit"
+                  [disabled]="siteLoginForm.invalid"
+                  (click)="login($event)"
+                >
+                  Login
+                </button>
 
-                            <div class="py-2 text-start">
-                                <label for="username" class="form-label">Email or Mobile Number <span class="asterisk">*</span></label>
-                                <input type="email" class="form-control" id="username" placeholder="Enter your Email or Mobile Number"
-                                    formControlName="username" maxLength="51" minlength="4">
-                                    
+                <button
+                  *ngIf="isLoader"
+                  class="login-button"
+                  type="button"
+                  disabled
+                >
+                  <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Loading...
+                </button>
+              </div>
+              <p class="text-center">
+                Don't have an Account?
+                <a href="javascript:void(0)" (click)="switchToRegister()"
+                  >Register Now</a
+                >
+              </p>
+              <p class="text-center">
+                <a routerLink="/forgot-password">Forgot Password?</a>
+              </p>
+            </form>
 
-                                <span *ngIf="siteLoginForm.get('username').hasError('maxlength')" class="error-message">
-                                    username exceeds max 50 characters
-                                </span>
-                                <span class="text-danger"
-                                    *ngIf="siteLoginForm.get('username')?.touched &&
-                                           siteLoginForm.get('username')?.hasError('required')">
-                                Enter a valid email address or Mobile Number
-                              </span>
+            <form
+              *ngIf="formType == 'register'"
+              [formGroup]="registerForm"
+              name="registerForm"
+            >
+              <div class="py-2 text-start">
+                <label for="firstname" class="form-label"
+                  >First Name <span class="asterisk">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstname"
+                  placeholder="Enter first name"
+                  formControlName="firstname"
+                  maxLength="51"
+                  minlength="2"
+                />
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('firstname')?.touched &&
+                    registerForm.get('firstname')?.hasError('required')
+                  "
+                >
+                  First Name is required
+                </span>
+              </div>
 
-                            </div>
-                            <div class="py-2">
-                                <label for="password" class="form-label">Password <span class="asterisk">*</span></label>
-                                <input type="password" class="form-control" id="password" placeholder="*********"
-                                    formControlName="password" maxLength="50">
-                                    <span class="text-danger"
-                                    *ngIf="siteLoginForm.get('password')?.touched &&
-                                           siteLoginForm.get('password')?.hasError('required')">
-                                Password is required
-                              </span>
-                            </div>
-                            <div class="d-grid gap-2">
-                                <button *ngIf="!isLoader" class="login-button" type="submit"
-                                    [disabled]="siteLoginForm.invalid" (click)="login($event)">Login</button>
+              <div class="py-2 text-start">
+                <label for="lastname" class="form-label"
+                  >Last Name <span class="asterisk">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastname"
+                  placeholder="Enter last name"
+                  formControlName="lastname"
+                  maxLength="51"
+                  minlength="2"
+                />
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('lastname')?.touched &&
+                    registerForm.get('lastname')?.hasError('required')
+                  "
+                >
+                  Last Name is required
+                </span>
+              </div>
 
-                                <button *ngIf="isLoader" class="login-button" type="button" disabled>
-                                    <span class="spinner-border spinner-border-sm" role="status"
-                                        aria-hidden="true"></span>
-                                    Loading...
-                                </button>
-                            </div>
-                            <p class="text-center">
-                                Don't have an Account?
-                                <a href="javascript:void(0)" (click)="switchToRegister()">Register Now</a>
-                              </p>
-                              <p class="text-center">
-                                <a routerLink="/forgot-password">Forgot Password?</a>
-                              </p>
+              <div class="py-2 text-start">
+                <label for="email" class="form-label"
+                  >Email <span class="asterisk">*</span></label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  placeholder="Enter email"
+                  formControlName="email"
+                  maxLength="51"
+                  minlength="4"
+                />
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('email')?.touched &&
+                    registerForm.get('email')?.hasError('required')
+                  "
+                >
+                  Email is required
+                </span>
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('email')?.touched &&
+                    registerForm.get('email')?.hasError('email')
+                  "
+                >
+                  Enter a valid email address
+                </span>
+              </div>
 
-                        </form>
+              <div class="py-2 text-start">
+                <label for="mobile" class="form-label"
+                  >Mobile <span class="asterisk">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="mobile"
+                  placeholder="Enter Mobile Number"
+                  formControlName="mobile"
+                  maxLength="10"
+                  minlength="10"
+                />
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('mobile')?.touched &&
+                    registerForm.get('mobile')?.hasError('required')
+                  "
+                >
+                  Mobile number is required
+                </span>
 
-                        <form *ngIf="formType=='register'" [formGroup]="registerForm" name="registerForm">
-                            <div class="py-2 text-start">
-                                <label for="firstname" class="form-label">First Name <span class="asterisk">*</span></label>
-                                <input type="text" class="form-control" id="firstname" placeholder="Enter first name"
-                                    formControlName="firstname" maxLength="51" minlength="2">
-                                    <span class="text-danger"
-                                    *ngIf="registerForm.get('firstname')?.touched &&
-                                           registerForm.get('firstname')?.hasError('required')">
-                                    First Name is required
-                                  </span>
-                            </div>
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('mobile')?.touched &&
+                    !registerForm.get('mobile')?.hasError('required') &&
+                    registerForm.get('mobile')?.hasError('minlength')
+                  "
+                >
+                  Mobile number must be 10 digits
+                </span>
 
-                            <div class="py-2 text-start">
-                                <label for="lastname" class="form-label">Last Name <span class="asterisk">*</span></label>
-                                <input type="text" class="form-control" id="lastname" placeholder="Enter last name"
-                                    formControlName="lastname" maxLength="51" minlength="2">
-                                    <span class="text-danger"
-                                    *ngIf="registerForm.get('lastname')?.touched &&
-                                           registerForm.get('lastname')?.hasError('required')">
-                                    Last Name is required
-                                  </span>
-                            </div>
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('mobile')?.touched &&
+                    !registerForm.get('mobile')?.hasError('required') &&
+                    !registerForm.get('mobile')?.hasError('minlength') &&
+                    registerForm.get('mobile')?.hasError('pattern')
+                  "
+                >
+                  Enter a valid 10-digit mobile number
+                </span>
+              </div>
 
-                            <div class="py-2 text-start">
-                                <label for="email" class="form-label">Email <span class="asterisk">*</span></label>
-                                <input type="email" class="form-control" id="email" placeholder="Enter email"
-                                    formControlName="email" maxLength="51" minlength="4">
-                                    <span class="text-danger"
-                                    *ngIf="registerForm.get('email')?.touched &&
-                                           registerForm.get('email')?.hasError('required')">
-                                    Email is required
-                                  </span>
-                                  <span class="text-danger"
-                                       *ngIf="registerForm.get('email')?.touched &&
-                                              registerForm.get('email')?.hasError('email')">
-                                              Enter a valid email address
-                                   </span>
-                            </div>
+              <div class="py-2 text-start">
+                <label for="dateOfBirth" class="form-label">
+                  Date of Birth <span class="asterisk">*</span>
+                </label>
 
-                            <div class="py-2 text-start">
-                                <label for="mobile" class="form-label">Mobile <span class="asterisk">*</span></label>
-                                <input type="text" class="form-control" id="mobile" placeholder="Enter Mobile Number"
-                                    formControlName="mobile" maxLength="10" minlength="10">
-                                    <span class="text-danger"
-                                         *ngIf="registerForm.get('mobile')?.touched &&
-                                                registerForm.get('mobile')?.hasError('required')">
-                                                   Mobile number is required
-                                    </span>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="dateOfBirth"
+                  formControlName="dateOfBirth"
+                  max="{{ todayDate }}"
+                />
 
-                                    <span class="text-danger"
-                                       *ngIf="registerForm.get('mobile')?.touched &&
-                                             !registerForm.get('mobile')?.hasError('required') &&
-                                              registerForm.get('mobile')?.hasError('minlength')">
-                                                 Mobile number must be 10 digits
-                                    </span>
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('dateOfBirth')?.touched &&
+                    registerForm.get('dateOfBirth')?.hasError('required')
+                  "
+                >
+                  Date of Birth is required
+                </span>
+              </div>
+              <div class="py-2 text-start">
+                <label for="regPassword" class="form-label"
+                  >Password <span class="asterisk">*</span></label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="regPassword"
+                  placeholder="Enter password"
+                  formControlName="regPassword"
+                  maxLength="51"
+                  minlength="4"
+                />
+                <span
+                  class="text-danger"
+                  *ngIf="
+                    registerForm.get('regPassword')?.touched &&
+                    registerForm.get('regPassword')?.hasError('required')
+                  "
+                >
+                  Password is required
+                </span>
+              </div>
 
-                                    <span class="text-danger"
-                                           *ngIf="registerForm.get('mobile')?.touched &&
-                                                !registerForm.get('mobile')?.hasError('required') &&
-                                                !registerForm.get('mobile')?.hasError('minlength') &&
-                                                registerForm.get('mobile')?.hasError('pattern')">
-                                                     Enter a valid 10-digit mobile number
-                                    </span>
-                            </div>
+              <div class="py-2 text-start">
+                <label for="addressLine1" class="form-label"
+                  >Address Line 1</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="addressLine1"
+                  placeholder="Enter address line 1"
+                  formControlName="addressLine1"
+                  maxLength="51"
+                  minlength="10"
+                />
+              </div>
+              <div class="py-2 text-start">
+                <label for="addressLine2" class="form-label"
+                  >Address Line 2</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="addressLine2"
+                  placeholder="Enter address line 2"
+                  formControlName="addressLine2"
+                  maxLength="51"
+                  minlength="10"
+                />
+              </div>
 
-                            <div class="py-2 text-start">
-                                <label for="regPassword" class="form-label">Password <span class="asterisk">*</span></label>
-                                <input type="text" class="form-control" id="regPassword" placeholder="Enter password"
-                                    formControlName="regPassword" maxLength="51" minlength="4">
-                                    <span class="text-danger"
-                                    *ngIf="registerForm.get('regPassword')?.touched &&
-                                           registerForm.get('regPassword')?.hasError('required')">
-                                    Password is required
-                                  </span>
-                            </div>
-                  
-                            <div class="py-2 text-start">
-                                <label for="addressLine1" class="form-label">Address Line 1</label>
-                                <input type="text" class="form-control" id="addressLine1" placeholder="Enter address line 1"
-                                    formControlName="addressLine1" maxLength="51" minlength="10">
-                            </div>
-                            <div class="py-2 text-start">
-                                <label for="addressLine2" class="form-label">Address Line 2</label>
-                                <input type="text" class="form-control" id="addressLine2" placeholder="Enter address line 2"
-                                    formControlName="addressLine2" maxLength="51" minlength="10">
-                            </div>
-                            
-                            <div class="py-2 text-start">
-                                <label for="landmark" class="form-label">Landmark</label>
-                                <input type="text" class="form-control" id="landmark" placeholder="Enter landmark"
-                                    formControlName="landmark" maxLength="51" minlength="4">
-                            </div>
-                            <div class="py-2 text-start">
-                                <label for="district" class="form-label">District</label>
-                                <input type="text" class="form-control" id="district" placeholder="Enter district"
-                                    formControlName="district" maxLength="51" minlength="4">
-                            </div>
-                            <div class="py-2 text-start">
-                                <label for="city" class="form-label">City</label>
-                                <input type="text" class="form-control" id="city" placeholder="Enter city"
-                                    formControlName="city" maxLength="51" minlength="4">
-                            </div>
-                            <div class="py-2 text-start">
-                                <label for="state" class="form-label">State</label>
-                                <input type="text" class="form-control" id="state" placeholder="Enter state"
-                                    formControlName="state" maxLength="51" minlength="4">
-                            </div>
-                            <div class="py-2 text-start">
-                                <label for="country" class="form-label">Country</label>
-                                <input type="text" class="form-control" id="country" placeholder="Enter country"
-                                    formControlName="country" maxLength="51" minlength="4">
-                            </div>
-                            <div class="py-2 text-start">
-                                <label for="postalCode" class="form-label">Postal Code</label>
-                                <input type="text" class="form-control" id="postalCode" placeholder="Enter postal code"
-                                    formControlName="postalCode" maxLength="6" minlength="6">
-                            </div>
+              <div class="py-2 text-start">
+                <label for="landmark" class="form-label">Landmark</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="landmark"
+                  placeholder="Enter landmark"
+                  formControlName="landmark"
+                  maxLength="51"
+                  minlength="4"
+                />
+              </div>
+              <div class="py-2 text-start">
+                <label for="district" class="form-label">District</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="district"
+                  placeholder="Enter district"
+                  formControlName="district"
+                  maxLength="51"
+                  minlength="4"
+                />
+              </div>
+              <div class="py-2 text-start">
+                <label for="city" class="form-label">City</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="city"
+                  placeholder="Enter city"
+                  formControlName="city"
+                  maxLength="51"
+                  minlength="4"
+                />
+              </div>
+              <div class="py-2 text-start">
+                <label for="state" class="form-label">State</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="state"
+                  placeholder="Enter state"
+                  formControlName="state"
+                  maxLength="51"
+                  minlength="4"
+                />
+              </div>
+              <div class="py-2 text-start">
+                <label for="country" class="form-label">Country</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="country"
+                  placeholder="Enter country"
+                  formControlName="country"
+                  maxLength="51"
+                  minlength="4"
+                />
+              </div>
+              <div class="py-2 text-start">
+                <label for="postalCode" class="form-label">Postal Code</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="postalCode"
+                  placeholder="Enter postal code"
+                  formControlName="postalCode"
+                  maxLength="6"
+                  minlength="6"
+                />
+              </div>
 
-                            <div class="d-grid gap-2">
-                                <button class="login-button" type="submit" (click)="register($event)" [disabled]="registerForm.invalid">Register</button>                                
-                            </div>
-                            <p class="text-center">
-                                Already have account
-                                <a href="javascript:void(0)" (click)="switchToLogin()">Login</a>
-                              </p>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
+              <div class="d-grid gap-2">
+                <button
+                  class="login-button"
+                  type="submit"
+                  (click)="register($event)"
+                  [disabled]="registerForm.invalid"
+                >
+                  Register
+                </button>
+              </div>
+              <p class="text-center">
+                Already have account
+                <a href="javascript:void(0)" (click)="switchToLogin()">Login</a>
+              </p>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
