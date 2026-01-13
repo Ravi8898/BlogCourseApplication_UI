@@ -44,7 +44,8 @@ export class LoginInputComponent {
   errorToast: any = false;
   successToast: any = false;
   loginErrorMsg = '';
-
+  todayDate = new Date().toISOString().split('T')[0];
+  
   namdId: string = ''
   vendorArr: any = [];
 
@@ -333,6 +334,10 @@ export class LoginInputComponent {
         Validators.maxLength(10)
       ]),
   
+      dateOfBirth: new FormControl('', [
+      Validators.required   
+      ]),
+
       regPassword: new FormControl('', [
         Validators.required,
         Validators.maxLength(50)
@@ -366,6 +371,7 @@ export class LoginInputComponent {
       lastName: this.registerForm.value.lastname,
       email: this.registerForm.value.email,
       phoneNumber: this.registerForm.value.mobile,
+      dateOfBirth: this.registerForm.value.dateOfBirth,
       password: this.registerForm.value.regPassword,
       role: 'USER',
       address: {

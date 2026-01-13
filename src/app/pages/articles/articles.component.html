@@ -1,75 +1,26 @@
 <div class="articles-wrapper">
-
   <div class="header">
     <h2>My Articles</h2>
   </div>
 
   <!-- Loader -->
-  <div class="loader" *ngIf="loading">
-    Loading articles...
-  </div>
+  <div class="loader" *ngIf="loading">Loading articles...</div>
 
   <!-- Table -->
-  <div class="table-container" *ngIf="!loading && articles.length > 0">
-    <table class="articles-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Status</th>
-          <th>Reviewed By</th>
-          <th>Reviewed At</th>
-          <th>PDF</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let article of articles; let i = index">
-          <td>{{ i + 1 }}</td>
-
-          <td class="title">
-            {{ article.title }}
-          </td>
-
-          <td class="description" title="{{ article.description }}">
-            {{ article.description }}
-          </td>
-
-          <td>
-            <span
-              class="status"
-              [ngClass]="article.articleStatus?.toLowerCase()">
-              {{ article.articleStatus }}
-            </span>
-          </td>
-
-          <td>
-            {{ article.reviewedBy || '-' }}
-          </td>
-
-          <td>
-            {{ article.reviewedAt ? (article.reviewedAt | date:'dd MMM yyyy') : '-' }}
-          </td>
-
-          <td>
-            <a
-              *ngIf="article.pdfPath"
-              [href]="article.pdfPath"
-              target="_blank"
-              class="pdf-link">
-              View PDF
-            </a>
-            <span *ngIf="!article.pdfPath">-</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="feature-card" *ngIf="!loading">
+    <app-ad-table
+      [tableData]="articleTableList"
+      [isTableTile]="true"
+      [isTableFilter]="true"
+      [isSearchShow]="true"
+      [searchObject]="articleSearchObject"
+      (searchParamObj)="applyArticleSearch($event)"
+    >
+    </app-ad-table>
   </div>
 
   <!-- No Data -->
-  <div class="no-data" *ngIf="!loading && articles.length === 0">
+  <div class="no-data" *ngIf="!loading && articleTableList.length === 0">
     No articles found.
   </div>
-
 </div>
