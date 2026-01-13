@@ -758,6 +758,24 @@ input:read-only {
   color: rgb(77, 72, 72);
 }
 
+.position-relative {
+  position: relative;
+}
+
+.position-relative i {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  margin-right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.position-relative i:hover {
+  color: #0b74b0;
+}
+
 
 .login-button {
   background: linear-gradient(90deg, #0b74b0 0%, #75479c 52.08%, #bd3861 100%);
