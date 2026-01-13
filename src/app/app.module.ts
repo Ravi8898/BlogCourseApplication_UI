@@ -116,7 +116,6 @@ import { InvoiceActionComponent } from './Paperless-Work/invoice-action/invoice-
 import { VendorHomeComponent } from './Paperless-Work/vendor-home/vendor-home.component';
 import { VendorUploadInvoiceComponent } from './Paperless-Work/vendor-upload-invoice/vendor-upload-invoice.component';
 import { ArticlesComponent } from './pages/articles/articles.component';
-import { ForgotPasswordComponent } from './common/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './common/reset-password/reset-password.component';
 @NgModule({
   declarations: [
@@ -227,7 +226,6 @@ import { ResetPasswordComponent } from './common/reset-password/reset-password.c
     VendorUploadInvoiceComponent,
     AdminHomeComponent,
     InvoiceActionComponent,
-    ForgotPasswordComponent,
     ResetPasswordComponent
   ],
   imports: [
