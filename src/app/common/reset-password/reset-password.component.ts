@@ -78,4 +78,14 @@ export class ResetPasswordComponent implements OnInit {
       }
     });
   }
+
+  showNewPassword = false;
+  toggleNewPassword() {
+  this.showNewPassword = !this.showNewPassword;
+  }
+  showConfirmPassword = false;
+  toggleConfirmPassword() {
+  this.showConfirmPassword = !this.showConfirmPassword;
+  }
+  
 }

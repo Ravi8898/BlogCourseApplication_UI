@@ -34,8 +34,23 @@
                             </div>
                             <div class="py-2">
                                 <label for="password" class="form-label">Password <span class="asterisk">*</span></label>
-                                <input type="password" class="form-control" id="password" placeholder="*********"
-                                    formControlName="password" maxLength="50">
+                                <div class="position-relative">
+                                    <input
+                                      [type]="showPassword ? 'text' : 'password'"
+                                      class="form-control"
+                                      id="password"
+                                      placeholder="*********"
+                                      formControlName="password"
+                                      maxLength="50"
+                                    />
+                                  
+                                    <i
+                                      class="fa"
+                                      [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                                      (click)="togglePassword()"
+                                    ></i>
+                                  </div>
+                                  
                                     <span class="text-danger"
                                     *ngIf="siteLoginForm.get('password')?.touched &&
                                            siteLoginForm.get('password')?.hasError('required')">
@@ -218,15 +233,23 @@
                                 <label for="regPassword" class="form-label"
                                   >Password <span class="asterisk">*</span></label
                                 >
-                                <input
-                                  type="text"
-                                  class="form-control"
-                                  id="regPassword"
-                                  placeholder="Enter password"
-                                  formControlName="regPassword"
-                                  maxLength="51"
-                                  minlength="4"
-                                />
+                                <div class="position-relative">
+                                    <input
+                                      [type]="showRegPassword ? 'text' : 'password'"
+                                      class="form-control"
+                                      id="regPassword"
+                                      placeholder="Enter password"
+                                      formControlName="regPassword"
+                                      maxlength="51"
+                                      minlength="4"
+                                    />
+                                  
+                                    <i
+                                      class="fa"
+                                      [ngClass]="showRegPassword ? 'fa-eye-slash' : 'fa-eye'"
+                                      (click)="toggleRegPassword()"
+                                    ></i>
+                                  </div>
                                 <span
                                   class="text-danger"
                                   *ngIf="

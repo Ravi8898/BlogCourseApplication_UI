@@ -244,7 +244,7 @@ export class LoginInputComponent {
     }
   }
 
-
+   
   login(event: any) {
     if (this.siteLoginForm.invalid) {
       this.siteLoginForm.markAllAsTouched();
@@ -297,6 +297,18 @@ export class LoginInputComponent {
     );
     
   }
+
+  showPassword: boolean = false;
+   togglePassword() {
+   this.showPassword = !this.showPassword;
+   }
+
+   showRegPassword = false;
+   toggleRegPassword() {
+   this.showRegPassword = !this.showRegPassword;
+   }
+
+
   resetLoginForm() {
     this.siteLoginForm.reset();
     this.siteLoginForm.markAsPristine();
