@@ -59,7 +59,6 @@ ngOnInit(): void {
         ? new Date(item.reviewedAt).toDateString()
         : '-',
       "PDF": item.pdfPath ? 'View PDF' : '-',
-      "History": item
     });
   });
 }
