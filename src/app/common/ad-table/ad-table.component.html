@@ -77,8 +77,8 @@
                             <th *ngIf="column != 'ID' && column != 'History'">{{ column }}</th>
                         </ng-container>
                         <ng-container *ngIf="showAction == true">
-                            <th *ngIf="loginType=='vendor'" style="width:170px">Action</th>
-                            <th *ngIf="loginType=='sitecontroller'">Invoice Action</th>
+                            <th style="width:170px">Action</th>
+                            <!-- <th *ngIf="loginType=='sitecontroller'">Invoice Action</th> -->
                             <th *ngIf="showHistory!=false">History</th>
                         </ng-container>
                     </tr>
