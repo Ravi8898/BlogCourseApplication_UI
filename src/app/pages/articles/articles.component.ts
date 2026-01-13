@@ -33,6 +33,7 @@ ngOnInit(): void {
     this.commonService.getAllArticlesByUserId().subscribe({
       next: (res: any) => {
         this.articleApiList = res.data;
+        console.log(this.articleApiList);
         this.prepareArticleTable(res.data);
         this.setArticleFilterField();
        // adjust based on your API response
@@ -50,15 +51,14 @@ ngOnInit(): void {
 
   data.forEach((item: any, index: number) => {
     this.articleTableList.push({
-      "#": index + 1,
       "Title": item.title,
       "Description": item.description,
       "Status": item.articleStatus,
       "Reviewed By": item.reviewedBy || '-',
       "Reviewed At": item.reviewedAt
         ? new Date(item.reviewedAt).toDateString()
-        : '-',
-      "PDF": item.pdfPath ? 'View PDF' : '-',
+        : '-'
+      // "PDF": item.pdfPath ? 'View PDF' : '-',
     });
   });
 }
@@ -71,6 +71,11 @@ setArticleFilterField() {
       forPlace: "Enter Title"
     },
     {
+      forLabel: "Description",
+      forContrl: "description",
+      forPlace: "Enter Description"
+    },
+    {
       forLabel: "Status",
       forContrl: "articleStatus",
       forPlace: "Enter Status"
@@ -79,6 +84,11 @@ setArticleFilterField() {
       forLabel: "Reviewed By",
       forContrl: "reviewedBy",
       forPlace: "Reviewed By"
+    },
+    {
+      forLabel: "Reviewed At",
+      forContrl: "reviewedAt",
+      forPlace: "Reviewed At"
     }
   ];
 }
