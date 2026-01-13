@@ -1,71 +1,101 @@
-<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+<h4 class="page-heading">Profile</h4>
 
-<div class="bg-color" style="height: calc(100% - 60px);">
-    <!-- <div>
-        <ul class="nav nav-tabs tab-class">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Profile</a>
-            </li>
-        </ul>
-    </div> -->
+<div class="profile-card">
 
-    <div class="">
-        <h4 class="page-heading">Profile</h4>
+  <form class="profile-form" [formGroup]="profileForm">
 
-        <div class="profile-card">
-            <table class="table table-bordered table-responsive table-striped" style="width: 100%;">
-                <tbody>
-                    <tr>
-                        <td class="key">Account Number of Vendor Or Creditor</td>
-                        <td>{{userData['userId']}}</td>
-                        <td class="key">Name</td>
-                        <td>{{userData['firstName'] + ' ' + userData['lastName']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="key">Address Line 1</td>
-                        <td>{{userData['address']['addressLine1']}}</td>
-                        <td class="key">Address Line 2</td>
-                        <td>{{userData['address']['addressLine2']}}</td>
-                    </tr>
-                    <!-- <tr>
-                        <td class="key">Street 3</td>
-                        <td>{{userData['street3']}}</td>
-                        <td class="key">Street 4</td>
-                        <td>{{userData['street4']}}</td>
-                    </tr> -->
-                    <tr>
-                        <td class="key">Region (Landmark)</td>
-                        <td>{{userData['address']['landmark']}}</td>
-                        <td class="key">City</td>
-                        <td>{{userData['address']['city']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="key">Postal Code</td>
-                        <td>{{userData['address']['postalCode']}}</td>
-                        <td class="key">District</td>
-                        <td>{{userData['address']['district']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="key">State</td>
-                        <td>{{userData['address']['state']}}</td>
-                        <td class="key">Country</td>
-                        <td>{{userData['address']['country']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="key">E-Mail Address</td>
-                        <td>{{userData['email']}}</td>
-                        <td class="key">Telephone Number</td>
-                        <td>{{userData['phoneNumber']}}</td>
-                    </tr>
-                    <!-- <tr>
-                        <td class="key">Vendor Account Group</td>
-                        <td>{{profileForm1['vendor_group']}}</td>
-                    </tr> -->
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <table class="table table-bordered table-striped w-100">
+      <tbody>
 
-    
-</div>
+        <tr>
+          <td class="key">Account Number</td>
+          <td>{{ profileForm.get('account_no')?.value }}</td>
 
+          <td class="key">Name</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('name')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="name" />
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key">Address Line 1</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('addressLine1')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="addressLine1" />
+          </td>
+
+          <td class="key">Address Line 2</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('addressLine2')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="addressLine2" />
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key">Landmark</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('landmark')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="landmark" />
+          </td>
+
+          <td class="key">City</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('city')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="city" />
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key">District</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('district')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="district" />
+          </td>
+
+          <td class="key">State</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('state')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="state" />
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key">Country</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('country')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="country" />
+          </td>
+
+          <td class="key">Postal Code</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('postalCode')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="postalCode" />
+          </td>
+        </tr>
+
+        <tr>
+          <td class="key">Email</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('email')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="email" />
+          </td>
+
+          <td class="key">Phone</td>
+          <td>
+            <span *ngIf="!isEditMode">{{ profileForm.get('phone')?.value }}</span>
+            <input *ngIf="isEditMode" class="form-control" formControlName="phone" />
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </form>
+
+  <div class="d-flex justify-content-end gap-2 mt-3">
+    <button *ngIf="!isEditMode" class="profile-edit-btn" (click)="edit()">Edit</button>
+    <button *ngIf="isEditMode" class="profile-cancel-btn" (click)="cancel()">Cancel</button>
+    <button *ngIf="isEditMode" class="profile-save-btn" (click)="save()">Save</button>
+  </div>
+
+</div> 

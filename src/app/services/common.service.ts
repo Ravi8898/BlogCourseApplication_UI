@@ -40,6 +40,15 @@ export class CommonService {
     return this.http.post(url, data);
   }
 
+  updateUserById(payload: any): Observable<any> {
+  return this.http.post(
+    `${environment.baseUrl}/updateUserById`,
+    payload,
+    { headers: this.returnHeader() }
+    );
+  }
+
+
     private createHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -446,7 +455,7 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
 
   routeToProfile() {
     this.router.navigate(['./dashboard/profile']);
-  } 
+  }
 
   /* routeToPurchaseOrder() {
     // this.router.navigate(['./dashboard/purchase']);
@@ -558,5 +567,5 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
       data
     );
   }
-  
+
 }

@@ -1,8 +1,86 @@
-td {
-    font-size: 12px !important;
+/* ---------------------------
+   FORM BASE STYLING
+---------------------------- */
+.profile-form input,
+.profile-form select,
+.profile-form textarea {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.key {
-    width: 250px;
-    font-size: 14px !important;
-    font-weight: 600;
+
+/* Focus State */
+.profile-form input:focus,
+.profile-form select:focus,
+.profile-form textarea:focus {
+  border-color: #7b2ff7;
+  box-shadow: 0 0 0 2px rgba(123, 47, 247, 0.2);
+  font-weight: inherit;
 }
+
+/* Readonly & Disabled */
+.profile-form input[readonly],
+.profile-form input:disabled,
+.profile-form select:disabled,
+.profile-form textarea:disabled {
+  background-color: #f1f3f5;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* ---------------------------
+   BUTTON STYLING
+---------------------------- */
+.profile-save-btn,
+.profile-edit-btn,
+.profile-cancel-btn {
+  height: 44px;
+  border-radius: 6px;
+  border: none;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+
+/* Primary Buttons */
+.profile-save-btn,
+.profile-edit-btn {
+  min-width: 140px;
+  background: linear-gradient(90deg, #7b2ff7, #e94057);
+  color: #fff;
+}
+
+/* Hover */
+.profile-save-btn:hover,
+.profile-edit-btn:hover {
+  opacity: 0.9;
+}
+
+/* Cancel Button */
+.profile-cancel-btn {
+  min-width: 110px;
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.profile-cancel-btn:hover {
+  background-color: #c82333;
+}
+
+/* If disabled (optional for save/edit) */
+.profile-save-btn:disabled,
+.profile-edit-btn:disabled,
+.profile-cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
