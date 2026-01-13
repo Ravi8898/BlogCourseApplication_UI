@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, NgForm, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonService } from '../../services/common.service';
 import { BreadcrumbService } from 'src/app/common/breadcrumb/breadcrumb.service';
 
@@ -13,7 +14,9 @@ export class ArticlesComponent implements OnInit {
   articleTableList: any[] = [];
   articleApiList: any[] = [];
   articleSearchObject: any[] = [];
+  addfrieghtform!: FormGroup;
 
+  showActionColumn = false;
   loading = false;
 
   constructor(
@@ -37,11 +40,13 @@ ngOnInit(): void {
         this.prepareArticleTable(res.data);
         this.setArticleFilterField();
        // adjust based on your API response
+        this.showActionColumn = this.articleApiList.length > 0 ? true : false;
         this.loading = false;
       },
       error: (err) => {
         console.error(err);
         this.loading = false;
+        this.showActionColumn = false;
       }
     });
   }
@@ -108,6 +113,34 @@ applyArticleSearch(data: any) {
 
   this.prepareArticleTable(filtered);
 }
+  showAddPanel = false;
 
+  openAddArticlePanel() {
+    this.showAddPanel = true;
+  }
+
+  closeAddArticlePanel() {
+    this.showAddPanel = false;
+  }
+  closeAddEditModal() {
+    this.formData.title = '';
+    this.formData.description = '';
+    this.formData.content = '';
+    this.showAddPanel = false;
+  }
+  onSubmit(formRef: NgForm) {
+    
+  }
+  formData: any = {
+    title: '',
+    description: '',
+    content: ''
+  };
+
+  resetForm(form: any) {
+    this.formData.title = '';
+    this.formData.description = '';
+    this.formData.content = '';
+  }
 
 }

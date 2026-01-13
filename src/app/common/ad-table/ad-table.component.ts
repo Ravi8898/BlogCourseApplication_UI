@@ -28,6 +28,7 @@ export class AdTableComponent implements OnChanges {
   @Input('tableTitle') tableTitle: any;
   @Input() showHistory:any;
   @Input() showAction :any = true;
+  @Input() showActionColumn :any = false;
   correctionRequired:boolean = false;
 
   @Output() searchParamObj = new EventEmitter<any>();
