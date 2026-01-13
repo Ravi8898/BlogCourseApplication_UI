@@ -749,6 +749,15 @@ input:read-only {
   color: #0b74b0;
 }
 
+.login-section .form-label-black {
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 0;
+  letter-spacing: 0;
+  text-align: left;
+  color: rgb(77, 72, 72);
+}
+
 
 .login-button {
   background: linear-gradient(90deg, #0b74b0 0%, #75479c 52.08%, #bd3861 100%);
