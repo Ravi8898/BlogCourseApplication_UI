@@ -40,6 +40,15 @@ export class CommonService {
     return this.http.post(url, data);
   }
 
+  updateUserById(payload: any): Observable<any> {
+  return this.http.post(
+    `${environment.baseUrl}/updateUserById`,
+    payload,
+    { headers: this.returnHeader() }
+    );
+  }
+
+
     private createHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
@@ -48,6 +57,21 @@ export class CommonService {
     });
     return headers;
   }
+
+  getAllArticlesByUserId(): Observable<any> {
+  const token = localStorage.getItem('token');
+
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+  });
+
+  return this.http.get(
+    `${environment.baseUrl}/article/getAllArticlesByUserId`,
+    { headers }
+  );
+}
+
+
 
   sendOTP(json: any) {
     // return this.http.post(`${environment.apiUrl}/auth/api/SupplierLogin`,json);
@@ -431,7 +455,7 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
 
   routeToProfile() {
     this.router.navigate(['./dashboard/profile']);
-  } 
+  }
 
   /* routeToPurchaseOrder() {
     // this.router.navigate(['./dashboard/purchase']);
@@ -529,4 +553,19 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
 
     return this.http.post<{ status: string, message: string }>(url, [payload], { headers });
   }
+
+  forgotPassword(payload: { email: string }) {
+    return this.http.post(
+      `${environment.baseUrl}/auth/forgotPassword`,
+      payload
+    );
+  }
+
+  resetPassword(data: { token: string; newPassword: string }) {
+    return this.http.post(
+      `${environment.baseUrl}/auth/resetPassword`,
+      data
+    );
+  }
+
 }

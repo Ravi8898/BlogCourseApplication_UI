@@ -1,7 +1,11 @@
-<app-toast-message [successToast]="successToast" [errorToast]="errorToast" [toastMsg]="toastMsg"></app-toast-message>
+<app-toast-message
+  [successToast]="successToast"
+  [errorToast]="errorToast"
+  [toastMsg]="toastMsg"
+></app-toast-message>
 
-<div class="bg-color" style="height: calc(100% - 60px);">
-    <!-- <div>
+<div class="bg-color" style="height: calc(100% - 60px)">
+  <!-- <div>
         <ul class="nav nav-tabs tab-class">
             <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="#">Profile</a>
@@ -9,63 +13,63 @@
         </ul>
     </div> -->
 
-    <div class="">
-        <h4 class="page-heading">Profile</h4>
+  <div class="">
+    <h4 class="page-heading">Profile</h4>
 
-        <div class="profile-card">
-            <table class="table table-bordered table-responsive table-striped" style="width: 100%;">
-                <tbody>
-                    <tr>
-                        <td class="key">Account Number of Vendor Or Creditor</td>
-                        <td>{{userData['userId']}}</td>
-                        <td class="key">Name</td>
-                        <td>{{userData['firstName'] + ' ' + userData['lastName']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="key">Address Line 1</td>
-                        <td>{{userData['address']['addressLine1']}}</td>
-                        <td class="key">Address Line 2</td>
-                        <td>{{userData['address']['addressLine2']}}</td>
-                    </tr>
-                    <!-- <tr>
+    <div class="profile-card">
+      <table
+        class="table table-bordered table-responsive table-striped"
+        style="width: 100%"
+      >
+        <tbody>
+          <tr>
+            <td class="key">Account Number of Vendor Or Creditor</td>
+            <td>{{ userData["userId"] }}</td>
+            <td class="key">Name</td>
+            <td>{{ userData["firstName"] + " " + userData["lastName"] }}</td>
+          </tr>
+          <tr>
+            <td class="key">Address Line 1</td>
+            <td>{{ userData["address"]["addressLine1"] }}</td>
+            <td class="key">Address Line 2</td>
+            <td>{{ userData["address"]["addressLine2"] }}</td>
+          </tr>
+          <!-- <tr>
                         <td class="key">Street 3</td>
                         <td>{{userData['street3']}}</td>
                         <td class="key">Street 4</td>
                         <td>{{userData['street4']}}</td>
                     </tr> -->
-                    <tr>
-                        <td class="key">Region (Landmark)</td>
-                        <td>{{userData['address']['landmark']}}</td>
-                        <td class="key">City</td>
-                        <td>{{userData['address']['city']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="key">Postal Code</td>
-                        <td>{{userData['address']['postalCode']}}</td>
-                        <td class="key">District</td>
-                        <td>{{userData['address']['district']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="key">State</td>
-                        <td>{{userData['address']['state']}}</td>
-                        <td class="key">Country</td>
-                        <td>{{userData['address']['country']}}</td>
-                    </tr>
-                    <tr>
-                        <td class="key">E-Mail Address</td>
-                        <td>{{userData['email']}}</td>
-                        <td class="key">Telephone Number</td>
-                        <td>{{userData['phoneNumber']}}</td>
-                    </tr>
-                    <!-- <tr>
+          <tr>
+            <td class="key">Region (Landmark)</td>
+            <td>{{ userData["address"]["landmark"] }}</td>
+            <td class="key">City</td>
+            <td>{{ userData["address"]["city"] }}</td>
+          </tr>
+          <tr>
+            <td class="key">Postal Code</td>
+            <td>{{ userData["address"]["postalCode"] }}</td>
+            <td class="key">District</td>
+            <td>{{ userData["address"]["district"] }}</td>
+          </tr>
+          <tr>
+            <td class="key">State</td>
+            <td>{{ userData["address"]["state"] }}</td>
+            <td class="key">Country</td>
+            <td>{{ userData["address"]["country"] }}</td>
+          </tr>
+          <tr>
+            <td class="key">E-Mail Address</td>
+            <td>{{ userData["email"] }}</td>
+            <td class="key">Telephone Number</td>
+            <td>{{ userData["phoneNumber"] }}</td>
+          </tr>
+          <!-- <tr>
                         <td class="key">Vendor Account Group</td>
                         <td>{{profileForm1['vendor_group']}}</td>
                     </tr> -->
-                </tbody>
-            </table>
-        </div>
+        </tbody>
+      </table>
     </div>
-
-    
+  </div>
 </div>
-

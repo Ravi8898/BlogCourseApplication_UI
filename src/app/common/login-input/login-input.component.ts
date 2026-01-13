@@ -44,7 +44,8 @@ export class LoginInputComponent {
   errorToast: any = false;
   successToast: any = false;
   loginErrorMsg = '';
-
+  todayDate = new Date().toISOString().split('T')[0];
+  
   namdId: string = ''
   vendorArr: any = [];
 
@@ -77,6 +78,14 @@ export class LoginInputComponent {
     })
 
     this.namdId = this.activeRoute.snapshot.queryParamMap.get('user')!;
+
+    this.forgotForm = new FormGroup({
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email
+      ])
+    });
+    
   }
 
   customTokenValidator(control: AbstractControl): ValidationErrors | null {
@@ -235,7 +244,7 @@ export class LoginInputComponent {
     }
   }
 
-
+   
   login(event: any) {
     if (this.siteLoginForm.invalid) {
       this.siteLoginForm.markAllAsTouched();
@@ -261,7 +270,7 @@ export class LoginInputComponent {
         console.log('Login successful:', res);
         console.log("inside login :: ", res['data']['username']);
         console.log("inside login localStorage:: ", localStorage.getItem('username'));
-        this.commonService.routeToPage('./dashboard');
+        this.commonService.routeToPage('./dashboard/articles');
         // Handle successful login
         if (res.status === 'SUCCESS') {
           this.resetLoginForm();
@@ -288,6 +297,18 @@ export class LoginInputComponent {
     );
     
   }
+
+  showPassword: boolean = false;
+   togglePassword() {
+   this.showPassword = !this.showPassword;
+   }
+
+   showRegPassword = false;
+   toggleRegPassword() {
+   this.showRegPassword = !this.showRegPassword;
+   }
+
+
   resetLoginForm() {
     this.siteLoginForm.reset();
     this.siteLoginForm.markAsPristine();
@@ -325,6 +346,10 @@ export class LoginInputComponent {
         Validators.maxLength(10)
       ]),
   
+      dateOfBirth: new FormControl('', [
+      Validators.required   
+      ]),
+
       regPassword: new FormControl('', [
         Validators.required,
         Validators.maxLength(50)
@@ -358,6 +383,7 @@ export class LoginInputComponent {
       lastName: this.registerForm.value.lastname,
       email: this.registerForm.value.email,
       phoneNumber: this.registerForm.value.mobile,
+      dateOfBirth: this.registerForm.value.dateOfBirth,
       password: this.registerForm.value.regPassword,
       role: 'USER',
       address: {
@@ -426,6 +452,50 @@ export class LoginInputComponent {
     this.loginErrorMsg = '';
     this.formType = 'login';
   }
+
+  forgotForm!: FormGroup;
+  isForgotLoading = false;
+  forgotSuccessMsg = '';
+  forgotErrorMsg = '';
+
+  sendResetLink(event: any) {
+    event.preventDefault();
+  
+    if (this.forgotForm.invalid) {
+      this.forgotForm.markAllAsTouched();
+      return;
+    }
+  
+    const email = this.forgotForm.get('email')?.value;
+    if (!email) return;
+  
+    this.isForgotLoading = true;
+  
+    this.commonService.forgotPassword({ email }).subscribe({
+      next: (res: any) => {
+        this.isForgotLoading = false;
+  
+        // Generic success (security-safe)
+        this.forgotSuccessMsg =
+          res?.message || 'If this email exists, a reset link has been sent';
+  
+        this.forgotForm.reset();
+      },
+      error: (err) => {
+        this.isForgotLoading = false;
+        this.forgotErrorMsg =
+          err?.error?.message || 'Something went wrong. Please try again';
+      }
+    });
+  }
+
+  switchToForgot() {
+    this.loginErrorMsg = '';
+    this.forgotSuccessMsg = '';
+    this.forgotErrorMsg = '';
+    this.formType = 'forgot';
+  }
+  
 
 
 }

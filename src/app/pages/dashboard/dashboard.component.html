@@ -21,19 +21,46 @@
     </div> -->
 
     <!--Changes by Suleman-->
-    <div class="tab-menu d-flex align-items-center"> 
-        <div *ngIf="roleName== 'USER' ">
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/home')">
-                <label class="menu-label" [class.active]="active === '/dashboard/home'">Home</label>
-            </a>
-            <a href="javascript:void(0);" (click)="activateNav('/dashboard/help')">
-                <label class="menu-label" [class.active]="active === '/dashboard/help'">Help</label>
-            </a>
-        </div>
-    </div>
+   <div class="tab-menu">
+  <div class="menu-container" *ngIf="roleName == 'USER'">
+
+    <a (click)="navigate('/dashboard/articles')">
+      <label class="menu-label" [class.active]="isActive('/dashboard/articles')">Articles</label>
+    </a>
+
+    <a (click)="navigate('/dashboard/process')">
+      <label class="menu-label" [class.active]="isActive('/dashboard/process')">Process</label>
+    </a>
+
+    <a (click)="navigate('/dashboard/simulation')">
+      <label class="menu-label" [class.active]="isActive('/dashboard/simulation')">Simulation</label>
+    </a>
+
+    <a (click)="navigate('/dashboard/how-things-work')">
+      <label class="menu-label" [class.active]="isActive('/dashboard/how-things-work')">How things Work?</label>
+    </a>
+
+    <a (click)="navigate('/dashboard/tools')">
+      <label class="menu-label" [class.active]="isActive('/dashboard/tools')">Tools</label>
+    </a>
+
+    <a (click)="navigate('/dashboard/course')">
+      <label class="menu-label" [class.active]="isActive('/dashboard/course')">Course</label>
+    </a>
+
+    <a (click)="navigate('/dashboard/consultation')">
+      <label class="menu-label" [class.active]="isActive('/dashboard/consultation')">Consultation</label>
+    </a>
+
+    <a (click)="navigate('/dashboard/help')">
+      <label class="menu-label" [class.active]="isActive('/dashboard/help')">Help</label>
+    </a>
+  </div>
+</div>
+
 
     <div class="m-4" style="padding-bottom: 40px;">
-        <app-breadcrumb (changedUrl)="urlChange($event)"></app-breadcrumb>
+        <app-breadcrumb></app-breadcrumb>
         <router-outlet></router-outlet>
     </div>
 

@@ -1,0 +1,172 @@
+.articles-wrapper {
+  padding: 20px;
+  background-color: #f8f9fc;
+  min-height: calc(100vh - 80px);
+}
+
+.header {
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d2f48;
+  }
+}
+
+/* Loader */
+.loader {
+  padding: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Table Container */
+.table-container {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+/* Table */
+.articles-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  thead {
+    background-color: #f1f3f9;
+
+    th {
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 600;
+      color: #444;
+      border-bottom: 1px solid #e2e6f0;
+      white-space: nowrap;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: #f7f9ff;
+      }
+    }
+
+    td {
+      padding: 12px 14px;
+      color: #555;
+      border-bottom: 1px solid #edf0f7;
+      vertical-align: middle;
+    }
+
+    .title {
+      font-weight: 500;
+      color: #2d2f48;
+    }
+
+    .description {
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+/* Status Badges */
+.status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  &.pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  &.approved {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  &.rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+}
+
+/* PDF Link */
+.pdf-link {
+  color: #4b6cff;
+  font-weight: 500;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* No Data */
+.no-data {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}
+
+.articles-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Button styling */
+.add-article-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #1976d2, #c2185b);
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+
+
+/* Hover animation */
+.add-article-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+/* Plus icon */
+.plus-icon {
+  font-size: 20px;
+  font-weight: 600;
+  transition: transform 0.3s ease;
+}
+.add-article-btn:hover .plus-icon {
+  transform: rotate(90deg);
+}
+
+/* Click effect */
+.add-article-btn:active {
+  transform: scale(0.95);
+}

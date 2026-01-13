@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  active: string = '/dashboard/home';
   roleName: any = '';
   loginType: any;
   userData: string | null = '';
@@ -16,7 +15,7 @@ export class DashboardComponent implements OnInit {
   roleNameArray:any;
 
   constructor(private router: Router) {
-    this.active = router.url;
+  
     this.roleName = localStorage.getItem('role') ? localStorage.getItem('role') : '';
     this.userData = localStorage.getItem('userdata') == null ? '' : localStorage.getItem('userdata');
     this.roleNameArray = this.roleName ? this.roleName.split(',') : [];
@@ -33,17 +32,13 @@ export class DashboardComponent implements OnInit {
     // }
   }
 
-  activateNav(url: string) {
-    this.active = url;
-    console.log('active', this.active);
-    if (url !== '') {
-      this.router.navigate([url]);
-    }
+  /** ✅ single source of truth */
+  isActive(route: string): boolean {
+    return this.router.url === route;
   }
 
-
-  urlChange(event: any) {
-    console.log('event', event);
-    this.active = event;
+  /** ✅ navigation only */
+  navigate(route: string): void {
+    this.router.navigate([route]);
   }
 }

@@ -45,24 +45,4 @@ export class ProfileComponent {
       vendor_group: new FormControl(''),
     })
   }
-
-  // loadprofileForm1Value(){
-  //   console.log(this.userData);
-  //   this.profileForm1['controls']['account_no'].setValue(this.userData['id']);
-  //   this.profileForm1['controls']['name'].setValue(this.userData['username']);
-  //   this.profileForm1['controls']['street1'].setValue(this.userData['STREET HOUSE NUMBER']);
-  //   this.profileForm1['controls']['street2'].setValue(this.userData['STREET 2']);
-  //   this.profileForm1['controls']['street3'].setValue(this.userData['STREET 3']);
-  //   this.profileForm1['controls']['street4'].setValue(this.userData['STREET 4']);
-  //   this.profileForm1['controls']['region'].setValue(this.userData['REGION']);
-  //   this.profileForm1['controls']['district'].setValue(this.userData['DISTRICT']);
-  //   this.profileForm1['controls']['postal_code'].setValue(this.userData['POSTALCODE']);
-  //   this.profileForm1['controls']['email'].setValue(this.userData['email']);
-  //   this.profileForm1['controls']['phone_no'].setValue(this.userData['phoneNumber']);
-  //   this.profileForm1['controls']['city'].setValue(this.userData['CITY']);
-  //   this.profileForm1['controls']['gst'].setValue(this.userData['GST']);
-  //   this.profileForm1['controls']['tax'].setValue(this.userData['PANNO']);
-  //   this.profileForm1['controls']['vendor_group'].setValue(this.userData['VENDOR_ACT_GRP']);
-
-  // }
 }
