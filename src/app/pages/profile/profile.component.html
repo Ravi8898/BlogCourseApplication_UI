@@ -7,84 +7,170 @@
     <table class="table table-bordered table-striped w-100">
       <tbody>
 
+        <!-- Account + Name -->
         <tr>
           <td class="key">Account Number</td>
           <td>{{ profileForm.get('account_no')?.value }}</td>
 
           <td class="key">Name</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('name')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="name" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('name')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="name"
+            />
           </td>
         </tr>
 
+        <!-- Address Line 1 + 2 -->
         <tr>
           <td class="key">Address Line 1</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('addressLine1')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="addressLine1" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('addressLine1')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="addressLine1"
+            />
           </td>
 
           <td class="key">Address Line 2</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('addressLine2')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="addressLine2" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('addressLine2')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="addressLine2"
+            />
           </td>
         </tr>
 
+        <!-- Landmark + City -->
         <tr>
           <td class="key">Landmark</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('landmark')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="landmark" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('landmark')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="landmark"
+            />
           </td>
 
           <td class="key">City</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('city')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="city" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('city')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="city"
+            />
           </td>
         </tr>
 
+        <!-- District + State -->
         <tr>
           <td class="key">District</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('district')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="district" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('district')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="district"
+            />
           </td>
 
           <td class="key">State</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('state')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="state" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('state')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="state"
+            />
           </td>
         </tr>
 
+        <!-- Country + Postal -->
         <tr>
           <td class="key">Country</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('country')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="country" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('country')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="country"
+            />
           </td>
 
           <td class="key">Postal Code</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('postalCode')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="postalCode" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('postalCode')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              class="form-control"
+              formControlName="postalCode"
+            />
           </td>
         </tr>
 
+        <!-- Email + Phone -->
         <tr>
           <td class="key">Email</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('email')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="email" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('email')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              type="email"
+              class="form-control"
+              formControlName="email"
+            />
+
+            <!-- Email validation -->
+            <small class="text-danger"
+              *ngIf="isEditMode && profileForm.get('email')?.invalid && profileForm.get('email')?.touched">
+              Please enter a valid email
+            </small>
           </td>
 
           <td class="key">Phone</td>
           <td>
-            <span *ngIf="!isEditMode">{{ profileForm.get('phone')?.value }}</span>
-            <input *ngIf="isEditMode" class="form-control" formControlName="phone" />
+            <span *ngIf="!isEditMode">
+              {{ profileForm.get('phone')?.value }}
+            </span>
+            <input
+              *ngIf="isEditMode"
+              type="tel"
+              class="form-control"
+              formControlName="phone"
+            />
+
+            <!-- Phone validation -->
+            <small class="text-danger"
+              *ngIf="isEditMode && profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched">
+              Enter valid 10-digit phone number
+            </small>
           </td>
         </tr>
 
@@ -92,10 +178,31 @@
     </table>
   </form>
 
+  <!-- Buttons -->
   <div class="d-flex justify-content-end gap-2 mt-3">
-    <button *ngIf="!isEditMode" class="profile-edit-btn" (click)="edit()">Edit</button>
-    <button *ngIf="isEditMode" class="profile-cancel-btn" (click)="cancel()">Cancel</button>
-    <button *ngIf="isEditMode" class="profile-save-btn" (click)="save()">Save</button>
+
+    <button
+      *ngIf="!isEditMode"
+      class="profile-edit-btn"
+      (click)="edit()">
+      Edit
+    </button>
+
+    <button
+      *ngIf="isEditMode"
+      class="profile-cancel-btn"
+      (click)="cancel()">
+      Cancel
+    </button>
+
+    <button
+      *ngIf="isEditMode"
+      class="profile-save-btn"
+      (click)="save()"
+      [disabled]="profileForm.invalid">
+      Save
+    </button>
+
   </div>
 
-</div> 
+</div>

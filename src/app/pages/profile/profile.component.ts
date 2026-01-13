@@ -15,6 +15,7 @@ export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
   userData: any = {};
   isEditMode = false;
+
   originalProfileData: any;
 
   constructor(
@@ -24,21 +25,28 @@ export class ProfileComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-     // Get user data from localStorage
+    // Fetch user data stored after login
     const data = localStorage.getItem('userdata');
     if (data) {
       this.userData = JSON.parse(data);
     }
 
+    // Create form structure
     this.initForm();
+
+    // Fill form with user values
     this.setFormValues();
   }
 
   initForm(): void {
     this.profileForm = new FormGroup({
+      // Read-only account number
       account_no: new FormControl({ value: '', disabled: true }),
+
+      // Full name (required)
       name: new FormControl('', Validators.required),
 
+      // Address fields
       addressLine1: new FormControl(''),
       addressLine2: new FormControl(''),
       landmark: new FormControl(''),
@@ -48,10 +56,10 @@ export class ProfileComponent implements OnInit {
       country: new FormControl(''),
       postalCode: new FormControl(''),
 
-      email: new FormControl('', [
-        Validators.required,
-        Validators.email
-      ]),
+      // Email with validation
+      email: new FormControl('', [Validators.required, Validators.email]),
+
+      // Phone number with Indian format validation
       phone: new FormControl('', [
         Validators.required,
         Validators.pattern(/^[6-9]\d{9}$/)
@@ -59,8 +67,8 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // Patch form with user data
   setFormValues(): void {
+    // Populate form fields from userData
     this.profileForm.patchValue({
       account_no: this.userData.userId,
       name: `${this.userData.firstName || ''} ${this.userData.lastName || ''}`,
@@ -76,7 +84,7 @@ export class ProfileComponent implements OnInit {
       phone: this.userData.phoneNumber || ''
     });
 
-    // Store original data (for cancel functionality)
+    // Save a snapshot to restore if user clicks cancel
     this.originalProfileData = { ...this.profileForm.getRawValue() };
   }
 
@@ -90,20 +98,23 @@ export class ProfileComponent implements OnInit {
   }
 
   save(): void {
-    // Stop if form is invalid
     if (this.profileForm.invalid) {
       this.profileForm.markAllAsTouched();
       return;
     }
 
-    // Get JWT token
     const token = localStorage.getItem('token');
     if (!token) {
       this.forceLogout();
       return;
     }
 
-    // Split full name into first & last name
+    const emailChanged =
+      this.profileForm.value.email !== this.originalProfileData.email;
+
+    const phoneChanged =
+      this.profileForm.value.phone !== this.originalProfileData.phone;
+
     const nameParts = this.profileForm.value.name.trim().split(' ');
 
     // Payload sent to backend
@@ -111,12 +122,8 @@ export class ProfileComponent implements OnInit {
       userId: this.userData.userId,
       firstName: nameParts[0],
       lastName: nameParts.slice(1).join(' '),
-
-      // Email & phone updated with SAME logic
       email: this.profileForm.value.email,
       phoneNumber: this.profileForm.value.phone,
-
-      // Address object
       addressRequest: {
         addressLine1: this.profileForm.value.addressLine1,
         addressLine2: this.profileForm.value.addressLine2,
@@ -129,50 +136,60 @@ export class ProfileComponent implements OnInit {
       }
     };
 
-    // API call to update profile
+    // Call backend API to update profile
     this.http.post(
       `${environment.apiUrl}/user/updateUserById`,
       payload,
       { headers: { Authorization: `Bearer ${token}` } }
     ).subscribe({
       next: (res: any) => {
+        if (res.status === 'SUCCESS') {
 
-        // If update successful
-        if (res?.status === 'SUCCESS') {
+          // Normal update
+          if (!emailChanged && !phoneChanged) {
+            localStorage.setItem('userdata', JSON.stringify(res.data));
+            this.userData = res.data;
+            this.setFormValues();
+            this.isEditMode = false;
 
-          // Show success toast
-          this.toastr.success(
+            this.showToast('Profile updated successfully', 'success');
+            return;
+          }
+
+          // Sensitive update
+          this.showToast(
             'Profile updated successfully. Please login again.',
-            'Success',
-            { timeOut: 3000 }
+            'success'
           );
 
-          // Logout after 3 seconds
           setTimeout(() => {
             this.forceLogout();
           }, 3000);
-
-        } else {
-          // API responded but failed
-          this.toastr.error(
-            'Profile update failed',
-            'Error',
-            { timeOut: 3000 }
-          );
         }
       },
-
-      // API error (token expired / server error)
       error: () => {
-        this.toastr.error(
-          'Session expired',
-          'Error',
-          { timeOut: 3000 }
-        );
+        this.showToast('Session expired', 'error');
         this.forceLogout();
       }
     });
   }
+
+  private showToast(message: string, type: 'success' | 'error'): void {
+    if (type === 'success') {
+      this.toastr.success(message, 'Success', {
+        timeOut: 3000,
+        closeButton: true,
+        progressBar: true
+      });
+    } else {
+      this.toastr.error(message, 'Error', {
+        timeOut: 3000,
+        closeButton: true,
+        progressBar: true
+      });
+    }
+  }
+
 
   forceLogout(): void {
     localStorage.clear();
