@@ -7,7 +7,7 @@
 <div class="articles-wrapper">
   <div class="header">
     <h2>My Articles</h2>
-    <button class="login-button" (click)="openAddArticlePanel()">
+    <button class="common-button" (click)="openAddArticlePanel()">
       + Add Article
     </button>
   </div>
@@ -30,9 +30,11 @@
     >
     </app-ad-table>
   </div>
-  <button class="login-button" (click)="goToAllArticles()">
-    View All Articles
-  </button>
+  <div class="actions-right">
+    <button class="common-button" (click)="goToAllArticles()">
+      View All Articles
+    </button>
+  </div>
 
   <app-custom-modal
     [title]="'Add Article'"
