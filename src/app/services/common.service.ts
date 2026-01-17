@@ -17,7 +17,7 @@ export class CommonService {
   viewPurchase = false;
   public isCorrectionRequired: boolean = false;
   public correctionRequiredData: any = null;
-  viewVendorInvoice:boolean = false;
+  viewVendorInvoice: boolean = false;
   editPurchaseData: any = {};
   action = '';
   secretKey = CryptoJS.enc.Utf8.parse('vspeed_adani_web'); // 16-byte key
@@ -41,15 +41,15 @@ export class CommonService {
   }
 
   updateUserById(payload: any): Observable<any> {
-  return this.http.post(
-    `${environment.baseUrl}/updateUserById`,
-    payload,
-    { headers: this.returnHeader() }
+    return this.http.post(
+      `${environment.baseUrl}/updateUserById`,
+      payload,
+      { headers: this.returnHeader() }
     );
   }
 
 
-    private createHeaders(): HttpHeaders {
+  private createHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -59,17 +59,35 @@ export class CommonService {
   }
 
   getAllArticlesByUserId(): Observable<any> {
-  const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`
-  });
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
 
-  return this.http.get(
-    `${environment.baseUrl}/article/getAllArticlesByUserId`,
-    { headers }
-  );
-}
+    return this.http.get(
+      `${environment.baseUrl}/article/getAllArticlesByUserId`,
+      { headers }
+    );
+  }
+
+  createArticle(data: any): Observable<any> {
+    const url = `${environment.baseUrl}/article/createArticle`;
+    return this.http.post(url, data, {
+      headers: this.createHeaders()
+    });
+  }
+
+  getAllArticles(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    });
+
+    return this.http.get(
+      `${environment.baseUrl}/article/getAllArticles`,
+      { headers }
+    );
+  }
 
 
 
@@ -89,7 +107,7 @@ export class CommonService {
     return this.http.get(`${environment.authUrl}/auth/api/VerifyOtp?otp=${json.otp}&userId=${json.username}&vendorNo=${json.vendorNo}`);
   }
 
-  getVendors(json:any){
+  getVendors(json: any) {
     return this.http.post(`${environment.authUrl}/auth/api/getVendors`, json)
   }
 
@@ -132,11 +150,11 @@ export class CommonService {
     return this.http.post(`${environment.apiUrl}/api/logistic/updateVsandEpStatus`, data, { headers: this.returnHeader() })
   }
 
-  getAttachmentFromBlob(blobId?:any){
-    return this.http.get(`${environment.apiUrl}/api/blob/getFile/${blobId}`, { headers: this.returnHeader()})
+  getAttachmentFromBlob(blobId?: any) {
+    return this.http.get(`${environment.apiUrl}/api/blob/getFile/${blobId}`, { headers: this.returnHeader() })
   }
 
-      getPoItemsRates(data:any){
+  getPoItemsRates(data: any) {
     return this.http.post(`http://10.212.87.140:8080/adani-logistics-service/consume/vspeed/getPoItemRates`, data, { headers: this.returnHeader() })
   }
 
@@ -151,7 +169,7 @@ export class CommonService {
     return this.http.post(url, formData, { headers: this.returnHeader() });
   }
 
-    postDataForALL(url: any, json: any) {
+  postDataForALL(url: any, json: any) {
     const header = this.createHeaders();
     url = `${environment.apiUrllogistics}/${url}`;
     return this.http.post(url, json, { headers: header })
@@ -161,7 +179,7 @@ export class CommonService {
     url = `${environment.apiUrllogistics}/${url}`;
     return this.http.post(url, json, { headers: header })
   }
-   // --- FI Mapping API Methods ---
+  // --- FI Mapping API Methods ---
 
   /**
    * Create FI Mapping
@@ -212,12 +230,12 @@ export class CommonService {
 
   // --------------Bill to mapping
 
-getBillToMappingList(): Observable<any> {
+  getBillToMappingList(): Observable<any> {
     const url = `${environment.apiUrllogistics}/allBillToMapping/GetDataForBill`;
     return this.http.get(url, { headers: this.returnHeader() });
   }
 
-    dataGetMaster(url: any) {
+  dataGetMaster(url: any) {
     url = `${environment.apiUrllogistics}/${url}`;
     return this.http.get(url, { headers: this.returnHeader() })
   }
@@ -281,7 +299,7 @@ getBillToMappingList(): Observable<any> {
     return this.http.get(url, { headers: this.returnHeader() });
   }
 
-    getVendorDetailsById(id: string | number): Observable<any> {
+  getVendorDetailsById(id: string | number): Observable<any> {
     const url = `${environment.apiUrllogistics}/vendor/get/${id}`;
     return this.http.get(url, { headers: this.returnHeader() });
   }
@@ -329,10 +347,10 @@ getBillToMappingList(): Observable<any> {
   /**
    * Delete Vendor by ID
    */
-deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any> {
-  const url = `${environment.apiUrllogistics}/vendor/delete/${id}?deletedBy=${encodeURIComponent(deletedBy)}`;
-  return this.http.delete(url, { headers: this.returnHeader() });
-}
+  deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any> {
+    const url = `${environment.apiUrllogistics}/vendor/delete/${id}?deletedBy=${encodeURIComponent(deletedBy)}`;
+    return this.http.delete(url, { headers: this.returnHeader() });
+  }
 
 
 
@@ -393,7 +411,7 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
     return this.http.post(url, json, { headers: this.returnHeader() })
   }
 
-  dataGetAttach(url?:any){
+  dataGetAttach(url?: any) {
     url = `${environment.apiUrl}/api/fileUpload/${url}`
     return this.http.get(url, { responseType: 'blob', headers: this.returnHeader() });
   }
@@ -403,12 +421,12 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
     return this.http.post(url, json, { headers: this.returnHeader() })
   }
 
-  dataGetAttachByBlob(url?:any){
+  dataGetAttachByBlob(url?: any) {
     url = `${environment.apiUrl}/api/blob/${url}`;
     return this.http.get(url, { responseType: 'blob', headers: this.returnHeader() })
   }
 
-  dataUploadBlob(url: any, json: any){
+  dataUploadBlob(url: any, json: any) {
     url = `${environment.apiUrl}/api/blob/${url}`;
     return this.http.post(url, json, { headers: this.returnHeader() })
   }
@@ -520,15 +538,15 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
   } */
 
 
-  getEncryptPath(path?:any){
+  getEncryptPath(path?: any) {
     const encryptedMessage = CryptoJS.AES.encrypt(path, this.secretKey, {
-        iv: this.IV,
-        mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7,
-      }
+      iv: this.IV,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    }
     )
 
-    let base64 =  encryptedMessage.toString();
+    let base64 = encryptedMessage.toString();
     const urlSafeBase64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
     return urlSafeBase64;
   }
