@@ -321,6 +321,11 @@ textarea {
   font-size: 12px;
   font-weight: 600;
 }
+.actions-right {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
 
 .button-right {
   display: flex;
@@ -788,7 +793,16 @@ input:read-only {
   font-size: 14px;
 }
 
-
+.common-button {
+  background: linear-gradient(90deg, #0b74b0 0%, #75479c 52.08%, #bd3861 100%);
+  border: 0;
+  border-radius: 10px;
+  height: 39px;
+  color: #ffffff;
+  margin-top: 7px;
+  font-weight: 500;
+  font-size: 14px;
+}
 
 @keyframes blinkBg {
   0% {

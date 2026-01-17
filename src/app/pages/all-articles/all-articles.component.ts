@@ -116,6 +116,6 @@ export class AllArticlesComponent implements OnInit {
     }
 
     goToMyArticles() {
-        this.router.navigate(['/dashboard/articles']);
+        this.router.navigate(['/dashboard/all-articles/my-articles']);
     }
 }
