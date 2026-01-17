@@ -216,7 +216,7 @@ export class ArticlesComponent implements OnInit {
   }
 
   goToAllArticles() {
-    this.router.navigate(['/dashboard/articles/all-articles']);
+    this.router.navigate(['/dashboard/all-articles']);
   }
 
 
