@@ -170,7 +170,7 @@
                         </ng-container>
 
                         <td *ngIf="showAction == true">
-                            <div class="bt-action-section" *ngIf="loginType=='vendor'">
+                            <div class="bt-action-section">
 
                                 <!-- <a href="javascript:void(0);" class="bt-action" data-bs-toggle="modal"
                                     [attr.data-bs-target]="modalElementId" (click)="goToEdit(item)">
@@ -178,50 +178,39 @@
                                 <!-- <a *ngIf="item['Status']=='sent-back'" href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Edit"
                                     [attr.data-bs-target]="" (click)="goToEdit(item)">
                                     <img src="../../../assets/svg/Edit.svg" alt="" /></a> -->
-                                <div *ngIf="roleName!='PRIMARY'">
-                                  <a [ngClass]="{'hide': item['Status']=='sent-back' || item['Status']=='correction_required'}"
-                                    href="javascript:void(0);" class="bt-action" data-toggle="tooltip" title="View Invoice"
+                                <div>
+                                  <a 
+                                    href="javascript:void(0);" class="bt-action" data-toggle="tooltip" title="View"
                                     (click)="goToVendorView(item)">
                                     <img src="../../../assets/svg/eye.svg" alt="" />
                                   </a>
-                                  <a [ngClass]="{'visible-hidden': (item['Status']!='sent-back' && item['Status']!='correction_required')}"
+                                  <a
                                     href="javascript:void(0);" class="bt-action abc" data-bs-toggle="modal" data-toggle="tooltip" title="Edit"
                                     [attr.data-bs-target]="" (click)="goToEdit(item)">
                                     <img src="../../../assets/svg/Edit.svg" alt="" />
                                   </a>
-                                  <!-- <a [ngClass]="{'visible-hidden': item['Status']!='sent-back' && item['Status']!='correction_required'}"
+                                  <a 
                                        href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Delete"
                                        (click)="goToDelete(item)" data-bs-target="#deleteModal">
                                        <img src="../../../assets/svg/Delete.svg" alt="" />
-                                    </a> -->
+                                    </a>
+                                    <a class="bt-action-section"
+                                  *ngIf="showActionColumn!=false && item['Status'] === 'DRAFT' || item['Status'] === 'Draft'"
+                                  href="javascript:void(0);"
+                                  class="bt-action"
+                                  title="Send for Approval"
+                                >
+                                  <img
+                                    src="../../../assets/svg/file-right-arrow.svg"
+                                    alt="Send for Approval"
+                                  />
+                                </a>
                                 </div>
-                                <!-- <button class="button-submit m-0" style="width: 110px; height: 30px; font-size: 12px;"><span>Submit</span> <img src="../../../assets/svg/right-arrow.svg"></button> -->
-                                <!-- <button *ngIf="roleName=='PRIMARY'" class="button-submit m-0" style="width: 110px; height: 30px; font-size: 12px;" (click)="getInvoice(item)"><span>Submit</span></button> -->
                                 </div>
-
-                            <div class="bt-action-section" *ngIf="loginType=='sitecontroller'">
-                                <a  href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Invoice Action"
-                                    [attr.data-bs-target]="searchModal" (click)="goToEdit(item, 'view')">
-                                    <img src="../../../assets/svg/site-action.svg" alt="" />
-                                </a>
-                                <!-- <a  href="javascript:void(0);" *ngIf="roleName=='RawMaterialIncharge'" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" [title]="'Edit'"
-                                    [attr.data-bs-target]="searchModal">
-                                    <img src="../../../assets/svg/Edit.svg" alt="" (click)="goToEdit(item, 'edit')">
-                                </a> -->
-                                <a  href="javascript:void(0);" *ngIf="roleName=='RawMaterialIncharge'" class="bt-action" [title]="'Edit'">
-                                    <img src="../../../assets/svg/Edit.svg" alt="" class="opac3" *ngIf="item['Status']=='submitted'" style="opacity: 0.3; cursor: no-drop;">
-                                    <img src="../../../assets/svg/Edit.svg" alt="" *ngIf="item['Status']!='submitted'" (click)="goToEdit(item, 'edit')">
-                                </a>
-                            </div>
-
-                            <div class="bt-action-section" *ngIf="loginType=='sitecontroller' && roleName=='SuperUser'">
-                                <a  href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Edit"
-                                    [attr.data-bs-target]="searchModal"> <!-- (click)="goToEdit(item)" -->
-                                    <img src="../../../assets/svg/Edit.svg" alt="" />
-                                </a>
-                            </div>
+                            
                         </td>
 
+                        
                         <td *ngIf="showHistory!=false">
                             <div class="bt-action-section">
                                 <a href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" title="View History"
