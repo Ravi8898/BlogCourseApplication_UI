@@ -56,6 +56,7 @@ import { ConsultationComponent } from './pages/consultation/consultation.compone
 import { ResetPasswordComponent } from './common/reset-password/reset-password.component';
 import { ProcessComponent } from './pages/process/process.component';
 import { ToolsComponent } from './pages/tools/tools.component';
+import { AllArticlesComponent } from './pages/all-articles/all-articles.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -74,39 +75,40 @@ const routes: Routes = [
   {
     //, canActivate: [authGuard]
     path: 'dashboard', component: DashboardComponent, children: [
-      {path: '', component:HomeComponent},
-      {path: 'all', component:AllVendorComponent, canActivate:[authGuard]},
-      {path: 'logistic', component:LogisticComponent},
-      {path: 'home', component:HomeComponent},
-      {path: 'help', component:HelpPageComponent},
-      {path: 'articles', component: ArticlesComponent},
-      {path: 'simulation', component: SimulationComponent},
-      {path: 'how-things-work', component: HowThingsWorkComponent},
-      {path: 'course', component: CourseComponent},
-      {path: 'consultation', component: ConsultationComponent},
-      {path: 'process', component: ProcessComponent},
-      {path: 'tools', component: ToolsComponent},
-      {path: 'profile', component:ProfileComponent, canActivate:[authGuard]},
-      {path: 'purchase', component:PurchaseOrderComponent, canActivate:[authGuard]},
-      {path: 'conditional-vendor', component:ConditionalVendorComponent, canActivate:[authGuard]},
-      {path: 'sitecontroller', component:SiteControllerComponent, canActivate:[authGuard]},
-      {path: 'storesincharge', component:SiteControllerComponent, canActivate:[authGuard]},
+      { path: '', component: HomeComponent },
+      { path: 'all', component: AllVendorComponent, canActivate: [authGuard] },
+      { path: 'logistic', component: LogisticComponent },
+      { path: 'home', component: HomeComponent },
+      { path: 'help', component: HelpPageComponent },
+      { path: 'articles', component: ArticlesComponent },
+      { path: 'articles/all-articles', component: AllArticlesComponent },
+      { path: 'simulation', component: SimulationComponent },
+      { path: 'how-things-work', component: HowThingsWorkComponent },
+      { path: 'course', component: CourseComponent },
+      { path: 'consultation', component: ConsultationComponent },
+      { path: 'process', component: ProcessComponent },
+      { path: 'tools', component: ToolsComponent },
+      { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
+      { path: 'purchase', component: PurchaseOrderComponent, canActivate: [authGuard] },
+      { path: 'conditional-vendor', component: ConditionalVendorComponent, canActivate: [authGuard] },
+      { path: 'sitecontroller', component: SiteControllerComponent, canActivate: [authGuard] },
+      { path: 'storesincharge', component: SiteControllerComponent, canActivate: [authGuard] },
 
-      {path: 'material-invoice', component:PurchaseOrderComponent, canActivate:[authGuard]},
+      { path: 'material-invoice', component: PurchaseOrderComponent, canActivate: [authGuard] },
       // {path: 'freight-inbound', component:PurchaseOrderComponent, canActivate:[authGuard]},
-      {path: 'freight-inbound/invoice', component:ConditionalVendorComponent, canActivate:[authGuard]},
-      {path: 'freight-inbound-invoice', component:ConditionalVendorComponent, canActivate:[authGuard]},
-      {path: 'conditional-invoice', component:ConditionalVendorComponent, canActivate:[authGuard]},
-      {path: 'service-invoice', component:ServiceVendorComponent, canActivate:[authGuard]},
-      {path: 'sla-invoice', component:SlaInvoiceComponent, canActivate:[authGuard]},
-      {path: 'reward-invoice', component:RewardInvoiceComponent, canActivate:[authGuard]},
+      { path: 'freight-inbound/invoice', component: ConditionalVendorComponent, canActivate: [authGuard] },
+      { path: 'freight-inbound-invoice', component: ConditionalVendorComponent, canActivate: [authGuard] },
+      { path: 'conditional-invoice', component: ConditionalVendorComponent, canActivate: [authGuard] },
+      { path: 'service-invoice', component: ServiceVendorComponent, canActivate: [authGuard] },
+      { path: 'sla-invoice', component: SlaInvoiceComponent, canActivate: [authGuard] },
+      { path: 'reward-invoice', component: RewardInvoiceComponent, canActivate: [authGuard] },
 
-      {path: 'material-incharge', component:SiteControllerComponent, canActivate:[authGuard]},
+      { path: 'material-incharge', component: SiteControllerComponent, canActivate: [authGuard] },
       // {path: 'conditional-incharge', component:ConditionalInchargeComponent, canActivate:[authGuard]},
-      {path: 'raw-material-incharge', component:ConditionalInchargeComponent, canActivate:[authGuard]},
-      {path: 'service-incharge', component:ServiceSitecontrollerComponent, canActivate:[authGuard]},
-      {path: 'sla-incharge', component:SlaInchargeComponent, canActivate:[authGuard]},
-      {path: 'reward-incharge', component:RewardInchargeComponent, canActivate:[authGuard]},
+      { path: 'raw-material-incharge', component: ConditionalInchargeComponent, canActivate: [authGuard] },
+      { path: 'service-incharge', component: ServiceSitecontrollerComponent, canActivate: [authGuard] },
+      { path: 'sla-incharge', component: SlaInchargeComponent, canActivate: [authGuard] },
+      { path: 'reward-incharge', component: RewardInchargeComponent, canActivate: [authGuard] },
     ]
   },
   {
@@ -130,16 +132,16 @@ const routes: Routes = [
       { path: 'invoice/purchase-order', component: CadAdminInvoiceActionComponent },
 
     ]
-  },{
+  }, {
 
-     path: 'All-Master', component: MasterAdminDashboardComponent, canActivate: [authGuard], children: [
+    path: 'All-Master', component: MasterAdminDashboardComponent, canActivate: [authGuard], children: [
       { path: '', component: AllMasterDataComponent },
       { path: 'all-master-data', component: AllMasterDataComponent },
       { path: 'add-bill', component: AddBillComponent },
       { path: 'add-bill/:id', component: AddBillComponent },
       { path: 'add-fi-data', component: AddFiDataComponent },
       { path: 'add-fi-data/:id', component: AddFiDataComponent },
-      {path: 'frieght',component:FrieghtmasterComponent},
+      { path: 'frieght', component: FrieghtmasterComponent },
       { path: 'add-frieght-bill', component: AddFrieghtBillComponent },
       { path: 'add-frieght-bill/:id', component: AddFrieghtBillComponent },
       { path: '**', component: AllMasterDataComponent },
@@ -148,9 +150,9 @@ const routes: Routes = [
   },
 
   {
-    path: 'paperless-work', component: DashboardComponent,  canActivate: [authGuard],children: [
+    path: 'paperless-work', component: DashboardComponent, canActivate: [authGuard], children: [
       { path: '', component: AdminHomeComponent },
-      {path: 'profile', component:ProfileComponent},
+      { path: 'profile', component: ProfileComponent },
       { path: 'home', component: AdminHomeComponent },
       { path: 'home/invoice', component: InvoiceActionComponent },
       { path: 'vendor-home', component: VendorHomeComponent },

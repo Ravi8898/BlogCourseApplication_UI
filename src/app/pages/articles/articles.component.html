@@ -1,12 +1,16 @@
+<app-toast-message
+  [successToast]="successToast"
+  [errorToast]="errorToast"
+  [toastMsg]="toastMsg"
+></app-toast-message>
+
 <div class="articles-wrapper">
   <div class="header">
     <h2>My Articles</h2>
     <button class="login-button" (click)="openAddArticlePanel()">
-  + Add Article
-  </button>
-
+      + Add Article
+    </button>
   </div>
-  
 
   <!-- Loader -->
   <div class="loader" *ngIf="loading">Loading articles...</div>
@@ -25,40 +29,74 @@
     >
     </app-ad-table>
   </div>
-  <app-custom-modal [title]="'Add Article'" *ngIf="showAddPanel" (onClickCross)="closeAddEditModal()" (closeModal)="closeAddEditModal()">
+  <button class="login-button" (click)="goToAllArticles()">
+    View All Articles
+  </button>
+
+  <app-custom-modal
+    [title]="'Add Article'"
+    *ngIf="showAddPanel"
+    (onClickCross)="closeAddEditModal()"
+    (closeModal)="closeAddEditModal()"
+  >
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-body">
           <form (ngSubmit)="onSubmit(formRef)" #formRef="ngForm">
-            
             <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
               <label class="form-label m-0">Title</label>
               <span class="asterisk">*</span>
-              <input type="text" [(ngModel)]="formData.title" name="title"
-              placeholder="Enter Title" required class="form-control">
+              <input
+                type="text"
+                [(ngModel)]="formData.title"
+                name="title"
+                placeholder="Enter Title"
+                required
+                class="form-control"
+              />
             </div>
             <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
               <label class="form-label m-0">Description</label>
               <span class="asterisk">*</span>
-              <input type="text" [(ngModel)]="formData.description" name="description"
-              placeholder="Enter Description" required class="form-control">
+              <input
+                type="text"
+                [(ngModel)]="formData.description"
+                name="description"
+                placeholder="Enter Description"
+                required
+                class="form-control"
+              />
             </div>
             <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
               <label class="form-label m-0">Content</label>
               <span class="asterisk">*</span>
-              <textarea [(ngModel)]="formData.content"  name="content"
-                placeholder="Enter Content" required class="text-textarea"
-                rows="12">
+              <textarea
+                [(ngModel)]="formData.content"
+                name="content"
+                placeholder="Enter Content"
+                required
+                class="text-textarea"
+                rows="12"
+              >
               </textarea>
             </div>
-            
+
             <div class="buttons">
               <div class="buttons mt-5">
-                <button type="submit" [disabled]="formRef.invalid" class="button-submit">
+                <button
+                  type="submit"
+                  (click)="createArticle($event)"
+                  [disabled]="formRef.invalid"
+                  class="button-submit"
+                >
                   Submit
                 </button>
 
-                <button type="button" class="button-back" (click)="resetForm(formRef)">
+                <button
+                  type="button"
+                  class="button-back"
+                  (click)="resetForm(formRef)"
+                >
                   Reset
                 </button>
               </div>
@@ -79,8 +117,4 @@
       </div>
     </div>
   </app-custom-modal>
-  
-  
-
-
 </div>

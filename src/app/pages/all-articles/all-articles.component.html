@@ -1,0 +1,27 @@
+<div class="articles-wrapper">
+  <div class="header">
+    <h2>All Articles</h2>
+  </div>
+
+  <!-- Loader -->
+  <div class="loader" *ngIf="loading">Loading articles...</div>
+
+  <!-- Table -->
+  <div class="feature-card" *ngIf="!loading">
+    <app-ad-table
+      [tableData]="articleTableList"
+      [isTableTile]="true"
+      [isTableFilter]="true"
+      [isSearchShow]="true"
+      [searchObject]="articleSearchObject"
+      [showHistory]="false"
+      [showActionColumn]="false"
+      (searchParamObj)="applyArticleSearch($event)"
+    >
+    </app-ad-table>
+  </div>
+
+  <button class="login-button" (click)="goToMyArticles()">
+    View My Articles
+  </button>
+</div>
