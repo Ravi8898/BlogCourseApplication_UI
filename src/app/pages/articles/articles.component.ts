@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from '../../services/common.service';
 import { BreadcrumbService } from 'src/app/common/breadcrumb/breadcrumb.service';
 
@@ -10,6 +11,9 @@ import { BreadcrumbService } from 'src/app/common/breadcrumb/breadcrumb.service'
 })
 export class ArticlesComponent implements OnInit {
 
+  successToast = false;
+  errorToast = false;
+  toastMsg = '';
   articles: any[] = [];
   articleTableList: any[] = [];
   articleApiList: any[] = [];
@@ -20,15 +24,15 @@ export class ArticlesComponent implements OnInit {
   loading = false;
 
   constructor(
-  private commonService: CommonService,
-  private breadcrumbService: BreadcrumbService
- ) {}
+    private commonService: CommonService,
+    private breadcrumbService: BreadcrumbService, private router: Router, private activatedRoute: ActivatedRoute
+  ) { }
 
-ngOnInit(): void {
-  this.breadcrumbService.setBreadcrumbUrl(); // 👈 ADD THIS
-  this.getArticlesByUser();
+  ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbUrl();
+    this.getArticlesByUser();
 
-}
+  }
 
   getArticlesByUser() {
     this.loading = true;
@@ -39,7 +43,7 @@ ngOnInit(): void {
         console.log(this.articleApiList);
         this.prepareArticleTable(res.data);
         this.setArticleFilterField();
-       // adjust based on your API response
+        // adjust based on your API response
         this.showActionColumn = this.articleApiList.length > 0 ? true : false;
         this.loading = false;
       },
@@ -52,67 +56,67 @@ ngOnInit(): void {
   }
 
   prepareArticleTable(data: any[]) {
-  this.articleTableList = [];
+    this.articleTableList = [];
 
-  data.forEach((item: any, index: number) => {
-    this.articleTableList.push({
-      "Title": item.title,
-      "Description": item.description,
-      "Status": item.articleStatus,
-      "Reviewed By": item.reviewedBy || '-',
-      "Reviewed At": item.reviewedAt
-        ? new Date(item.reviewedAt).toDateString()
-        : '-'
-      // "PDF": item.pdfPath ? 'View PDF' : '-',
+    data.forEach((item: any, index: number) => {
+      this.articleTableList.push({
+        "Title": item.title,
+        "Description": item.description,
+        "Status": item.articleStatus,
+        "Reviewed By": item.reviewedBy || '-',
+        "Reviewed At": item.reviewedAt
+          ? new Date(item.reviewedAt).toDateString()
+          : '-'
+        // "PDF": item.pdfPath ? 'View PDF' : '-',
+      });
     });
-  });
-}
+  }
 
-setArticleFilterField() {
-  this.articleSearchObject = [
-    {
-      forLabel: "Title",
-      forContrl: "title",
-      forPlace: "Enter Title"
-    },
-    {
-      forLabel: "Description",
-      forContrl: "description",
-      forPlace: "Enter Description"
-    },
-    {
-      forLabel: "Status",
-      forContrl: "articleStatus",
-      forPlace: "Enter Status"
-    },
-    {
-      forLabel: "Reviewed By",
-      forContrl: "reviewedBy",
-      forPlace: "Reviewed By"
-    },
-    {
-      forLabel: "Reviewed At",
-      forContrl: "reviewedAt",
-      forPlace: "Reviewed At"
-    }
-  ];
-}
+  setArticleFilterField() {
+    this.articleSearchObject = [
+      {
+        forLabel: "Title",
+        forContrl: "title",
+        forPlace: "Enter Title"
+      },
+      {
+        forLabel: "Description",
+        forContrl: "description",
+        forPlace: "Enter Description"
+      },
+      {
+        forLabel: "Status",
+        forContrl: "articleStatus",
+        forPlace: "Enter Status"
+      },
+      {
+        forLabel: "Reviewed By",
+        forContrl: "reviewedBy",
+        forPlace: "Reviewed By"
+      },
+      {
+        forLabel: "Reviewed At",
+        forContrl: "reviewedAt",
+        forPlace: "Reviewed At"
+      }
+    ];
+  }
 
-applyArticleSearch(data: any) {
-  let filterData = data.pi_filterjson;
-  let filtered = this.articleApiList;
+  applyArticleSearch(data: any) {
+    let filterData = data.pi_filterjson;
+    let filtered = this.articleApiList;
 
-  Object.keys(filterData).forEach((key) => {
-    if (filterData[key]) {
-      filtered = filtered.filter((item: any) =>
-        item[key]?.toString().toLowerCase()
-          .includes(filterData[key].toLowerCase())
-      );
-    }
-  });
+    Object.keys(filterData).forEach((key) => {
+      if (filterData[key]) {
+        filtered = filtered.filter((item: any) =>
+          item[key]?.toString().toLowerCase()
+            .includes(filterData[key].toLowerCase())
+        );
+      }
+    });
 
-  this.prepareArticleTable(filtered);
-}
+    this.prepareArticleTable(filtered);
+  }
   showAddPanel = false;
 
   openAddArticlePanel() {
@@ -129,7 +133,7 @@ applyArticleSearch(data: any) {
     this.showAddPanel = false;
   }
   onSubmit(formRef: NgForm) {
-    
+
   }
   formData: any = {
     title: '',
@@ -142,5 +146,79 @@ applyArticleSearch(data: any) {
     this.formData.description = '';
     this.formData.content = '';
   }
+
+  createArticle(event: any) {
+    event.preventDefault();
+
+    // Reset toasts
+    this.successToast = false;
+    this.errorToast = false;
+    this.toastMsg = '';
+
+    // Basic validation
+    if (!this.formData.title || !this.formData.description || !this.formData.content) {
+      this.errorToast = true;
+      this.toastMsg = 'Please fill all required fields';
+      return;
+    }
+
+    const payload = {
+      title: this.formData.title,
+      description: this.formData.description,
+      content: this.formData.content
+    };
+
+    this.loading = true;
+
+    this.commonService.createArticle(payload).subscribe({
+      next: (res: any) => {
+        this.loading = false;
+
+        if (res && res.status === 'SUCCESS') {
+          // Success toast
+          this.toastMsg = res.message || 'Article created successfully';
+          this.successToast = true;
+
+          // Refresh list
+          this.getArticlesByUser();
+
+          // Reset form & close panel
+          this.resetForm(null);
+          this.showAddPanel = false;
+
+          setTimeout(() => {
+            this.successToast = false;
+          }, 3000);
+        } else {
+          // API returned failure
+          this.toastMsg = res?.message || 'Failed to create article';
+          this.errorToast = true;
+
+          setTimeout(() => {
+            this.errorToast = false;
+          }, 3000);
+        }
+      },
+      error: (err) => {
+        this.loading = false;
+
+        this.toastMsg =
+          err?.error?.message || 'Server error while creating article';
+        this.errorToast = true;
+
+        setTimeout(() => {
+          this.errorToast = false;
+        }, 3000);
+
+        console.error(err);
+      }
+    });
+  }
+
+  goToAllArticles() {
+    this.router.navigate(['/dashboard/articles/all-articles']);
+  }
+
+
 
 }
