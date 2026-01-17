@@ -117,6 +117,7 @@ import { VendorHomeComponent } from './Paperless-Work/vendor-home/vendor-home.co
 import { VendorUploadInvoiceComponent } from './Paperless-Work/vendor-upload-invoice/vendor-upload-invoice.component';
 import { ArticlesComponent } from './pages/articles/articles.component';
 import { ResetPasswordComponent } from './common/reset-password/reset-password.component';
+import { AllArticlesComponent } from './pages/all-articles/all-articles.component';
 @NgModule({
   declarations: [
     AllMasterDataComponent,
@@ -155,6 +156,7 @@ import { ResetPasswordComponent } from './common/reset-password/reset-password.c
     ExamplePdfViewerComponent,
     ConditionalVendorComponent,
     HelpPageComponent,
+    AllArticlesComponent,
     ArticlesComponent,
     SamlCallbackComponent,
     SlaInvoiceComponent,
@@ -243,7 +245,7 @@ import { ResetPasswordComponent } from './common/reset-password/reset-password.c
     NgxExtendedPdfViewerModule,
     NgSelectModule,
     ObserversModule
-],
+  ],
   providers: [FormService],
   exports: [OnlyNumbersDirective, PopupDialogComponent],
   bootstrap: [AppComponent]
