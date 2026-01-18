@@ -169,7 +169,7 @@ applyArticleSearch(data: any) {
     this.showAddPanel = false;
   }
   onSubmit(formRef: NgForm) {
-    
+
   }
   formData: any = {
     title: '',
