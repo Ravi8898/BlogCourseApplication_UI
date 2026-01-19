@@ -568,4 +568,12 @@ deleteVendor(id: string | number, deletedBy: string = 'vendor'): Observable<any>
     );
   }
 
+  
+  updateArticleStatus(payload: any) {
+    return this.http.post(
+      `${environment.baseUrl}/updateArticleById`,
+      payload
+    );
+  }
+
 }

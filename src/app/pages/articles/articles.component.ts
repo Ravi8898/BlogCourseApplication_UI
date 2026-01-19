@@ -68,6 +68,46 @@ ngOnInit(): void {
   });
 }
 
+
+onSendForApproval(rowIndex: number) {
+
+  console.log('Row index:', rowIndex);
+  console.log('API list:', this.articleApiList);
+
+  const article = this.articleApiList[rowIndex];
+
+  if (!article) {
+    alert('Article not found');
+    return;
+  }
+
+  const payload = {
+    articleId: article.articleId,        // ✅ NOW EXISTS
+    articleStatus: 'PENDING_APPROVAL'
+  };
+
+  console.log('Send for approval payload:', payload);
+
+  this.commonService.updateArticleStatus(payload).subscribe({
+    next: (res: any) => {
+      if (res.status === 'SUCCESS') {
+
+        // update UI
+        this.articleTableList[rowIndex]['Status'] = 'PENDING_APPROVAL';
+
+        // hide action button
+        this.showActionColumn = false;
+
+        this.getArticlesByUser();
+      }
+    },
+    error: () => {
+      alert('Unable to send article for approval');
+    }
+  });
+}
+
+
 setArticleFilterField() {
   this.articleSearchObject = [
     {

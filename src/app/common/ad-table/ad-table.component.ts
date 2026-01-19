@@ -37,6 +37,7 @@ export class AdTableComponent implements OnChanges {
   @Output() activateTab = new EventEmitter();
   @Output() excelDownload = new EventEmitter();
   @Output() retryService = new EventEmitter();
+  @Output() sendForApproval = new EventEmitter<any>();
 
   dynamicSearchForm!: FormGroup;
   columnForm!: FormGroup;
