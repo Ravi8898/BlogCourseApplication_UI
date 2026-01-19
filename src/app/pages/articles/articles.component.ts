@@ -23,6 +23,21 @@ export class ArticlesComponent implements OnInit {
   showActionColumn = false;
   loading = false;
 
+  showToast(msg: string, isError: boolean) {
+    this.successToast = false;
+    this.errorToast = false;
+    this.toastMsg = '';
+    this.toastMsg = msg;
+  
+    if (isError) {
+      this.errorToast = true;
+      setTimeout(() => this.errorToast = false, 3000);
+    } else {
+      this.successToast = true;
+      setTimeout(() => this.successToast = false, 3000);
+    }
+  }
+
   constructor(
     private commonService: CommonService,
     private breadcrumbService: BreadcrumbService, private router: Router, private activatedRoute: ActivatedRoute
@@ -62,7 +77,7 @@ export class ArticlesComponent implements OnInit {
       this.articleTableList.push({
         "Title": item.title,
         "Description": item.description,
-        "Status": item.articleStatus,
+        "Status": this.formatStatus(item.articleStatus),
         "Reviewed By": item.reviewedBy || '-',
         "Reviewed At": item.reviewedAt
           ? new Date(item.reviewedAt).toDateString()
@@ -71,6 +86,17 @@ export class ArticlesComponent implements OnInit {
       });
     });
   }
+
+  formatStatus(status: string): string {
+    if (!status) return '-';
+  
+    return status
+      .toLowerCase()              // pending_approval
+      .split('_')                 // ['pending', 'approval']
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');                 // Pending Approval
+  }
+  
 
 onSendForApproval(rowIndex: number) {
 
@@ -85,7 +111,7 @@ onSendForApproval(rowIndex: number) {
   }
 
   const payload = {
-    articleId: article.articleId,        // ✅ NOW EXISTS
+    articleId: article.articleId,        
     articleStatus: 'PENDING_APPROVAL'
   };
 
@@ -101,7 +127,18 @@ onSendForApproval(rowIndex: number) {
         // hide action button
         this.showActionColumn = false;
 
+        this.showToast(
+          'Article sent for approval to Admin ',
+          false
+        );
+
         this.getArticlesByUser();
+      }
+      else {
+        this.showToast(
+          'Failed to send article for approval',
+          true
+        );
       }
     },
     error: () => {

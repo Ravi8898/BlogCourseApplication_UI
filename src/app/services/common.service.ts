@@ -583,12 +583,10 @@ export class CommonService {
     );
   }
 
-  
-  updateArticleStatus(payload: any) {
-    return this.http.post(
-      `${environment.baseUrl}/updateArticleById`,
-      payload
-    );
+  updateArticleStatus(payload: any): Observable<any> {
+    const headers = this.returnHeader();
+    let url = `${environment.baseUrl}/article/updateArticleById`;
+    return this.http.post(url, payload, { headers: headers });
   }
 
 }
