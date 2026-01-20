@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CommonService } from 'src/app/services/common.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BreadcrumbService } from 'src/app/common/breadcrumb/breadcrumb.service';
 
 @Component({
   selector: 'app-profile',
@@ -23,6 +25,8 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private commonService: CommonService,
+    //Added breadcrumb to show what is the current page in navigation path
+    private breadcrumbService: BreadcrumbService, private router: Router, private activatedRoute: ActivatedRoute,
     private http: HttpClient) {
     // Initializing user data from local storage on component load
     const savedData = localStorage.getItem('userdata');
@@ -32,6 +36,7 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.breadcrumbService.setBreadcrumbUrl();// Update breadcrumbs
     this.loadProfileForm1();
     this.patchFormData();
     this.profileForm1.disable(); // Keeping form read-only by default
