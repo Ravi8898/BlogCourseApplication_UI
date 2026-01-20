@@ -54,6 +54,14 @@ export class CommonService {
     });
     return headers;
   }
+  private createFileUploadHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+
+    return new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  }
+
 
   getAllArticlesByUserId(): Observable<any> {
     const token = localStorage.getItem('token');
@@ -84,6 +92,15 @@ export class CommonService {
       `${environment.baseUrl}/article/getAllArticles`,
       { headers }
     );
+  }
+
+  uploadImage(file: File): Observable<any> {
+    const url = `${environment.baseUrl}/media/uploadImage`;
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post(url, formData, {
+      headers: this.createFileUploadHeaders()
+    });
   }
 
 
