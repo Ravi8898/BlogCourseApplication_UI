@@ -70,7 +70,7 @@
                 class="form-control"
               />
             </div>
-            <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
+            <!-- <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
               <label class="form-label m-0">Content</label>
               <span class="asterisk">*</span>
               <textarea
@@ -82,7 +82,36 @@
                 rows="12"
               >
               </textarea>
+            </div> -->
+            <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group section-box" *ngFor="let section of formData.sections; let i = index">
+              
+              <label class="form-label m-0">Section {{ i + 1 }}</label>
+              <span class="asterisk">*</span>
+              <!-- Delete Button -->
+              <a 
+                href="javascript:void(0);" class="bt-action section-delete" data-bs-toggle="tooltip" title="Delete"
+                (click)="deleteSection(i)">
+                <img src="../../../assets/svg/Delete.svg" alt="" />
+              </a>
+              <textarea
+                [(ngModel)]="section.explanation"
+                name="explanation{{i}}"
+                placeholder="Enter explanation"
+                class="text-textarea"
+                required
+                rows="4">
+              </textarea>
+              <input type="file" accept="image/*" (change)="uploadImage($event, i)" />
+              <div *ngIf="section.uploading">Uploading...</div>
+              <div *ngIf="section.imageUrl">
+                Image uploaded: {{ section.imageUrl }}
+              </div>
+              
+
             </div>
+
+            <button class="common-button" type="button" (click)="addSection()">+ Add Section</button>
+
 
             <div class="buttons">
               <div class="buttons mt-5">

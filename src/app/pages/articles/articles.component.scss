@@ -170,3 +170,20 @@
 .add-article-btn:active {
   transform: scale(0.95);
 }
+
+.section-box {
+  position: relative;   /* Required for absolute positioning */
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+/* Delete icon positioned top-right */
+.section-delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}

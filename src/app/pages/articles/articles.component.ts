@@ -205,43 +205,82 @@ onSendForApproval(rowIndex: number) {
   closeAddEditModal() {
     this.formData.title = '';
     this.formData.description = '';
-    this.formData.content = '';
+    this.formData.sections = [
+      {
+        key: '',
+        explanation: '',
+        imageUrl: null,
+        uploading: false
+      }
+    ];
     this.showAddPanel = false;
   }
   onSubmit(formRef: NgForm) {
 
   }
-  formData: any = {
+
+  goToAllArticles() {
+    this.router.navigate(['/dashboard/all-articles']);
+  }
+  
+  formData = {
     title: '',
     description: '',
-    content: ''
+    sections: [
+      {
+        key: 'Section1',
+        explanation: '',
+        imageUrl: null,
+        uploading: false
+      }
+    ]
   };
 
   resetForm(form: any) {
-    this.formData.title = '';
-    this.formData.description = '';
-    this.formData.content = '';
+    this.formData = {
+      title: '',
+      description: '',
+      sections: [
+        {
+          key: 'Section 1',
+          explanation: '',
+          imageUrl: null,
+          uploading: false
+        }
+      ]
+    };
   }
 
   createArticle(event: any) {
     event.preventDefault();
 
-    // Reset toasts
     this.successToast = false;
     this.errorToast = false;
     this.toastMsg = '';
 
-    // Basic validation
-    if (!this.formData.title || !this.formData.description || !this.formData.content) {
+    if (!this.formData.title || !this.formData.description || this.formData.sections.length === 0) {
       this.errorToast = true;
       this.toastMsg = 'Please fill all required fields';
       return;
     }
 
+    const sectionsPayload: any = {};
+
+    this.formData.sections.forEach(section => {
+      if (!section.key || !section.explanation) return;
+
+      sectionsPayload[section.key] = {
+        explanation: section.explanation,
+        imageUrl: section.imageUrl || null
+      };
+    });
+
     const payload = {
       title: this.formData.title,
       description: this.formData.description,
-      content: this.formData.content
+      content: {
+        sections: sectionsPayload
+      }
     };
 
     this.loading = true;
@@ -250,51 +289,140 @@ onSendForApproval(rowIndex: number) {
       next: (res: any) => {
         this.loading = false;
 
-        if (res && res.status === 'SUCCESS') {
-          // Success toast
+        if (res?.status === 'SUCCESS') {
           this.toastMsg = res.message || 'Article created successfully';
           this.successToast = true;
 
-          // Refresh list
           this.getArticlesByUser();
-
-          // Reset form & close panel
           this.resetForm(null);
           this.showAddPanel = false;
 
           setTimeout(() => {
             this.successToast = false;
+            this.toastMsg = '';
           }, 3000);
         } else {
-          // API returned failure
           this.toastMsg = res?.message || 'Failed to create article';
           this.errorToast = true;
 
           setTimeout(() => {
             this.errorToast = false;
+            this.toastMsg = '';
           }, 3000);
         }
       },
       error: (err) => {
         this.loading = false;
 
-        this.toastMsg =
-          err?.error?.message || 'Server error while creating article';
+        this.toastMsg = err?.error?.message || 'Server error while creating article';
         this.errorToast = true;
 
         setTimeout(() => {
           this.errorToast = false;
+          this.toastMsg = '';
         }, 3000);
-
-        console.error(err);
       }
     });
   }
 
-  goToAllArticles() {
-    this.router.navigate(['/dashboard/all-articles']);
+  // uploadImage(event: any, index: number) {
+
+  //   const file = event.target.files[0];
+  //   if (!file) return;
+
+  //   const formData = new FormData();
+  //   formData.append('file', file);
+
+  //   this.formData.sections[index].uploading = true;
+
+  //   this.commonService.uploadImage(file).subscribe({
+  //     next: (res: any) => {
+  //       this.formData.sections[index].imageUrl = res.data.imageUrl;
+  //       this.formData.sections[index].uploading = false;
+  //       this.toastMsg = 'Image uploaded successfully';
+  //     },
+  //     error: () => {
+  //       this.formData.sections[index].uploading = false;
+  //       this.errorToast = true;
+  //       this.toastMsg = 'Image upload failed';
+  //     }
+  //   });
+  // }
+
+  uploadImage(event: any, index: number) {
+
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.formData.sections[index].uploading = true;
+
+    this.commonService.uploadImage(file).subscribe({
+      next: (res: any) => {
+
+        // Adjust according to backend response structure
+        const imageUrl = res?.data;
+
+        if (!imageUrl) {
+          this.toastMsg = 'Invalid image upload response';
+          this.errorToast = true;
+          this.formData.sections[index].uploading = false;
+          return;
+        }
+
+        // Assign image URL to correct section
+        this.formData.sections[index].imageUrl = imageUrl;
+        this.formData.sections[index].uploading = false;
+
+        this.toastMsg = 'Image uploaded successfully';
+        this.successToast = true;
+
+        setTimeout(() => {
+          this.successToast = false;
+          this.toastMsg = '';
+        }, 3000);
+      },
+      error: () => {
+        this.formData.sections[index].uploading = false;
+
+        this.toastMsg = 'Image upload failed';
+        this.errorToast = true;
+
+        setTimeout(() => {
+          this.errorToast = false;
+          this.toastMsg = '';
+        }, 3000);
+      }
+    });
   }
 
 
+  addSection() {
+    const nextIndex = this.formData.sections.length + 1;
+
+    this.formData.sections.push({
+      key: 'Section' + nextIndex,
+      explanation: '',
+      imageUrl: null,
+      uploading: false
+    });
+
+  }
+
+  deleteSection(index: number) {
+
+    // Do not allow deleting last remaining section (optional safety)
+    if (this.formData.sections.length === 1) {
+      this.toastMsg = 'At least one section is required';
+      this.errorToast = true;
+      // Auto-hide toast after 5 seconds
+      setTimeout(() => {
+        this.errorToast = false;
+        this.toastMsg = '';
+      }, 3000);
+      return;
+    }
+
+    this.formData.sections.splice(index, 1);
+  }
 
 }
