@@ -70,7 +70,7 @@ export class AllArticlesComponent implements OnInit {
                 Title: item.title,
                 Description: item.description,
                 Status: item.articleStatus,
-                Author: item.authorName || '-',
+                Author: item.authorId || '-',
                 'Reviewed By': item.reviewedBy || '-',
                 'Reviewed At': item.reviewedAt
                     ? new Date(item.reviewedAt).toDateString()
@@ -93,7 +93,7 @@ export class AllArticlesComponent implements OnInit {
             },
             {
                 forLabel: 'Author',
-                forContrl: 'authorName',
+                forContrl: 'authorId',
                 forPlace: 'Enter Author'
             }
         ];
@@ -116,6 +116,6 @@ export class AllArticlesComponent implements OnInit {
     }
 
     goToMyArticles() {
-        this.router.navigate(['/dashboard/articles']);
+        this.router.navigate(['/dashboard/all-articles/my-articles']);
     }
 }

@@ -1,8 +1,91 @@
 td {
     font-size: 12px !important;
 }
+td input {
+    font-weight: inherit !important;
+    font-size: inherit !important;
+}
 .key {
     width: 250px;
     font-size: 14px !important;
     font-weight: 600;
+}
+
+.login-button, .button-submit, .button-back {
+    width: 156px !important;
+    height: 40px !important;
+    border-radius: 30px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 !important;
+}
+
+.login-button, .button-submit {
+    background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%) !important;
+    color: #FFF !important;
+}
+
+.login-button:hover, .button-submit:hover {
+    background: linear-gradient(90deg, #0B74B0 0%, #75479C 52.08%, #BD3861 100%) !important;
+    opacity: 0.9;
+}
+
+.button-back {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+.button-back:hover {
+    background-color: #c82333 !important;
+    color: #ffffff !important;
+}
+
+.bt-section {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.profile-card {
+  .table {
+    table-layout: fixed;
+
+    td {
+      padding: 0 !important;
+      height: 40px;
+      vertical-align: middle;
+      border: 1px solid #dee2e6;
+    }
+
+    span {
+      display: inline-block;
+      padding: 8px 12px;
+      line-height: 1.5;
+    }
+
+    .form-control {
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      padding: 8px 12px;
+      background: #fdfdfd;
+
+      &:focus {
+        box-shadow: none !important;
+      }
+    }
+
+    .key {
+      padding: 8px 12px !important;
+      background-color: #f8f9fa;
+      font-weight: 600;
+    }
+  }
 }
