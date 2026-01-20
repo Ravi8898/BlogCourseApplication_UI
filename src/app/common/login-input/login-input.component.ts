@@ -45,7 +45,7 @@ export class LoginInputComponent {
   successToast: any = false;
   loginErrorMsg = '';
   todayDate = new Date().toISOString().split('T')[0];
-  
+
   namdId: string = ''
   vendorArr: any = [];
 
@@ -85,7 +85,7 @@ export class LoginInputComponent {
         Validators.email
       ])
     });
-    
+
   }
 
   customTokenValidator(control: AbstractControl): ValidationErrors | null {
@@ -244,7 +244,7 @@ export class LoginInputComponent {
     }
   }
 
-   
+
   login(event: any) {
     if (this.siteLoginForm.invalid) {
       this.siteLoginForm.markAllAsTouched();
@@ -270,19 +270,19 @@ export class LoginInputComponent {
         console.log('Login successful:', res);
         console.log("inside login :: ", res['data']['username']);
         console.log("inside login localStorage:: ", localStorage.getItem('username'));
-        this.commonService.routeToPage('./dashboard/articles');
+        this.commonService.routeToPage('./dashboard/all-articles');
         // Handle successful login
         if (res.status === 'SUCCESS') {
           this.resetLoginForm();
-        // Success Toast
-        this.toastMsg = res.message || 'Login successfully';
-        this.successToast = true;
-        this.errorToast = false;
-
-        setTimeout(() => {
+          // Success Toast
+          this.toastMsg = res.message || 'Login successfully';
           this.successToast = true;
-        }, 3000);
-      }
+          this.errorToast = false;
+
+          setTimeout(() => {
+            this.successToast = true;
+          }, 3000);
+        }
       },
       error => {
         this.isLoader = false;
@@ -295,18 +295,18 @@ export class LoginInputComponent {
         }, 5000);
       }
     );
-    
+
   }
 
   showPassword: boolean = false;
-   togglePassword() {
-   this.showPassword = !this.showPassword;
-   }
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
-   showRegPassword = false;
-   toggleRegPassword() {
-   this.showRegPassword = !this.showRegPassword;
-   }
+  showRegPassword = false;
+  toggleRegPassword() {
+    this.showRegPassword = !this.showRegPassword;
+  }
 
 
   resetLoginForm() {
@@ -327,43 +327,43 @@ export class LoginInputComponent {
         Validators.required,
         Validators.maxLength(50)
       ]),
-  
+
       lastname: new FormControl('', [
         Validators.required,
         Validators.maxLength(50)
       ]),
-  
+
       email: new FormControl('', [
         Validators.required,
         Validators.email,
         Validators.maxLength(50)
       ]),
-  
+
       mobile: new FormControl('', [
         Validators.required,
         Validators.pattern(/^[6-9]\d{9}$/),
         Validators.minLength(10),
         Validators.maxLength(10)
       ]),
-  
+
       dateOfBirth: new FormControl('', [
-      Validators.required   
+        Validators.required
       ]),
 
       regPassword: new FormControl('', [
         Validators.required,
         Validators.maxLength(50)
       ]),
-        // OPTIONAL FIELDS (no required)
-    addressLine1: new FormControl(''),
-    addressLine2: new FormControl(''),
-    landmark: new FormControl(''),
-    city: new FormControl(''),
-    district: new FormControl(''),
-    state: new FormControl(''),
-    country: new FormControl(''),
-    postalCode: new FormControl('')
-  
+      // OPTIONAL FIELDS (no required)
+      addressLine1: new FormControl(''),
+      addressLine2: new FormControl(''),
+      landmark: new FormControl(''),
+      city: new FormControl(''),
+      district: new FormControl(''),
+      state: new FormControl(''),
+      country: new FormControl(''),
+      postalCode: new FormControl('')
+
     })
   }
 
@@ -371,12 +371,11 @@ export class LoginInputComponent {
     this.submittedRegister = true;
     console.log('resgiter');
 
-    if (this.registerForm.invalid) 
-    { 
-      this.registerForm.markAllAsTouched(); 
-      return; 
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
+      return;
     }
-  
+
 
     let json = {
       firstName: this.registerForm.value.firstname,
@@ -460,25 +459,25 @@ export class LoginInputComponent {
 
   sendResetLink(event: any) {
     event.preventDefault();
-  
+
     if (this.forgotForm.invalid) {
       this.forgotForm.markAllAsTouched();
       return;
     }
-  
+
     const email = this.forgotForm.get('email')?.value;
     if (!email) return;
-  
+
     this.isForgotLoading = true;
-  
+
     this.commonService.forgotPassword({ email }).subscribe({
       next: (res: any) => {
         this.isForgotLoading = false;
-  
+
         // Generic success (security-safe)
         this.forgotSuccessMsg =
           res?.message || 'If this email exists, a reset link has been sent';
-  
+
         this.forgotForm.reset();
       },
       error: (err) => {
@@ -495,7 +494,7 @@ export class LoginInputComponent {
     this.forgotErrorMsg = '';
     this.formType = 'forgot';
   }
-  
+
 
 
 }

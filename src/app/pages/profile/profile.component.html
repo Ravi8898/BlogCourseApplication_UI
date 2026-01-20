@@ -1,75 +1,153 @@
 <app-toast-message
   [successToast]="successToast"
   [errorToast]="errorToast"
-  [toastMsg]="toastMsg"
-></app-toast-message>
+  [toastMsg]="toastMsg">
+</app-toast-message>
 
-<div class="bg-color" style="height: calc(100% - 60px)">
-  <!-- <div>
-        <ul class="nav nav-tabs tab-class">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Profile</a>
-            </li>
-        </ul>
-    </div> -->
+<div class="profile-card" [formGroup]="profileForm1">
+  <table class="table table-bordered table-striped" style="width: 100%; table-layout: fixed;">
+    <tbody>
 
-  <div class="">
-    <h4 class="page-heading">Profile</h4>
+        <!-- <td class="key">Account Number of Vendor Or Creditor</td>
+        <td>{{ userData["userId"] }}</td> -->
+        <tr>
+          <td class="key">Name</td>
+          <td>
+          <span *ngIf="!isEditMode">
+          {{ userData["firstName"] }} {{ userData["lastName"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text"
+            formControlName="name"
+            class="form-control form-control-sm"
+            [class.is-invalid]="profileForm1.get('name')?.invalid && profileForm1.get('name')?.touched">
+          </td>
+          <td class="key">Date of Birth</td>
+          <td>
+          <span *ngIf="!isEditMode">
+          {{ userData["dateOfBirth"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="date"
+            formControlName="dateOfBirth"
+            class="form-control form-control-sm"
+            [class.is-invalid]="profileForm1.get('dateOfBirth')?.invalid && profileForm1.get('dateOfBirth')?.touched">
+          </td>
+        </tr>
 
-    <div class="profile-card">
-      <table
-        class="table table-bordered table-responsive table-striped"
-        style="width: 100%"
-      >
-        <tbody>
-          <tr>
-            <td class="key">Account Number of Vendor Or Creditor</td>
-            <td>{{ userData["userId"] }}</td>
-            <td class="key">Name</td>
-            <td>{{ userData["firstName"] + " " + userData["lastName"] }}</td>
-          </tr>
-          <tr>
-            <td class="key">Address Line 1</td>
-            <td>{{ userData["address"]["addressLine1"] }}</td>
-            <td class="key">Address Line 2</td>
-            <td>{{ userData["address"]["addressLine2"] }}</td>
-          </tr>
-          <!-- <tr>
-                        <td class="key">Street 3</td>
-                        <td>{{userData['street3']}}</td>
-                        <td class="key">Street 4</td>
-                        <td>{{userData['street4']}}</td>
-                    </tr> -->
-          <tr>
-            <td class="key">Region (Landmark)</td>
-            <td>{{ userData["address"]["landmark"] }}</td>
-            <td class="key">City</td>
-            <td>{{ userData["address"]["city"] }}</td>
-          </tr>
-          <tr>
-            <td class="key">Postal Code</td>
-            <td>{{ userData["address"]["postalCode"] }}</td>
-            <td class="key">District</td>
-            <td>{{ userData["address"]["district"] }}</td>
-          </tr>
-          <tr>
-            <td class="key">State</td>
-            <td>{{ userData["address"]["state"] }}</td>
-            <td class="key">Country</td>
-            <td>{{ userData["address"]["country"] }}</td>
-          </tr>
-          <tr>
-            <td class="key">E-Mail Address</td>
-            <td>{{ userData["email"] }}</td>
-            <td class="key">Telephone Number</td>
-            <td>{{ userData["phoneNumber"] }}</td>
-          </tr>
-          <!-- <tr>
-                        <td class="key">Vendor Account Group</td>
-                        <td>{{profileForm1['vendor_group']}}</td>
-                    </tr> -->
-        </tbody>
-      </table>
-    </div>
+      <tr>
+        <td class="key">Address Line 1</td>
+        <td>
+          <span *ngIf="!isEditMode">
+            {{ userData["addressRequest"]?.["addressLine1"] || userData["address"]?.["addressLine1"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text"
+            formControlName="addressLine1"
+            class="form-control form-control-sm">
+        </td>
+        <td class="key">Address Line 2</td>
+        <td>
+          <span *ngIf="!isEditMode">
+            {{ userData["addressRequest"]?.["addressLine2"] || userData["address"]?.["addressLine2"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text"
+            formControlName="addressLine2"
+            class="form-control form-control-sm">
+        </td>
+      </tr>
+
+      <tr>
+        <td class="key">Region (Landmark)</td>
+        <td>
+          <span *ngIf="!isEditMode">
+            {{ userData["addressRequest"]?.["landmark"] || userData["address"]?.["landmark"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text" formControlName="region"
+            class="form-control form-control-sm">
+        </td>
+        <td class="key">City</td>
+        <td>
+          <span *ngIf="!isEditMode">
+            {{ userData["addressRequest"]?.["city"] || userData["address"]?.["city"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text" formControlName="city"
+            class="form-control form-control-sm">
+        </td>
+      </tr>
+
+      <tr>
+        <td class="key">Postal Code</td>
+        <td>
+          <span *ngIf="!isEditMode">
+            {{ userData["addressRequest"]?.["postalCode"] || userData["address"]?.["postalCode"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text" formControlName="postal_code"
+            class="form-control form-control-sm">
+        </td>
+        <td class="key">District</td>
+        <td>
+          <span *ngIf="!isEditMode">
+            {{ userData["addressRequest"]?.["district"] || userData["address"]?.["district"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text" formControlName="district"
+            class="form-control form-control-sm">
+        </td>
+      </tr>
+
+      <tr>
+        <td class="key">State</td>
+        <td>
+          <span *ngIf="!isEditMode">
+            {{ userData["addressRequest"]?.["state"] || userData["address"]?.["state"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text" formControlName="state"
+            class="form-control form-control-sm">
+        </td>
+        <td class="key">Country</td>
+        <td>
+          <span *ngIf="!isEditMode">
+            {{ userData["addressRequest"]?.["country"] || userData["address"]?.["country"] }}
+          </span>
+          <input *ngIf="isEditMode"
+            type="text" formControlName="country"
+            class="form-control form-control-sm">
+        </td>
+      </tr>
+
+      <tr>
+        <td class="key">E-Mail Address</td>
+        <td>
+          <span *ngIf="!isEditMode">{{ userData["email"] }}</span>
+          <input *ngIf="isEditMode"
+            type="email"
+            formControlName="email"
+            class="form-control form-control-sm"
+            [class.is-invalid]="profileForm1.get('email')?.invalid && profileForm1.get('email')?.touched">
+        </td>
+        <td class="key">Telephone Number</td>
+        <td>
+          <span *ngIf="!isEditMode">{{ userData["phoneNumber"] }}</span>
+          <input *ngIf="isEditMode"
+            type="text" formControlName="phone_no"
+            class="form-control form-control-sm"
+            [class.is-invalid]="profileForm1.get('phone_no')?.invalid && profileForm1.get('phone_no')?.touched">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="bt-section">
+    <button *ngIf="!isEditMode" class="login-button" (click)="Edit($event)">Edit</button>
+    <button *ngIf="isEditMode" class="button-back" (click)="Cancel($event)">Cancel</button>
+    <button *ngIf="isEditMode" class="button-submit" (click)="Save($event)" [disabled]="isLoader">
+      {{ isLoader ? 'Saving...' : 'Save' }}
+    </button>
   </div>
 </div>

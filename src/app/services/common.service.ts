@@ -41,13 +41,10 @@ export class CommonService {
   }
 
   updateUserById(payload: any): Observable<any> {
-    return this.http.post(
-      `${environment.baseUrl}/updateUserById`,
-      payload,
-      { headers: this.returnHeader() }
-    );
-  }
-
+    const headers = this.returnHeader();
+    let url = `${environment.baseUrl}/user/updateUserById`;
+    return this.http.post(url, payload, { headers: headers });
+}
 
   private createHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -584,6 +581,12 @@ export class CommonService {
       `${environment.baseUrl}/auth/resetPassword`,
       data
     );
+  }
+
+  updateArticleStatus(payload: any): Observable<any> {
+    const headers = this.returnHeader();
+    let url = `${environment.baseUrl}/article/updateArticleById`;
+    return this.http.post(url, payload, { headers: headers });
   }
 
 }
