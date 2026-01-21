@@ -3,6 +3,7 @@
   [errorToast]="errorToast"
   [toastMsg]="toastMsg"
 ></app-toast-message>
+<app-preview-modal [imageUrl]="previewImageUrl"></app-preview-modal>
 
 <div class="articles-wrapper">
   <div class="header">
@@ -70,7 +71,7 @@
                 class="form-control"
               />
             </div>
-            
+
             <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group section-box" *ngFor="let section of formData.sections; let i = index">
 
               <div>
@@ -108,7 +109,20 @@
               </div>
 
               <!-- Image Upload -->
-              <input type="file" accept="image/*" (change)="uploadImage($event, i)" />
+              <div class="image-upload-row">
+                <input type="file" accept="image/*" (change)="uploadImage($event, i)" />
+
+                <!-- Preview button -->
+                <button 
+                  *ngIf="section.imageUrl"
+                  type="button"
+                  class="preview-button"
+                  (click)="openPreview(section.imageUrl)">
+                  Preview
+                </button>
+
+              </div>
+
             </div>
 
             <button class="common-button" type="button" (click)="addSection()">+ Add Section</button>

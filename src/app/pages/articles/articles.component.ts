@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, NgForm, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from '../../services/common.service';
 import { BreadcrumbService } from 'src/app/common/breadcrumb/breadcrumb.service';
+import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-modal.component';
+
 
 @Component({
   selector: 'app-articles',
@@ -10,6 +12,10 @@ import { BreadcrumbService } from 'src/app/common/breadcrumb/breadcrumb.service'
   styleUrls: ['./articles.component.scss']
 })
 export class ArticlesComponent implements OnInit {
+
+  @ViewChild(PreviewModalComponent)
+  previewModal!: PreviewModalComponent;
+  previewImageUrl: string = '';
 
   successToast = false;
   errorToast = false;
@@ -399,6 +405,15 @@ export class ArticlesComponent implements OnInit {
     }
 
     this.formData.sections.splice(index, 1);
+  }
+
+  openPreview(imageUrl: string) {
+    console.log('Opening preview for image URL:', imageUrl);
+    this.previewImageUrl = imageUrl;
+    this.previewModal.imageUrl = imageUrl;
+
+    console.log('PreviewModal imageUrl set to:', this.previewModal.imageUrl);
+    this.previewModal.open();
   }
 
 }

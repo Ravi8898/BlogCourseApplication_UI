@@ -803,6 +803,16 @@ input:read-only {
   font-weight: 500;
   font-size: 14px;
 }
+.preview-button{
+  background: linear-gradient(90deg, #0b74b0 0%, #75479c 52.08%, #bd3861 100%);
+  border: 0;
+  border-radius: 10px;
+  height: 24px;
+  color: #ffffff;
+  margin-top: 7px;
+  font-weight: 500;
+  font-size: 14px;
+}
 
 @keyframes blinkBg {
   0% {
