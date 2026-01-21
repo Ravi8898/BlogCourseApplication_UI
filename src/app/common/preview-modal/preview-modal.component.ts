@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-preview-modal',
   templateUrl: './preview-modal.component.html',
-  styleUrls: ['./preview-modal.component.css']
+  styleUrls: ['./preview-modal.component.scss']
 })
 export class PreviewModalComponent {
 
@@ -11,17 +11,19 @@ export class PreviewModalComponent {
 
   private modal: any;
 
-  open() {
-    console.log('PreviewModalComponent open called with imageUrl:', this.imageUrl);
-    // this.imageUrl = imageUrl;
+  open(imageUrl: string) {
+    console.log('PreviewModalComponent open called with image:', imageUrl);
+
+    // imageUrl is now Base64 preview string
+    this.imageUrl = imageUrl;
+    console.log(this.imageUrl.substring(0, 50));
     const modalElement = document.getElementById('previewModal');
-    console.log('Imageurl:', modalElement?.getAttribute('imageUrl'));
     this.modal = new (window as any).bootstrap.Modal(modalElement);
     this.modal.show();
   }
 
   close() {
-    this.modal?.hide();
+    this.modal.hide();
     this.imageUrl = '';
   }
 }

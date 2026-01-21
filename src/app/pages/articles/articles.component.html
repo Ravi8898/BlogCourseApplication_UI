@@ -3,7 +3,6 @@
   [errorToast]="errorToast"
   [toastMsg]="toastMsg"
 ></app-toast-message>
-<app-preview-modal [imageUrl]="previewImageUrl"></app-preview-modal>
 
 <div class="articles-wrapper">
   <div class="header">
@@ -12,6 +11,7 @@
       + Add Article
     </button>
   </div>
+  <app-preview-modal #previewModal [imageUrl]="previewImageUrl"></app-preview-modal>
 
   <!-- Loader -->
   <div class="loader" *ngIf="loading">Loading articles...</div>

@@ -13,9 +13,7 @@ import { PreviewModalComponent } from 'src/app/common/preview-modal/preview-moda
 })
 export class ArticlesComponent implements OnInit {
 
-  @ViewChild(PreviewModalComponent)
-  previewModal!: PreviewModalComponent;
-  previewImageUrl: string = '';
+  @ViewChild('previewModal') previewModal!: PreviewModalComponent;
 
   successToast = false;
   errorToast = false;
@@ -215,7 +213,7 @@ export class ArticlesComponent implements OnInit {
       {
         key: '',
         explanation: '',
-        imageUrl: null,
+        imageUrl: '',
         uploading: false
       }
     ];
@@ -236,7 +234,7 @@ export class ArticlesComponent implements OnInit {
       {
         key: 'Section 1',
         explanation: '',
-        imageUrl: null,
+        imageUrl: '',
         uploading: false
       }
     ]
@@ -250,7 +248,7 @@ export class ArticlesComponent implements OnInit {
         {
           key: 'Section 1',
           explanation: '',
-          imageUrl: null,
+          imageUrl: '',
           uploading: false
         }
       ]
@@ -341,18 +339,21 @@ export class ArticlesComponent implements OnInit {
     this.commonService.uploadImage(file).subscribe({
       next: (res: any) => {
 
-        // Adjust according to backend response structure
-        const imageUrl = res?.data;
+        const base64 = res?.data?.base64;
 
-        if (!imageUrl) {
+        if (!base64) {
           this.toastMsg = 'Invalid image upload response';
           this.errorToast = true;
           this.formData.sections[index].uploading = false;
           return;
         }
 
-        // Assign image URL to correct section
-        this.formData.sections[index].imageUrl = imageUrl;
+        // Build preview image source
+        const previewImage = `data:${file.type};base64,${base64}`;
+
+        // Assign Base64 preview to section
+        this.formData.sections[index].imageUrl = previewImage;
+
         this.formData.sections[index].uploading = false;
 
         this.toastMsg = 'Image uploaded successfully';
@@ -363,6 +364,7 @@ export class ArticlesComponent implements OnInit {
           this.toastMsg = '';
         }, 3000);
       },
+
       error: () => {
         this.formData.sections[index].uploading = false;
 
@@ -377,14 +379,13 @@ export class ArticlesComponent implements OnInit {
     });
   }
 
-
   addSection() {
     const nextIndex = this.formData.sections.length + 1;
 
     this.formData.sections.push({
       key: 'Section ' + nextIndex,
       explanation: '',
-      imageUrl: null,
+      imageUrl: '',
       uploading: false
     });
 
@@ -407,13 +408,11 @@ export class ArticlesComponent implements OnInit {
     this.formData.sections.splice(index, 1);
   }
 
+  previewImageUrl: string = '';
   openPreview(imageUrl: string) {
-    console.log('Opening preview for image URL:', imageUrl);
-    this.previewImageUrl = imageUrl;
-    this.previewModal.imageUrl = imageUrl;
-
-    console.log('PreviewModal imageUrl set to:', this.previewModal.imageUrl);
-    this.previewModal.open();
+    console.log('Opening preview for:', imageUrl);
+    this.previewImageUrl=imageUrl;
+    this.previewModal.open(imageUrl);
   }
 
 }

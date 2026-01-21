@@ -8,9 +8,8 @@
       </div>
 
       <div class="modal-body text-center">
-        <img *ngIf="imageUrl"
-             [src]="imageUrl"
-             class="img-fluid preview-image" />
+        <img *ngIf="imageUrl" [src]="imageUrl" class="img-fluid preview-image"/>
+        <div *ngIf="!imageUrl">No image to preview.</div>
       </div>
 
     </div>
