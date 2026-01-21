@@ -730,12 +730,14 @@ viewHistoryChecklist(poInvoiceId: any) {
   });
 }
 
-
-
-
-  confirmDelete(value: any) {
-    this.deleteConfirmed.emit(value);
+  onDeleteInit(row: any) {
+    this.deleteItemId = row;   // store full article or articleId
   }
+
+  confirmDelete(article: any) {
+    this.deleteConfirmed.emit(article);
+  }
+
 
   viewAttachment(data:any){
     console.log('viewAttachment');

@@ -181,6 +181,30 @@ export class ArticlesComponent implements OnInit {
     ];
   }
 
+  onDeleteArticle(index: number) {
+    const article = this.articleApiList[index];
+  
+    const payload = {
+      articleId: article.articleId,
+      isActive: 'N'
+    };
+  
+    this.commonService.deleteArticle(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === 'SUCCESS') {
+          this.showToast('Article deleted successfully', false);
+          this.getArticlesByUser();
+        } else {
+          this.showToast(res.message || 'Delete failed', true);
+        }
+      },
+      error: () => {
+        this.showToast('Unable to delete article', true);
+      }
+    });
+  }
+  
+
 
   applyArticleSearch(data: any) {
     let filterData = data.pi_filterjson;
