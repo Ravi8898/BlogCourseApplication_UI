@@ -70,6 +70,7 @@ export class AdTableComponent implements OnChanges {
   errorToast: any = false;
   successToast: any = false;
   selectedInvoiceType: any;
+  hideEditDelete: boolean = false;
 
   // formData = {
   //   icjNo: '',
@@ -99,6 +100,20 @@ export class AdTableComponent implements OnChanges {
       this.roleName = this.userdata?.['ROLE'];
     }
   }
+
+  ngOnInit() {
+    const currentUrl = this.route.url;
+
+    console.log('Current URL Path:', currentUrl);
+    console.log('check condition', currentUrl.includes('/dashboard/all-articles'));
+    // Hide edit/delete only on All Articles page
+    if (currentUrl === '/dashboard/all-articles') {
+      this.hideEditDelete = true;
+    } else {
+      this.hideEditDelete = false;
+    }
+  }
+
 
   ngOnChanges(changes: SimpleChanges): void {
     this.roleName = localStorage.getItem('roleName')?localStorage.getItem('roleName'):''

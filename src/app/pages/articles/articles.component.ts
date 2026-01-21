@@ -98,54 +98,54 @@ export class ArticlesComponent implements OnInit {
   }
   
 
-onSendForApproval(rowIndex: number) {
+  onSendForApproval(rowIndex: number) {
 
-  console.log('Row index:', rowIndex);
-  console.log('API list:', this.articleApiList);
+    console.log('Row index:', rowIndex);
+    console.log('API list:', this.articleApiList);
 
-  const article = this.articleApiList[rowIndex];
+    const article = this.articleApiList[rowIndex];
 
-  if (!article) {
-    alert('Article not found');
-    return;
-  }
-
-  const payload = {
-    articleId: article.articleId,        
-    articleStatus: 'PENDING_APPROVAL'
-  };
-
-  console.log('Send for approval payload:', payload);
-
-  this.commonService.updateArticleStatus(payload).subscribe({
-    next: (res: any) => {
-      if (res.status === 'SUCCESS') {
-
-        // update UI
-        this.articleTableList[rowIndex]['Status'] = 'PENDING_APPROVAL';
-
-        // hide action button
-        this.showActionColumn = false;
-
-        this.showToast(
-          'Article sent for approval to Admin ',
-          false
-        );
-
-        this.getArticlesByUser();
-      }
-      else {
-        this.showToast(
-          'Failed to send article for approval',
-          true
-        );
-      }
-    },
-    error: () => {
-      alert('Unable to send article for approval');
+    if (!article) {
+      alert('Article not found');
+      return;
     }
-  });
-}
+
+    const payload = {
+      articleId: article.articleId,        
+      articleStatus: 'PENDING_APPROVAL'
+    };
+
+    console.log('Send for approval payload:', payload);
+
+    this.commonService.updateArticleStatus(payload).subscribe({
+      next: (res: any) => {
+        if (res.status === 'SUCCESS') {
+
+          // update UI
+          this.articleTableList[rowIndex]['Status'] = 'PENDING_APPROVAL';
+
+          // hide action button
+          this.showActionColumn = false;
+
+          this.showToast(
+            'Article sent for approval to Admin ',
+            false
+          );
+
+          this.getArticlesByUser();
+        }
+        else {
+          this.showToast(
+            'Failed to send article for approval',
+            true
+          );
+        }
+      },
+      error: () => {
+        alert('Unable to send article for approval');
+      }
+    });
+  }
 
   setArticleFilterField() {
     this.articleSearchObject = [

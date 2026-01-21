@@ -184,12 +184,13 @@
                                     (click)="goToVendorView(item)">
                                     <img src="../../../assets/svg/eye.svg" alt="" />
                                   </a>
-                                  <a
+                                  <!-- <a *ngIf = "loginType == 'ADMIN'" -->
+                                   <a *ngIf="!hideEditDelete"
                                     href="javascript:void(0);" class="bt-action abc" data-bs-toggle="modal" data-toggle="tooltip" title="Edit"
                                     [attr.data-bs-target]="" (click)="goToEdit(item)">
                                     <img src="../../../assets/svg/Edit.svg" alt="" />
                                   </a>
-                                  <a 
+                                  <a  *ngIf="!hideEditDelete"
                                        href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Delete"
                                        (click)="goToDelete(item)" data-bs-target="#deleteModal">
                                        <img src="../../../assets/svg/Delete.svg" alt="" />
