@@ -228,7 +228,7 @@ onSendForApproval(rowIndex: number) {
     description: '',
     sections: [
       {
-        key: 'Section1',
+        key: 'Section 1',
         explanation: '',
         imageUrl: null,
         uploading: false
@@ -236,7 +236,7 @@ onSendForApproval(rowIndex: number) {
     ]
   };
 
-  resetForm(form: any) {
+  resetForm() {
     this.formData = {
       title: '',
       description: '',
@@ -294,7 +294,7 @@ onSendForApproval(rowIndex: number) {
           this.successToast = true;
 
           this.getArticlesByUser();
-          this.resetForm(null);
+          this.resetForm();
           this.showAddPanel = false;
 
           setTimeout(() => {
@@ -324,30 +324,6 @@ onSendForApproval(rowIndex: number) {
       }
     });
   }
-
-  // uploadImage(event: any, index: number) {
-
-  //   const file = event.target.files[0];
-  //   if (!file) return;
-
-  //   const formData = new FormData();
-  //   formData.append('file', file);
-
-  //   this.formData.sections[index].uploading = true;
-
-  //   this.commonService.uploadImage(file).subscribe({
-  //     next: (res: any) => {
-  //       this.formData.sections[index].imageUrl = res.data.imageUrl;
-  //       this.formData.sections[index].uploading = false;
-  //       this.toastMsg = 'Image uploaded successfully';
-  //     },
-  //     error: () => {
-  //       this.formData.sections[index].uploading = false;
-  //       this.errorToast = true;
-  //       this.toastMsg = 'Image upload failed';
-  //     }
-  //   });
-  // }
 
   uploadImage(event: any, index: number) {
 
@@ -400,7 +376,7 @@ onSendForApproval(rowIndex: number) {
     const nextIndex = this.formData.sections.length + 1;
 
     this.formData.sections.push({
-      key: 'Section' + nextIndex,
+      key: 'Section ' + nextIndex,
       explanation: '',
       imageUrl: null,
       uploading: false

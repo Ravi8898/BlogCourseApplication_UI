@@ -70,79 +70,59 @@
                 class="form-control"
               />
             </div>
-            <!-- <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group">
-              <label class="form-label m-0">Content</label>
-              <span class="asterisk">*</span>
-              <textarea
-                [(ngModel)]="formData.content"
-                name="content"
-                placeholder="Enter Content"
-                required
-                class="text-textarea"
-                rows="12"
-              >
-              </textarea>
-            </div> -->
+            
             <div class="col-lg-5 col-md-3 col-xs-2 w-100 mt-3 input-text-group section-box" *ngFor="let section of formData.sections; let i = index">
-              
-              <label class="form-label m-0">Section {{ i + 1 }}</label>
-              <span class="asterisk">*</span>
-              <!-- Delete Button -->
-              <a 
-                href="javascript:void(0);" class="bt-action section-delete" data-bs-toggle="tooltip" title="Delete"
-                (click)="deleteSection(i)">
-                <img src="../../../assets/svg/Delete.svg" alt="" />
-              </a>
-              <textarea
-                [(ngModel)]="section.explanation"
-                name="explanation{{i}}"
-                placeholder="Enter explanation"
-                class="text-textarea"
-                required
-                rows="4">
-              </textarea>
-              <input type="file" accept="image/*" (change)="uploadImage($event, i)" />
-              <div *ngIf="section.uploading">Uploading...</div>
-              <div *ngIf="section.imageUrl">
-                Image uploaded: {{ section.imageUrl }}
-              </div>
-              
 
+              <div>
+                <label class="form-label m-0">Section Name</label>
+                <span class="asterisk">*</span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Section Name"
+                  [(ngModel)]="section.key"
+                  name="sectionKey{{i}}" required/>
+              </div>
+              <div>
+                <label class="form-label m-0">Section Explaination</label>
+                <span class="asterisk">*</span>
+                <textarea
+                  [(ngModel)]="section.explanation"
+                  name="explanation{{i}}"
+                  placeholder="Enter explanation"
+                  class="text-textarea" required
+                  rows="4">
+                </textarea>
+              </div>
+              <div class="section-header">
+                <!-- Action buttons -->
+                <div class="section-actions">
+                  <!-- Delete -->
+                  <a 
+                    href="javascript:void(0);" class="bt-action section-delete" data-bs-toggle="tooltip" title="Delete"
+                    (click)="deleteSection(i)">
+                    <img src="../../../assets/svg/Delete.svg" alt="" />
+                  </a>
+
+                </div>
+              </div>
+
+              <!-- Image Upload -->
+              <input type="file" accept="image/*" (change)="uploadImage($event, i)" />
             </div>
 
             <button class="common-button" type="button" (click)="addSection()">+ Add Section</button>
-
-
+            
             <div class="buttons">
               <div class="buttons mt-5">
-                <button
-                  type="submit"
-                  (click)="createArticle($event)"
-                  [disabled]="formRef.invalid"
-                  class="button-submit"
-                >
-                  Submit
+                <button type="submit" (click)="createArticle($event)" [disabled]="formRef.invalid"
+                  class="button-submit"> Submit
                 </button>
 
-                <button
-                  type="button"
-                  class="button-back"
-                  (click)="resetForm(formRef)"
-                >
-                  Reset
+                <button type="button" class="button-back" (click)="resetForm()">Reset
                 </button>
               </div>
 
-              <!-- <div class="submitBtn mt-5">
-                <button type="submit" [disabled]="formRef.invalid" class="button-submit">
-                  Submit
-                </button>
-              </div>
-              <div class="resetbtn mt-5">
-                <button type="button" class="button-back ms-4 me-0" (click)="resetForm(formRef)">
-                  Reset
-                </button>
-              </div> -->
             </div>
           </form>
         </div>
