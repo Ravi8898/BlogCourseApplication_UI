@@ -239,6 +239,7 @@ export class ArticlesComponent implements OnInit {
       }
     ]
   };
+  base64Image: string = '';
 
   resetForm() {
     this.formData = {
@@ -275,7 +276,7 @@ export class ArticlesComponent implements OnInit {
 
       sectionsPayload[section.key] = {
         explanation: section.explanation,
-        imageUrl: section.imageUrl || null
+        imageUrl: 'resources\\uploads\\article\\images\\' + section.imageUrl || null
       };
     });
 
@@ -339,21 +340,20 @@ export class ArticlesComponent implements OnInit {
     this.commonService.uploadImage(file).subscribe({
       next: (res: any) => {
 
-        const base64 = res?.data?.base64;
-
-        if (!base64) {
+        const base64Image = res?.data?.base64;
+        if (!base64Image) {
           this.toastMsg = 'Invalid image upload response';
           this.errorToast = true;
           this.formData.sections[index].uploading = false;
           return;
         }
 
+
         // Build preview image source
-        const previewImage = `data:${file.type};base64,${base64}`;
+        this.base64Image = `data:${file.type};base64,${base64Image}`;
 
         // Assign Base64 preview to section
-        this.formData.sections[index].imageUrl = previewImage;
-
+        this.formData.sections[index].imageUrl = res?.data?.imageUrl;
         this.formData.sections[index].uploading = false;
 
         this.toastMsg = 'Image uploaded successfully';
@@ -409,6 +409,7 @@ export class ArticlesComponent implements OnInit {
   }
 
   previewImageUrl: string = '';
+  
   openPreview(imageUrl: string) {
     console.log('Opening preview for:', imageUrl);
     this.previewImageUrl=imageUrl;
