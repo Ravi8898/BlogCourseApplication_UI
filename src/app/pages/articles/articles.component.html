@@ -11,7 +11,7 @@
       + Add Article
     </button>
   </div>
-  <app-preview-modal #previewModal [imageUrl]="previewImageUrl"></app-preview-modal>
+  <app-preview-modal #previewModal [base64Image]="previewImageUrl"></app-preview-modal>
 
   <!-- Loader -->
   <div class="loader" *ngIf="loading">Loading articles...</div>
@@ -118,7 +118,7 @@
                   *ngIf="section.imageUrl"
                   type="button"
                   class="preview-button"
-                  (click)="openPreview(base64Image)">
+                  (click)="openPreview(section.base64Image)">
                   Preview
                 </button>
 
