@@ -192,7 +192,7 @@
                                   </a>
                                   <a  *ngIf="!hideEditDelete"
                                        href="javascript:void(0);" class="bt-action" data-bs-toggle="modal" data-toggle="tooltip" title="Delete"
-                                       (click)="goToDelete(item)" data-bs-target="#deleteModal">
+                                       (click)="onDeleteInit(sr)" data-bs-target="#deleteModal">
                                        <img src="../../../assets/svg/Delete.svg" alt="" />
                                     </a>
                                     <a class="bt-action-section"
@@ -368,7 +368,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="body">
-                Are you sure, you want to delete this row ?
+                Are you sure, you want to delete this Article ?
             </div>
             <div class="bt-section footer">
                 <button type="button" class="button-back" data-bs-dismiss="modal">Cancel</button>

@@ -606,4 +606,11 @@ export class CommonService {
     return this.http.post(url, payload, { headers: headers });
   }
 
+  deleteArticle(payload: any) {
+    const headers = this.returnHeader();
+    const url = `${environment.baseUrl}/article/updateArticleById`;
+    return this.http.post(url, payload, { headers });
+  }
+  
+
 }
