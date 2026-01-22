@@ -279,7 +279,9 @@ export class ArticlesComponent implements OnInit {
 
       sectionsPayload[section.key] = {
         explanation: section.explanation,
-        imageUrl: 'resources\\uploads\\article\\images\\' + section.imageUrl || null
+        imageUrl: section.imageUrl && section.imageUrl.trim() !== '' 
+        ? 'resources\\uploads\\article\\images\\' + section.imageUrl : null
+        // imageUrl: 'resources\\uploads\\article\\images\\' + section.imageUrl || null
       };
     });
 
