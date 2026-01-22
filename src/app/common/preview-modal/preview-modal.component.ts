@@ -7,16 +7,16 @@ import { Component, Input } from '@angular/core';
 })
 export class PreviewModalComponent {
 
-  @Input() imageUrl: string = '';
+  @Input() base64Image: string = '';
 
   private modal: any;
 
-  open(imageUrl: string) {
-    console.log('PreviewModalComponent open called with image:', imageUrl);
+  open(base64Image: string) {
+    console.log('PreviewModalComponent open called with image:', base64Image);
 
-    // imageUrl is now Base64 preview string
-    this.imageUrl = imageUrl;
-    console.log(this.imageUrl.substring(0, 50));
+    // base64Image is now Base64 preview string
+    this.base64Image = base64Image;
+    console.log(this.base64Image.substring(0, 50));
     const modalElement = document.getElementById('previewModal');
     this.modal = new (window as any).bootstrap.Modal(modalElement);
     this.modal.show();
@@ -24,6 +24,6 @@ export class PreviewModalComponent {
 
   close() {
     this.modal.hide();
-    this.imageUrl = '';
+    this.base64Image = '';
   }
 }

@@ -214,6 +214,7 @@ export class ArticlesComponent implements OnInit {
         key: '',
         explanation: '',
         imageUrl: '',
+        base64Image: '',
         uploading: false
       }
     ];
@@ -235,6 +236,7 @@ export class ArticlesComponent implements OnInit {
         key: 'Section 1',
         explanation: '',
         imageUrl: '',
+        base64Image: '',
         uploading: false
       }
     ]
@@ -250,6 +252,7 @@ export class ArticlesComponent implements OnInit {
           key: 'Section 1',
           explanation: '',
           imageUrl: '',
+          base64Image: '',
           uploading: false
         }
       ]
@@ -340,23 +343,22 @@ export class ArticlesComponent implements OnInit {
     this.commonService.uploadImage(file).subscribe({
       next: (res: any) => {
 
-        const base64Image = res?.data?.base64;
-        if (!base64Image) {
-          this.toastMsg = 'Invalid image upload response';
-          this.errorToast = true;
+        const base64 = res?.data?.base64;
+        const imageUrl = res?.data?.imageUrl; 
+        if (!base64 || !imageUrl) {
+          this.showToast('Invalid image upload response', true);
           this.formData.sections[index].uploading = false;
           return;
         }
+        // Create preview Base64 image
+        const previewImage = `data:${file.type};base64,${base64}`;
 
-
-        // Build preview image source
-        this.base64Image = `data:${file.type};base64,${base64Image}`;
-
-        // Assign Base64 preview to section
-        this.formData.sections[index].imageUrl = res?.data?.imageUrl;
+        // Store both values per section
+        this.formData.sections[index].base64Image = previewImage;
+        this.formData.sections[index].imageUrl = imageUrl;
         this.formData.sections[index].uploading = false;
 
-        this.toastMsg = 'Image uploaded successfully';
+        this.toastMsg = res.message || 'Image uploaded successfully';
         this.successToast = true;
 
         setTimeout(() => {
@@ -365,10 +367,10 @@ export class ArticlesComponent implements OnInit {
         }, 3000);
       },
 
-      error: () => {
+      error: (error : any) => {
         this.formData.sections[index].uploading = false;
 
-        this.toastMsg = 'Image upload failed';
+        this.toastMsg = error?.message || 'Image upload failed';
         this.errorToast = true;
 
         setTimeout(() => {
@@ -386,6 +388,7 @@ export class ArticlesComponent implements OnInit {
       key: 'Section ' + nextIndex,
       explanation: '',
       imageUrl: '',
+      base64Image: '',
       uploading: false
     });
 
@@ -410,10 +413,10 @@ export class ArticlesComponent implements OnInit {
 
   previewImageUrl: string = '';
   
-  openPreview(imageUrl: string) {
-    console.log('Opening preview for:', imageUrl);
-    this.previewImageUrl=imageUrl;
-    this.previewModal.open(imageUrl);
+  openPreview(base64Image: string) {
+    console.log('Opening preview for:', base64Image);
+    this.previewImageUrl = base64Image;
+    this.previewModal.open(base64Image);
   }
 
 }

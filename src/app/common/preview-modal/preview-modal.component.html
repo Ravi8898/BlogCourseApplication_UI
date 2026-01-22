@@ -8,8 +8,8 @@
       </div>
 
       <div class="modal-body text-center">
-        <img *ngIf="imageUrl" [src]="imageUrl" class="img-fluid preview-image"/>
-        <div *ngIf="!imageUrl">No image to preview.</div>
+        <img *ngIf="base64Image" [src]="base64Image" class="img-fluid preview-image"/>
+        <div *ngIf="!base64Image">No image to preview.</div>
       </div>
 
     </div>
