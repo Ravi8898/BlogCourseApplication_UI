@@ -99,6 +99,7 @@ import { ConditionalVendorComponent } from './pages/conditional-vendor/condition
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { EmployeeManagementComponent } from './pages/employee-management/employee-management.component';
 import { HelpPageComponent } from './pages/help-page/help-page.component';
+import { AddArticleModalComponent } from './common/add-article-modal/add-article-modal.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LogisticComponent } from './pages/logistic/logistic.component';
 import { ProfileComponent } from './pages/profile/profile.component';
@@ -157,6 +158,7 @@ import { PreviewModalComponent } from './common/preview-modal/preview-modal.comp
     ExamplePdfViewerComponent,
     ConditionalVendorComponent,
     HelpPageComponent,
+    AddArticleModalComponent,
     AllArticlesComponent,
     ArticlesComponent,
     SamlCallbackComponent,
