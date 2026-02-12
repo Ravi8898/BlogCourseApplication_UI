@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { OTP_TIMER } from 'src/app/providers/constants';
 import { CommonService } from 'src/app/services/common.service';
 import { environment } from 'src/environments/environment';
+import { encryptPassword } from '../../utils/encryption.util';
+
 
 @Component({
   selector: 'app-login-input',
@@ -250,10 +252,18 @@ export class LoginInputComponent {
       this.siteLoginForm.markAllAsTouched();
       return;
     }
-    const loginData = {
-      username: this.siteLoginForm.controls['username'].value,
-      password: this.siteLoginForm.controls['password'].value
-    };
+    const plainPassword =
+    this.siteLoginForm.controls['password'].value;
+
+  const encryptedPassword = encryptPassword(plainPassword);
+
+  console.log('PLAIN:', plainPassword);
+  console.log('ENCRYPTED:', encryptedPassword);
+
+  const loginData = {
+    username: this.siteLoginForm.controls['username'].value,
+    password: encryptedPassword
+  };
     this.commonService.login(loginData).subscribe(
       res => {
         localStorage.clear();
@@ -376,14 +386,18 @@ export class LoginInputComponent {
       return;
     }
 
-
+    const encryptedPassword = encryptPassword(
+      this.registerForm.value.regPassword
+    );
+    
+    
     let json = {
       firstName: this.registerForm.value.firstname,
       lastName: this.registerForm.value.lastname,
       email: this.registerForm.value.email,
       phoneNumber: this.registerForm.value.mobile,
       dateOfBirth: this.registerForm.value.dateOfBirth,
-      password: this.registerForm.value.regPassword,
+      password: encryptedPassword,
       role: 'USER',
       address: {
         addressLine1: this.registerForm.value.addressLine1,
