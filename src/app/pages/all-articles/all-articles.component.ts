@@ -24,6 +24,18 @@ export class AllArticlesComponent implements OnInit {
     errorToast = false;
     toastMsg = '';
 
+    showToast(message: string, isError: boolean) {
+        this.toastMsg = message;
+        this.successToast = !isError;
+        this.errorToast = isError;
+
+        setTimeout(() => {
+            this.successToast = false;
+            this.errorToast = false;
+            this.toastMsg = '';
+        }, 3000);
+    }
+
     constructor(
         private commonService: CommonService,
         private breadcrumbService: BreadcrumbService,
@@ -126,6 +138,7 @@ export class AllArticlesComponent implements OnInit {
     onArticleCreated() {
         this.showAddPanel = false;
         this.getAllApprovedArticles(); // refresh list
+        this.showToast('Article created successfully', false);
     }
 
 }
