@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
+import { encryptPassword } from 'src/app/utils/encryption.util';
+
 
 @Component({
   selector: 'app-reset-password',
@@ -31,21 +33,21 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    // 2️⃣ Create form
+    // 2️ Create form
     this.resetForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(4)]],
       confirmPassword: ['', Validators.required]
     }, { validators: this.passwordMatchValidator });
   }
 
-  // 3️⃣ Password match validation
+  // 3️ Password match validation
   passwordMatchValidator(form: FormGroup) {
     return form.get('newPassword')?.value === form.get('confirmPassword')?.value
       ? null
       : { passwordMismatch: true };
   }
 
-  // 4️⃣ Submit reset password
+  // 4️ Submit reset password
   onSubmit() {
 
     if (this.resetForm.invalid) {
@@ -53,9 +55,13 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
+    const encryptedPassword = encryptPassword(
+      this.resetForm.value.newPassword
+    );
+
     const payload = {
       token: this.token,
-      newPassword: this.resetForm.value.newPassword
+      newPassword: encryptedPassword
     };
 
     this.isLoading = true;
