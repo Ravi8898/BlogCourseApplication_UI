@@ -122,6 +122,34 @@ img {
   width: 65%;
 }
 
+.section-box {
+  position: relative;
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+.section-delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+/* Override global img rule */
+.section-delete .icon-fixed {
+  width: 16px !important;
+  height: 16px !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain;
+}
+
+
+
 .error-message {
   color: red;
   font-weight: 400;
